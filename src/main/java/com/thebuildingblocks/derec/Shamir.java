@@ -1,4 +1,4 @@
-package com.thebuildingblocks.shamir;
+package com.thebuildingblocks.derec;
 
 import com.codahale.shamir.Scheme;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Crude test of timing of splitting and joining Shamir secrets
  */
-public class Main {
+public class Shamir {
     /**
      * Result of a test contains:
      * @param secretSize size of the secret
