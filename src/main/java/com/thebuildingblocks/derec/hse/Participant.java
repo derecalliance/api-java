@@ -28,11 +28,6 @@ public class Participant {
             return new Message.PairingRequest(name, keyPairMap.get(destinationName).getPublic());
         }
 
-        public Message.PairingAck createPairingAck(Message.PairingResponse pairingResponse) {
-
-            return new Message.PairingAck(null);
-        }
-
         public byte[] serialise(Message.PairingRequest pairingRequest) {
             return pairingRequest.serialize();
         }
@@ -56,10 +51,6 @@ public class Participant {
         public byte [] serialize(Message.PairingResponse pairingResponse) {
             return pairingResponse.serialize(secretKeyMap.get(pairingResponse.destinationName),
                     keyPairMap.get(pairingResponse.destinationName).getPublic());
-        }
-
-        public void receivePairingAck(Message.PairingAck pairingAck) {
-
         }
     }
 }

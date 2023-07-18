@@ -1,6 +1,5 @@
 package com.thebuildingblocks.derec;
 
-import com.thebuildingblocks.derec.hse.Message.PairingAck;
 import com.thebuildingblocks.derec.hse.Message.PairingRequest;
 import com.thebuildingblocks.derec.hse.Message.PairingResponse;
 import com.thebuildingblocks.derec.hse.Participant.Helper;
@@ -29,10 +28,6 @@ public class AESGCM {
                 // contains the fact that is from bob)
                 alice.keyPairMap.get("bob").getPrivate());
         logger.info("Alice: Incoming pairing response from {}", incomingPairingResponse.originatorName);
-
-        // PairingAck pairingAck = alice.createPairingAck(incomingPairingResponse);
-
-        // bob.receivePairingAck(pairingAck);
     }
 
 

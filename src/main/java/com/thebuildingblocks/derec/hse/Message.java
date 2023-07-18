@@ -22,7 +22,7 @@ public class Message {
         final PublicKey originatorPublicKey;
 
         PairingRequest(String originatorName, PublicKey originatorPublicKey) {
-            this.originatorName = originatorName;
+            this.originatorName = Normalizer.normalize(originatorName, Normalizer.Form.NFC);
             this.originatorPublicKey = originatorPublicKey;
         }
 
@@ -60,9 +60,11 @@ public class Message {
     }
 
     public static class PairingResponse extends Message {
+        // not transmitted
+        final transient String destinationName;
+
         // encrypted payload
         public final String originatorName;
-        final String destinationName;
 
         // other fields
 
@@ -82,7 +84,7 @@ public class Message {
             int pkl = bb.getInt();
             byte[] theirPublicKey = new byte[pkl];
             bb.get(theirPublicKey);
-            // make the ecdh key
+            // make the ecdh secret
             byte[] ecdhKey = generateEcdhSecret(myPrivateKey, publicKeyFromByteArray(theirPublicKey));
             // get the secret key
             SecretKey secretKey = generateSecretKey(ecdhKey);
@@ -91,6 +93,7 @@ public class Message {
             byte[] iv = new byte[IV_LENGTH_BYTE];
             bb.get(iv);
 
+            // cipher text is remainder of message
             byte[] cipherText = Arrays.copyOfRange(bb.array(), bb.position(), bb.capacity());
 
             byte[] plainText = doDecrypt(cipherText, secretKey, iv);
@@ -100,7 +103,7 @@ public class Message {
             short nameLength = payload.getShort();
             byte[] nameBuf = new byte[nameLength];
             payload.get(nameBuf);
-            // we don't know what the destination is (it is the deserialiser, but we don't care anyway)
+            // we don't know what the destination is
             return new PairingResponse(new String(nameBuf, StandardCharsets.UTF_8), "");
         }
 
@@ -124,9 +127,5 @@ public class Message {
                     .put(cipherText);
             return Arrays.copyOf(bb.array(), bb.position());
         }
-    }
-
-    public record PairingAck(byte[] message) {
-
     }
 }
