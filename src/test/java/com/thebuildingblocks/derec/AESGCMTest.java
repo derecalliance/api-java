@@ -26,8 +26,8 @@ public class AESGCMTest {
     @Test
     public void testGenerateEcdhKey() {
 
-        byte [] secret1 = generateEcdhKey(alice.getPrivate(), bob.getPublic());
-        byte [] secret2 = generateEcdhKey(bob.getPrivate(), alice.getPublic());
+        byte [] secret1 = generateEcdhSecret(alice.getPrivate(), bob.getPublic());
+        byte [] secret2 = generateEcdhSecret(bob.getPrivate(), alice.getPublic());
 
         assertArrayEquals(secret1, secret2);
     }
@@ -35,8 +35,8 @@ public class AESGCMTest {
     @Test
     public void testGenerateEcdhKeyFromByteArray() {
         PublicKey bobPublic = publicKeyFromByteArray(bob.getPublic().getEncoded());
-        byte [] secret1 = generateEcdhKey(alice.getPrivate(), bobPublic);
-        byte [] secret2 = generateEcdhKey(bob.getPrivate(), alice.getPublic());
+        byte [] secret1 = generateEcdhSecret(alice.getPrivate(), bobPublic);
+        byte [] secret2 = generateEcdhSecret(bob.getPrivate(), alice.getPublic());
 
         assertArrayEquals(secret1, secret2);
     }
@@ -53,11 +53,11 @@ public class AESGCMTest {
         byte [] iv = generateIv(); // iv is communicated "somehow"
 
         // Alice does encryption
-        byte [] aliceEcdhKey = generateEcdhKey(alice.getPrivate(), bob.getPublic());
+        byte [] aliceEcdhKey = generateEcdhSecret(alice.getPrivate(), bob.getPublic());
         byte [] cipherText = doEncrypt(plainText, generateSecretKey(aliceEcdhKey), iv);
 
         // Bob does decryption
-        byte [] bobEcdhKey = generateEcdhKey(bob.getPrivate(), alice.getPublic());
+        byte [] bobEcdhKey = generateEcdhSecret(bob.getPrivate(), alice.getPublic());
         assertArrayEquals(plainText, doDecrypt(cipherText, generateSecretKey(bobEcdhKey), iv));
     }
 
@@ -67,11 +67,11 @@ public class AESGCMTest {
         byte [] iv = generateIv();
 
         // Alice does encryption
-        byte [] aliceEcdhKey = generateEcdhKey(alice.getPrivate(), bob.getPublic());
+        byte [] aliceEcdhKey = generateEcdhSecret(alice.getPrivate(), bob.getPublic());
         byte [] cipherTextWithIv = encryptWithPrefixIv(plainText, generateSecretKey(aliceEcdhKey), iv);
 
         // Bob does decryption
-        byte [] bobEcdhKey = generateEcdhKey(bob.getPrivate(), alice.getPublic());
+        byte [] bobEcdhKey = generateEcdhSecret(bob.getPrivate(), alice.getPublic());
         assertArrayEquals(plainText, decryptWithPrefixIv(cipherTextWithIv, generateSecretKey(bobEcdhKey)));
     }
 }

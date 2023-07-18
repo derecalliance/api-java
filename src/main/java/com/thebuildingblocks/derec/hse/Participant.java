@@ -47,7 +47,7 @@ public class Participant {
             // first store a key pair for this requester
             keyPairMap.put(pairingRequest.originatorName, kpg.generateKeyPair());
             // create the ecdh key
-            byte[] ecdhKey = generateEcdhKey(keyPairMap.get(pairingRequest.originatorName).getPrivate(), pairingRequest.originatorPublicKey);
+            byte[] ecdhKey = generateEcdhSecret(keyPairMap.get(pairingRequest.originatorName).getPrivate(), pairingRequest.originatorPublicKey);
             SecretKey secretKey = generateSecretKey(ecdhKey);
             secretKeyMap.put(pairingRequest.originatorName, secretKey);
             return new Message.PairingResponse(name, pairingRequest.originatorName);

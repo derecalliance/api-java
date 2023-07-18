@@ -53,7 +53,7 @@ public class Encryption {
      * @param theirPublicKey their public key
      * @return an ECDH Symmetric key
      */
-    public static byte [] generateEcdhKey(PrivateKey ourPrivateKey, PublicKey theirPublicKey) {
+    public static byte [] generateEcdhSecret(PrivateKey ourPrivateKey, PublicKey theirPublicKey) {
         try {
             KeyAgreement keyAgreement = KeyAgreement.getInstance(KEY_AGREEMENT_ALGO);
             keyAgreement.init(ourPrivateKey);

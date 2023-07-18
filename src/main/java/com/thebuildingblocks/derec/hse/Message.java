@@ -83,7 +83,7 @@ public class Message {
             byte[] theirPublicKey = new byte[pkl];
             bb.get(theirPublicKey);
             // make the ecdh key
-            byte[] ecdhKey = generateEcdhKey(myPrivateKey, publicKeyFromByteArray(theirPublicKey));
+            byte[] ecdhKey = generateEcdhSecret(myPrivateKey, publicKeyFromByteArray(theirPublicKey));
             // get the secret key
             SecretKey secretKey = generateSecretKey(ecdhKey);
 
