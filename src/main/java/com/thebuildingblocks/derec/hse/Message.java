@@ -8,15 +8,22 @@ import java.security.PublicKey;
 import java.text.Normalizer;
 import java.util.Arrays;
 
-import static com.thebuildingblocks.derec.hse.Encryption.*;
+import static com.thebuildingblocks.derec.hse.Crypto.*;
 
+/**
+ * Contains serializers and deserializers for protocol messages
+ */
 public class Message {
-
 
     static short PROTOCOL_VERSION = 1;
     static short PAIRING_REQUEST_ID = 0;
     static short PAIRING_RESPONSE_ID = 1;
 
+    /**
+     * Checks the message is at the right protocol version and is of the right kind
+     * @param bb a byte buffer from which to take fields
+     * @param messageIdRequired the message type expected
+     */
     static void check(ByteBuffer bb, short messageIdRequired) {
         short protocolVersion = bb.getShort();
         short messageId = bb.getShort();
@@ -25,6 +32,11 @@ public class Message {
         }
     }
 
+    /**
+     * Sent from User to Helper to initiate relationship
+     * <p>
+     * TODO add parameter negotiation
+     */
     public static class PairingRequest extends Message {
         public final String originatorName;
         final PublicKey originatorPublicKey;
@@ -64,6 +76,9 @@ public class Message {
         }
     }
 
+    /**
+     * Send from Helper to User to acknowledge relationship (or TODO reject it)
+     */
     public static class PairingResponse extends Message {
         // not transmitted
         final transient String destinationName;
@@ -86,10 +101,10 @@ public class Message {
             int pkl = bb.getInt();
             byte[] theirPublicKey = new byte[pkl];
             bb.get(theirPublicKey);
-            // make the ecdh secret
-            byte[] ecdhKey = generateEcdhSecret(myPrivateKey, publicKeyFromByteArray(theirPublicKey));
+            // make the secret
+            byte[] secret = generateSharedSecret(myPrivateKey, publicKeyFromByteArray(theirPublicKey));
             // get the secret key
-            SecretKey secretKey = generateSecretKey(ecdhKey);
+            SecretKey secretKey = generateSecretKey(secret);
 
             // get the iv
             byte[] iv = new byte[IV_LENGTH_BYTE];

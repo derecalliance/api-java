@@ -2,18 +2,21 @@ package com.thebuildingblocks.derec;
 
 import com.thebuildingblocks.derec.hse.Message.PairingRequest;
 import com.thebuildingblocks.derec.hse.Message.PairingResponse;
-import com.thebuildingblocks.derec.hse.Participant.Helper;
-import com.thebuildingblocks.derec.hse.Participant.User;
+import com.thebuildingblocks.derec.hse.Counterparty.Helper;
+import com.thebuildingblocks.derec.hse.Counterparty.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.thebuildingblocks.derec.hse.Crypto.keyPairGenerator;
 
 public class AESGCM {
     static Logger logger = LoggerFactory.getLogger(AESGCM.class);
     public static void main(String[] args) {
+        logger.info("Key pair algorithm {}", keyPairGenerator.getAlgorithm());
         // alice creates a pairing request
         User alice = new User("alice");
         PairingRequest pairingRequest = alice.createPairingRequest("bob");
-        byte [] pairingRequestMessage = alice.serialise(pairingRequest);
+        byte [] pairingRequestMessage = alice.serialize(pairingRequest);
 
         // bob receives pairing request and creates pairing response
         Helper bob = new Helper("bob");
@@ -26,7 +29,7 @@ public class AESGCM {
         PairingResponse incomingPairingResponse = PairingResponse.deserialize(pairingResponseMessage,
                 // alice has to know it is from "bob" otherwise she can't decrypt (the encrypted part
                 // contains the fact that is from bob)
-                alice.keyPairMap.get("bob").getPrivate());
+                alice.cpDetails.get("bob").getPrivate());
         logger.info("Alice: Incoming pairing response from {}", incomingPairingResponse.originatorName);
     }
 }
