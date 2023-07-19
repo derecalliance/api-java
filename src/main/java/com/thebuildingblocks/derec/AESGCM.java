@@ -29,6 +29,4 @@ public class AESGCM {
                 alice.keyPairMap.get("bob").getPrivate());
         logger.info("Alice: Incoming pairing response from {}", incomingPairingResponse.originatorName);
     }
-
-
 }

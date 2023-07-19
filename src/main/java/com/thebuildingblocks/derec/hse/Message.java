@@ -17,6 +17,14 @@ public class Message {
     static short PAIRING_REQUEST_ID = 0;
     static short PAIRING_RESPONSE_ID = 1;
 
+    static void check(ByteBuffer bb, short messageIdRequired) {
+        short protocolVersion = bb.getShort();
+        short messageId = bb.getShort();
+        if (protocolVersion != 1 || messageId != messageIdRequired) {
+            throw new AssertionError("Wrong protocol version or message type");
+        }
+    }
+
     public static class PairingRequest extends Message {
         public final String originatorName;
         final PublicKey originatorPublicKey;
@@ -28,10 +36,7 @@ public class Message {
 
         public static PairingRequest deserialize(byte[] message) {
             ByteBuffer bb = ByteBuffer.wrap(message);
-            short protocolVersion = bb.getShort();
-            assert (protocolVersion == 1);
-            short messageId = bb.getShort();
-            assert (messageId == PAIRING_REQUEST_ID);
+            check(bb, PAIRING_REQUEST_ID);
 
             short nameLength = bb.getShort();
             byte[] nameBuf = new byte[nameLength];
@@ -75,10 +80,7 @@ public class Message {
 
         public static PairingResponse deserialize(byte[] message, PrivateKey myPrivateKey) {
             ByteBuffer bb = ByteBuffer.wrap(message);
-            short protocolVersion = bb.getShort();
-            assert (protocolVersion == 1);
-            short messageId = bb.getShort();
-            assert (messageId == PAIRING_RESPONSE_ID);
+            check(bb, PAIRING_RESPONSE_ID);
 
             // get their public key
             int pkl = bb.getInt();
