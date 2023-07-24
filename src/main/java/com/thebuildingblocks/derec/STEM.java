@@ -47,7 +47,6 @@ public class STEM {
     public static final int IV_LENGTH = 128 / 8;
 
     static KeyPairGenerator kpg;
-
     static {
         try {
             kpg = KeyPairGenerator.getInstance(KEY_PAIR_ALGORITHM);
@@ -56,10 +55,8 @@ public class STEM {
             throw new RuntimeException(e);
         }
     }
-
     static KeyPair aliceKeyPair = kpg.generateKeyPair();
     static KeyPair bobKeyPair = kpg.generateKeyPair();
-
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
         // create message
@@ -121,11 +118,12 @@ public class STEM {
 
     /**
      * Sign then encrypt a message and its signature and serialize to an OutputStream
-     * @param myPrivateKey the private key of the sender
+     *
+     * @param myPrivateKey   the private key of the sender
      * @param theirPublicKey the public key of the recipient
-     * @param message the plain text message
-     * @param outputStream an output stream to write to
-     * @throws IOException if bad IO things happen
+     * @param message        the plain text message
+     * @param outputStream   an output stream to write to
+     * @throws IOException              if bad IO things happen
      * @throws GeneralSecurityException if bad security things happen
      */
     public static void signThenEncrypt(PrivateKey myPrivateKey, PublicKey theirPublicKey, byte[] message,
@@ -157,15 +155,17 @@ public class STEM {
 
     /**
      * Take some cipher text and return a plain text buffer. Throw an exception if the signature is not correct
-     * @param publicKey the public key of the sender
-     * @param secretKey the secret key they used to encrypt the message
-     * @param ivSpec the IV they sent with the message
+     *
+     * @param publicKey  the public key of the sender
+     * @param secretKey  the secret key they used to encrypt the message
+     * @param ivSpec     the IV they sent with the message
      * @param cipherText the cipher text
      * @return a plain text byte array
      * @throws GeneralSecurityException if nasty security things
-     * @throws IOException if nasty IO things
+     * @throws IOException              if nasty IO things
      */
-    public static byte[] decryptThenVerify(PublicKey publicKey, SecretKey secretKey, IvParameterSpec ivSpec, byte[] cipherText) throws GeneralSecurityException, IOException {
+    public static byte[] decryptThenVerify(PublicKey publicKey, SecretKey secretKey, IvParameterSpec ivSpec,
+                                           byte[] cipherText) throws GeneralSecurityException, IOException {
         // writing plaintext to a stream
         ByteArrayOutputStream payload = new ByteArrayOutputStream();
 
@@ -177,7 +177,7 @@ public class STEM {
         // separate off the data and the signature bytes
         byte[] decryptedSignedBytes = payload.toByteArray();
         int dataLength = decryptedSignedBytes.length - SIGNATURE_LENGTH_BYTES;
-        byte [] data = Arrays.copyOf(decryptedSignedBytes, dataLength);
+        byte[] data = Arrays.copyOf(decryptedSignedBytes, dataLength);
         byte[] signature = Arrays.copyOfRange(decryptedSignedBytes, dataLength, dataLength + SIGNATURE_LENGTH_BYTES);
 
         verifySignature(publicKey, data, signature);
@@ -192,7 +192,7 @@ public class STEM {
         return signatureInstance.sign();
     }
 
-    public static void verifySignature(PublicKey publicKey, byte [] data, byte [] signature) throws GeneralSecurityException{
+    public static void verifySignature(PublicKey publicKey, byte[] data, byte[] signature) throws GeneralSecurityException {
         Signature signatureInstance = Signature.getInstance(SIGNATURE_ALGORITHM);
         signatureInstance.initVerify(publicKey);
         signatureInstance.update(data);
