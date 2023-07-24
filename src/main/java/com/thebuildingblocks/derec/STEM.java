@@ -16,6 +16,20 @@ import java.util.Objects;
  * Sign then Encrypt Prototype.
  * <p>
  * Illustration of proposed method for DeRec protocol
+ * <p>
+ * Alice creates a buffer containing
+ * <ol>
+ *     <li>Her public key (necessary in initial key exchange in some scenarios)</li>
+ *     <li>An encryption key (EK) encrypted using Bob's public key (which she must have got during key exchange)</li>
+ *     <li>An IV </li>
+ *     <li>Encrypted using EK: </li>
+ *     <ol>
+ *         <li>The message data</li>
+ *         <li>A signature for the message data</li>
+ *     </ol>
+ * </ol>
+ * <p>
+ * Bob inverts the process and prints out the message Alice sent.
  */
 public class STEM {
 
@@ -34,8 +48,6 @@ public class STEM {
 
     static KeyPairGenerator kpg;
 
-
-
     static {
         try {
             kpg = KeyPairGenerator.getInstance(KEY_PAIR_ALGORITHM);
@@ -50,7 +62,9 @@ public class STEM {
 
 
     public static void main(String[] args) throws GeneralSecurityException, IOException {
+        // create message
         byte[] protocolMessage = beAlice();
+        // decode message
         String decoded = new String(beBob(protocolMessage), StandardCharsets.UTF_8);
         System.out.println(decoded);
     }
@@ -105,6 +119,15 @@ public class STEM {
     }
 
 
+    /**
+     * Sign then encrypt a message and its signature and serialize to an OutputStream
+     * @param myPrivateKey the private key of the sender
+     * @param theirPublicKey the public key of the recipient
+     * @param message the plain text message
+     * @param outputStream an output stream to write to
+     * @throws IOException if bad IO things happen
+     * @throws GeneralSecurityException if bad security things happen
+     */
     public static void signThenEncrypt(PrivateKey myPrivateKey, PublicKey theirPublicKey, byte[] message,
                                        OutputStream outputStream) throws IOException, GeneralSecurityException {
         // generate secret key with which to encrypt message
@@ -128,10 +151,20 @@ public class STEM {
         Cipher messageCipherInstance = Cipher.getInstance(MESSAGE_CIPHER_ALGORITHM);
         messageCipherInstance.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
         outputStream.write(messageCipherInstance.update(message));
-        outputStream.write(messageCipherInstance.update(getSignature(myPrivateKey, message)));
+        outputStream.write(messageCipherInstance.update(createSignature(myPrivateKey, message)));
         outputStream.write(messageCipherInstance.doFinal());
     }
 
+    /**
+     * Take some cipher text and return a plain text buffer. Throw an exception if the signature is not correct
+     * @param publicKey the public key of the sender
+     * @param secretKey the secret key they used to encrypt the message
+     * @param ivSpec the IV they sent with the message
+     * @param cipherText the cipher text
+     * @return a plain text byte array
+     * @throws GeneralSecurityException if nasty security things
+     * @throws IOException if nasty IO things
+     */
     public static byte[] decryptThenVerify(PublicKey publicKey, SecretKey secretKey, IvParameterSpec ivSpec, byte[] cipherText) throws GeneralSecurityException, IOException {
         // writing plaintext to a stream
         ByteArrayOutputStream payload = new ByteArrayOutputStream();
@@ -152,7 +185,7 @@ public class STEM {
         return data;
     }
 
-    public static byte[] getSignature(PrivateKey privateKey, byte[] message) throws GeneralSecurityException {
+    public static byte[] createSignature(PrivateKey privateKey, byte[] message) throws GeneralSecurityException {
         Signature signatureInstance = Signature.getInstance(SIGNATURE_ALGORITHM);
         signatureInstance.initSign(privateKey);
         signatureInstance.update(message);
