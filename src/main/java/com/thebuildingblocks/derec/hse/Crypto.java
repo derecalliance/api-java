@@ -8,6 +8,9 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
+import java.util.Objects;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import static java.util.Map.entry;
 
@@ -46,6 +49,11 @@ public class Crypto {
 
 
     static {
+        // use BC provider if requested
+        if (!Objects.isNull(System.getProperty("BC")) && Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+
         try {
             keyPairGenerator = KeyPairGenerator.getInstance(KEY_PARAMS.KeyPairGeneratorAlgo);
             keyFactory = java.security.KeyFactory.getInstance(KEY_PARAMS.keyFactoryAlgo);
