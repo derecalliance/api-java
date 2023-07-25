@@ -21,53 +21,51 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Calendar;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 
 /*
 https://stackoverflow.com/questions/43960761/how-to-store-and-reuse-keypair-in-java/43965528#43965528
  */
-public class SelfSignCert {
+public class SelfSignedCertificate {
+
+
+    static Provider bcProvider = new BouncyCastleProvider();
+    static {
+        Security.addProvider(bcProvider);
+    }
+
+    public static final String SIGNATURE_ALGORITHM = "SHA256WithRSA";
+    public static final String KEY_PAIR_ALGORITHM = "RSA";
+    public static final int KEY_SIZE = 2048;
 
     public static KeyPair generateKeyPair() throws Exception {
-        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-        generator.initialize(2048, new SecureRandom());
-        KeyPair pair = generator.generateKeyPair();
-
-        return pair;
+        KeyPairGenerator generator = KeyPairGenerator.getInstance(KEY_PAIR_ALGORITHM);
+        generator.initialize(KEY_SIZE, new SecureRandom());
+        return generator.generateKeyPair();
     }
 
     public static X509Certificate selfSign(KeyPair keyPair, String subjectDN) throws OperatorCreationException,
-            CertificateException, IOException {
-        Provider bcProvider = new BouncyCastleProvider();
-        Security.addProvider(bcProvider);
+            CertificateException {
 
-        long now = System.currentTimeMillis();
-        Date startDate = new Date(now);
+        ZonedDateTime start = ZonedDateTime.now();
+        Date startDate = Date.from(start.toInstant());
+        Date endDate = Date.from(start.plusYears(1).toInstant());
 
         X500Name dnName = new X500Name(subjectDN);
 
         // Using the current timestamp as the certificate serial number
-        BigInteger certSerialNumber = new BigInteger(Long.toString(now));
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startDate);
-        // 1 Yr validity
-        calendar.add(Calendar.YEAR, 1);
-
-        Date endDate = calendar.getTime();
-
-        // Use appropriate signature algorithm based on your keyPair algorithm.
-        String signatureAlgorithm = "SHA256WithRSA";
+        BigInteger certSerialNumber = new BigInteger(Long.toString(startDate.getTime()));
 
         SubjectPublicKeyInfo subjectPublicKeyInfo = SubjectPublicKeyInfo.getInstance(keyPair.getPublic().getEncoded());
 
         X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(dnName, certSerialNumber,
                 startDate, endDate, dnName, subjectPublicKeyInfo);
 
-        ContentSigner contentSigner =
-                new JcaContentSignerBuilder(signatureAlgorithm).setProvider(bcProvider).build(keyPair.getPrivate());
+        ContentSigner contentSigner = new JcaContentSignerBuilder(SIGNATURE_ALGORITHM)
+                .setProvider(bcProvider)
+                .build(keyPair.getPrivate());
 
         X509CertificateHolder certificateHolder = certificateBuilder.build(contentSigner);
 
