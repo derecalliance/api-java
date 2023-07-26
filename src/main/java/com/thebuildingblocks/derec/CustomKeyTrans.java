@@ -1,5 +1,8 @@
 package com.thebuildingblocks.derec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -15,7 +18,7 @@ import java.util.Objects;
 /**
  * Sign then Encrypt Prototype.
  * <p>
- * Illustration of proposed method for DeRec protocol
+ * Illustration of a proposed method for DeRec protocol using "Key Transfer" methodology, and custom encoding
  * <p>
  * Alice creates a buffer containing
  * <ol>
@@ -31,7 +34,7 @@ import java.util.Objects;
  * <p>
  * Bob inverts the process and prints out the message Alice sent.
  */
-public class STEM {
+public class CustomKeyTrans {
 
     public static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
     public static final int SIGNATURE_LENGTH_BYTES = 256;
@@ -46,6 +49,7 @@ public class STEM {
     public static final int SECRET_KEY_SIZE = 128;
     public static final int IV_LENGTH = 128 / 8;
 
+    static Logger logger = LoggerFactory.getLogger(CustomKeyTrans.class.getSimpleName());
     static KeyPairGenerator kpg;
     static {
         try {
@@ -63,12 +67,11 @@ public class STEM {
         byte[] protocolMessage = beAlice();
         // decode message
         String decoded = new String(beBob(protocolMessage), StandardCharsets.UTF_8);
-        System.out.println(decoded);
     }
 
     public static byte[] beAlice() throws IOException, GeneralSecurityException {
         // alice is going to send Bob a poem
-        try (InputStream is = STEM.class.getClassLoader().getResourceAsStream("jabberwocky.txt")) {
+        try (InputStream is = CustomKeyTrans.class.getClassLoader().getResourceAsStream("jabberwocky.txt")) {
             byte[] plainText = Objects.requireNonNull(is).readAllBytes();
 
             try (ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -78,8 +81,12 @@ public class STEM {
                 dataOutputStream.write(aliceKeyPair.getPublic().getEncoded());
                 // adds signed encrypted poem
                 signThenEncrypt(aliceKeyPair.getPrivate(), bobKeyPair.getPublic(), plainText, dataOutputStream);
+
                 // returns as a buffer
-                return os.toByteArray();
+                byte[] byteArray = os.toByteArray();
+                logger.info("Content was {} bytes, encrypted signed content {} bytes",
+                        plainText.length, byteArray.length );
+                return byteArray;
             }
         }
     }
