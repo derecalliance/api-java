@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import static com.thebuildingblocks.derec.hse.Crypto.keyPairGenerator;
 
+/**
+ * Prototype of initial AES-GCM based pairing and encryption proposal for DeRec
+ */
 public class AESGCM {
     static Logger logger = LoggerFactory.getLogger(AESGCM.class);
     public static void main(String[] args) {
