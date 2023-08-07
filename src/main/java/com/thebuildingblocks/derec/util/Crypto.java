@@ -1,7 +1,10 @@
 package com.thebuildingblocks.derec.util;
 
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.KeyUsage;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -31,7 +34,7 @@ public class Crypto {
     }
 
     public static X509Certificate createCertificate(KeyPair keyPair, String subjectDN, String signatureAlgorithm)
-            throws OperatorCreationException, CertificateException {
+            throws OperatorCreationException, CertificateException, CertIOException {
 
         ZonedDateTime start = ZonedDateTime.now();
         Date startDate = Date.from(start.toInstant());
@@ -47,7 +50,8 @@ public class Crypto {
         X509v3CertificateBuilder certificateBuilder = new X509v3CertificateBuilder(dnName, certSerialNumber,
                 startDate, endDate, dnName, subjectPublicKeyInfo);
 
-        // TODO add usages e.g.signature and key agreement
+        certificateBuilder.addExtension(Extension.keyUsage,true, new KeyUsage(KeyUsage.dataEncipherment
+                | KeyUsage.keyEncipherment | KeyUsage.keyAgreement | KeyUsage.digitalSignature));
 
         ContentSigner contentSigner = new JcaContentSignerBuilder(signatureAlgorithm)
                 .setProvider(bcProvider)
