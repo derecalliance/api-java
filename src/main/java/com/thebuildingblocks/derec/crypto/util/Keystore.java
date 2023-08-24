@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.util;
+package com.thebuildingblocks.derec.crypto.util;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -12,8 +12,8 @@ import java.security.cert.CertificateException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-import static com.thebuildingblocks.derec.util.Crypto.createCertificate;
-import static com.thebuildingblocks.derec.util.Crypto.generateKeyPair;
+import static com.thebuildingblocks.derec.crypto.util.Crypto.createCertificate;
+import static com.thebuildingblocks.derec.crypto.util.Crypto.generateKeyPair;
 
 
 /*

@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.hse;
+package com.thebuildingblocks.derec.crypto.aesgcm;
 
 import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;

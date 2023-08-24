@@ -1,13 +1,13 @@
-package com.thebuildingblocks.derec;
+package com.thebuildingblocks.derec.crypto;
 
-import com.thebuildingblocks.derec.hse.Message.PairingRequest;
-import com.thebuildingblocks.derec.hse.Message.PairingResponse;
-import com.thebuildingblocks.derec.hse.Counterparty.Helper;
-import com.thebuildingblocks.derec.hse.Counterparty.User;
+import com.thebuildingblocks.derec.crypto.aesgcm.Message.PairingRequest;
+import com.thebuildingblocks.derec.crypto.aesgcm.Message.PairingResponse;
+import com.thebuildingblocks.derec.crypto.aesgcm.Counterparty.Helper;
+import com.thebuildingblocks.derec.crypto.aesgcm.Counterparty.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.thebuildingblocks.derec.hse.Crypto.keyPairGenerator;
+import static com.thebuildingblocks.derec.crypto.aesgcm.Crypto.keyPairGenerator;
 
 /**
  * Prototype of initial AES-GCM based pairing and encryption proposal for DeRec

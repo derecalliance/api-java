@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec;
+package com.thebuildingblocks.derec.crypto;
 
 import com.codahale.shamir.Scheme;
 

@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.hse;
+package com.thebuildingblocks.derec.crypto.aesgcm;
 
 import javax.crypto.SecretKey;
 import java.security.KeyPair;
@@ -7,8 +7,6 @@ import java.security.PublicKey;
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.thebuildingblocks.derec.hse.Crypto.*;
 
 /**
  * Representing a participant in the DeRec protocol. Can be a User (with secrets to share) or a Helper (which
@@ -32,7 +30,7 @@ public class Counterparty {
         SecretKey secretKey;
 
         public CounterpartyRecord() {
-            this.keyPair = keyPairGenerator.generateKeyPair();
+            this.keyPair = Crypto.keyPairGenerator.generateKeyPair();
         }
 
         public PublicKey getPublic() {
@@ -87,9 +85,9 @@ public class Counterparty {
             // first store a key pair for this requester
             cpDetails.put(pairingRequest.originatorName, new CounterpartyRecord());
             // create the secret
-            byte[] secret = generateSharedSecret(cpDetails.get(pairingRequest.originatorName).getPrivate(),
+            byte[] secret = Crypto.generateSharedSecret(cpDetails.get(pairingRequest.originatorName).getPrivate(),
                     pairingRequest.originatorPublicKey);
-            cpDetails.get(pairingRequest.originatorName).secretKey = generateSecretKey(secret);
+            cpDetails.get(pairingRequest.originatorName).secretKey = Crypto.generateSecretKey(secret);
             return new Message.PairingResponse(getName(), pairingRequest.originatorName);
         }
 

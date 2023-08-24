@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec;
+package com.thebuildingblocks.derec.crypto;
 
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -31,8 +31,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
 
-import static com.thebuildingblocks.derec.util.Crypto.createCertificate;
-import static com.thebuildingblocks.derec.util.Crypto.generateKeyPair;
+import static com.thebuildingblocks.derec.crypto.util.Crypto.createCertificate;
+import static com.thebuildingblocks.derec.crypto.util.Crypto.generateKeyPair;
 
 /**
  * Illustration of a proposed method for DeRec protocol using "Key Transfer" methodology, and RFC5652

@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.hse;
+package com.thebuildingblocks.derec.crypto.aesgcm;
 
 import javax.crypto.SecretKey;
 import java.nio.ByteBuffer;
@@ -8,7 +8,7 @@ import java.security.PublicKey;
 import java.text.Normalizer;
 import java.util.Arrays;
 
-import static com.thebuildingblocks.derec.hse.Crypto.*;
+import static com.thebuildingblocks.derec.crypto.aesgcm.Crypto.*;
 
 /**
  * Contains serializers and deserializers for protocol messages

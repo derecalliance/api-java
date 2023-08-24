@@ -8,7 +8,7 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 
-import static com.thebuildingblocks.derec.hse.Crypto.*;
+import static com.thebuildingblocks.derec.crypto.aesgcm.Crypto.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
