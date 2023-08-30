@@ -16,7 +16,7 @@ public class Sharer {
     KeyPair keyPair; // public/private key pair
     X509Certificate certificate; // certificate to use
     Map<String, Secret> secrets; // a map of secret id to each secret that the sharer wishes to share
-    URI contact; // a way of contacting me
+    URI address; // my transport address
     List<String> availableVersions; // a list of available protocol versions
 
     /**
@@ -48,7 +48,7 @@ public class Sharer {
         Util.DeRecId helperId; // unique Id for helper
         URI tsAndCs;    // link to legal conditions regarding what the helper is to do about
                         // authentication for recovery and substitution of sharer
-        URI uri; // a way of contacting the helper
+        URI address;    // the helper's transport address
         PublicKey publicKey; // public key for the helper (for this secret may be the same for all secrets for this sharer)
         X509Certificate certificate; // The helper's certificate
         String protocolVersion; // accepted protocol version

@@ -1,10 +1,14 @@
 package com.thebuildingblocks.derec.model;
 
-    public class Util{
+import java.net.URI;
+
+public class Util{
     /**
      * Some formal system for identification of parties, does this need to be the same across all implementations
      */
     public static class DeRecId {
+        URI contact; // how to contact me outside of the protocol, an email address, for example
+        // some kind of unique id ...
     }
 
     /**

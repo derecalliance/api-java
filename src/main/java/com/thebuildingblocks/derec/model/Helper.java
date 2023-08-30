@@ -13,7 +13,7 @@ public class Helper {
     Util.DeRecId id; // helper's Id
     KeyPair keyPair; // public/private key pair
     X509Certificate certificate; // certificate to use
-    URI contact; // a way of contacting me
+    URI address; // my transport address
     List<String> availableVersions; // a list of available protocol versions
     Util.RetryParameters retryParameters; // parameters to negotiate for any sharer/secret
     List<Sharer> sharer; // list of paired sharers
@@ -23,7 +23,7 @@ public class Helper {
      */
     public static class Sharer {
         Util.DeRecId sharerId; // sharer unique id
-        URI sharerUri; // how to contact sharer
+        URI sharerAddress; // sharer transport address
         PublicKey publicKey; // sharer's public key
         URI tsAndCs;    // link to legal conditions regarding what the helper is to do about
         // authentication for recovery and substitution of sharer
