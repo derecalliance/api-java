@@ -171,7 +171,7 @@ public class HelperClient implements Closeable {
     }
 
     /**
-     * Initiate pairing with this helper
+     * Remove pairing with this helper
      */
     public void unPair() {
         if (!status.equals(Status.PAIRED)) {
