@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
+import java.net.http.HttpClient;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -19,7 +20,6 @@ public class Secret implements Closeable {
     /* -- basic details of the secret -- */
     public DeRecId sharerId;
     public String secretId; // the ID of the secret
-    public byte[] secret; // content of the secret
     public String description; // human-readable description of the secret
 
     /* -- interoperability for the secret -- */
@@ -27,11 +27,12 @@ public class Secret implements Closeable {
     int thresholdSecretRecovery; // how many helpers needed to recover the secret
     int thresholdForDeletion; // how many confirmations of new secret needed to be confirmed to delete old one
     Util.RetryParameters retryParameters; // Retry parameters needed for this secret
+    HttpClient httpClient = HttpClient.newHttpClient();
 
     /* -- working variables -- */
     /* todo these need to be thread safe */
     int latestShareVersion;
-    Map<Integer, Version> versions = new LinkedHashMap<>(); // map is sorted by insertion order, key is the version number
+    NavigableMap<Integer, Version> versions = Collections.synchronizedNavigableMap(new TreeMap<>());
     List<HelperClient> helpers = new ArrayList<>(5); // helpers with whom this secret is to be / was shared
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -116,21 +117,14 @@ public class Secret implements Closeable {
             throw new IllegalStateException(String.format("Not enough helpers %d", activeHelpers.size()));
         }
         latestShareVersion++;
-        this.versions.put(latestShareVersion, new Version(latestShareVersion, bytesToProtect, activeHelpers.size()));
+        this.versions.put(latestShareVersion, new Version(this, bytesToProtect, latestShareVersion, activeHelpers.size()));
         // add the shares to the list
         int shareNumber = 0;
         for (HelperClient helper: activeHelpers) {
-            helper.send(versions.get(latestShareVersion), shareNumber++);
+            Share share = versions.get(latestShareVersion).shares.get(shareNumber++);
+            helper.send(share);
         }
         return this.versions.get(latestShareVersion).future;
-    }
-
-    /**
-     * Start, or restart, the sharing process.
-     * @return Version being shared
-     */
-    public Version share() {
-        return update(secret);
     }
 
     /**
@@ -166,12 +160,14 @@ public class Secret implements Closeable {
      * Representing a version of a share
      */
     public static class Version {
+        final byte[] bytesToProtect; // copy of the secret when the version  was creates
+        public Secret secret;
         // version numbers to be allocated so that they are always larger than the last shared
         int versionNumber;
-        // the shares created for this version
-        List<Share> shares;
+        int threshold; // share threshold
+        List<Share> shares; // the shares created for this version
         // a future to complete when the sharing is complete successfully or is known to have failed
-        CompletableFuture<Version> future;
+        CompletableFuture<Version> future = new CompletableFuture<>();
         // whether it succeeded or failed
         boolean success;
         // count of update requests sent
@@ -180,13 +176,15 @@ public class Secret implements Closeable {
         int successfulUpdateRepliesReceived;
         int failedUpdateReplyReceived;
 
-        public Version(int latestShareVersion, byte [] bytesToProtect, int numShares) {
+        public Version(Secret secret, byte[] bytesToProtect, int latestShareVersion, int numShares) {
             this.versionNumber = latestShareVersion;
+            this.secret = secret;
+            this.bytesToProtect = bytesToProtect;
             this.shares = createShares(bytesToProtect, numShares);
         }
 
         List<Share> createShares(byte [] bytesToProtect, int numShares) {
-           return IntStream.range(0, numShares).mapToObj(i -> new Share(bytesToProtect)).toList();
+           return IntStream.range(0, numShares).mapToObj(i -> new Share(bytesToProtect, this)).toList();
         }
     }
 
@@ -194,14 +192,16 @@ public class Secret implements Closeable {
      * A share of a secret for a helper
      */
     public static class Share {
+        final Version version;
+        public CompletableFuture<Share> future;
         byte [] shareContent; // contents of the share
-        int shareVersion; // the share version number
-        int threshold; // share threshold
-        DeRecId helper; // the helper who was sent this share
+        Util.RetryStatus retryStatus = new Util.RetryStatus();
+        HelperClient helper; // the helper who was sent this share
         ZonedDateTime confirmed; // when/whether the share was confirmed
         ZonedDateTime verified; // when the share was last verified
 
-        public Share(byte[] shareContent) {
+        public Share(byte[] shareContent, Version version) {
+            this.version = version;
             this.shareContent = shareContent;
         }
     }

@@ -1,40 +1,31 @@
 package com.thebuildingblocks.derec.v1.skeleton;
 
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 /**
  * Sharer's view of a helper for a single secret, there will be multiple entries for the
- * same helper - one for each secret that have shared to that helper
+ * same helper - one for each secret shared to that helper
  */
 public class HelperClient implements Closeable {
-    public enum Status {
-        NONE, // not yet invited
-        INVITED, // no reply yet
-        PAIRED, // replied positively
-        REFUSED, // replied negatively
-        PENDING_REMOVAL, // in the process of being removed
-        REMOVED,
-        GONE // timeout, disconnect etc.
-    }
-
     private final Secret secret; // the secret this helper is a helper for
     DeRecId helperId; // unique Id for helper
     URI tsAndCs;    // link to legal conditions regarding what the helper is to do about
@@ -42,24 +33,15 @@ public class HelperClient implements Closeable {
     PublicKey publicKey; // public key for the helper (for this secret)
     X509Certificate certificate; // The helper's certificate
     String protocolVersion; // accepted protocol version
-
     Status status = Status.NONE; // pairing not yet attempted
-    Util.RetryStatus retryStatus; // some kind of way of figuring out retry and timeout,
-    // todo: retry status actually needs to be part of the Share
 
-    /* -- todo: these need to be thread safe --*/
-    int lastConfirmedShareVersion; // which version has the helper got?
-    Map<Integer, Secret.Share> shares; // a list of the shares sent to this helper - this is basically
+    // a list of the shares sent to this helper - this is basically
     // a filtered view of secret.versions for this helper
-
-    CompletableFuture<HelperClient> pairingFuture; // awaits completion of pairing
-    private final OkHttpClient client = new OkHttpClient(); // one client per helper not actually needed
-
+    NavigableMap<Integer, Secret.Share> shares = Collections.synchronizedNavigableMap(new TreeMap<>());
+    CompletableFuture<HelperClient> pairingFuture; // awaits completion of pairing or unpairing
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     HelperClient(Secret secret, DeRecId helperId) {
-        retryStatus = new Util.RetryStatus();
-        shares = new HashMap<>();
         this.secret = secret;
         this.helperId = helperId;
     }
@@ -68,167 +50,170 @@ public class HelperClient implements Closeable {
      * Initiate pairing with this helper
      */
     public void pair() {
-        if (status.equals(Status.PAIRED) || status.equals(Status.INVITED)) {
-            throw new IllegalStateException("Cannot pair a paired helper");
-        }
-        status = Status.INVITED;
-
-        Request request = null;
-        try {
-            request = new Request.Builder()
-                    .url(helperId.address.toURL())
-                    .post(RequestBody.create(("Pair Request: " + secret.sharerId.name).getBytes(StandardCharsets.UTF_8)))
-                    .build();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            if (!status.equals(Status.NONE) && !status.equals(Status.FAILED)) {
+                throw new IllegalStateException(String.format("Cannot pair a helper with status %s", status));
+            }
+            status = Status.INVITED;
         }
 
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(helperId.address)
+                .POST(BodyPublishers.ofString("Pair Request: " + secret.sharerId.name, StandardCharsets.UTF_8))
+                .build();
 
-        Call call = client.newCall(request);
-        pairingFuture = new CompletableFuture<>();
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                handleFail();
-            }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        status = Status.PAIRED;
-                        pairingFuture.complete(HelperClient.this);
-                        return;
-                    }
-                }
-                handleFail();
-            }
-
-            private void handleFail() {
-                status = Status.REFUSED;
-                pairingFuture.complete(HelperClient.this);
-            }
-        });
+        pairingFuture = secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
+                .thenApply(this::processPairingResponseStatus)
+                .thenApply(HttpResponse::body)
+                .thenApply(this::processPairingResponseBody)
+                .exceptionally(t -> {
+                    this.status = Status.FAILED;
+                    return this;
+                });
     }
 
-    public void send(Secret.Version version, int i) {
-        Secret.Share share = version.shares.get(i);
-        share.helper = this.helperId;
-        shares.put(version.versionNumber, version.shares.get(i));
-        Request request = null;
-        try {
-            request = new Request.Builder()
-                    .url(helperId.address.toURL())
-                    .post(RequestBody.create(share.shareContent))
-                    .build();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+    private HttpResponse<byte[]> processPairingResponseStatus(HttpResponse<byte[]> response) {
+        this.status = response.statusCode() == 200 ? Status.PAIRED : Status.REFUSED;
+        return response;
+    }
+
+    private HelperClient processPairingResponseBody(byte[] bytes) {
+        // todo: process the returned message
+        return this;
+    }
+
+    public void send(Secret.Share share) {
+        synchronized (this) {
+            if (!status.equals(Status.PAIRED)) {
+                throw new IllegalStateException("Helper must be paired to share");
+            }
+            shares.put(share.version.versionNumber, share);
         }
+        // todo: check already allocated
+        share.helper = this;
 
+        /*
+         * In-line functions following serve only to capture the share
+         */
+        Function<HttpResponse<byte[]>, HttpResponse<byte[]>> processSharResponseStatusFn = httpResponse ->
+                processShareResponseStatus(share, httpResponse);
 
-        Call call = client.newCall(request);
-        version.future = new CompletableFuture<>();
-        call.enqueue(new Callback() {
-            final DeRecId helperId = HelperClient.this.helperId;
+        Function<byte[], Secret.Share> processShareResponseBody = bytes -> {
+            // todo: do something with the ShareResponse message
+            return share;
+        };
 
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                handleFail();
+        Function<Throwable, Secret.Share> shareRequestFailedHandler = throwable -> {
+            // todo: do something with exception
+            // todo move code to share
+            synchronized (share.version) {
+                share.version.failedUpdateReplyReceived++;
             }
+            return share;
+        };
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) {
-                try (ResponseBody responseBody = response.body()) {
-                    logger.info("Response from {} - success: {}", helperId.name, response.isSuccessful());
-                    if (response.isSuccessful()) {
-                        version.successfulUpdateRepliesReceived++;
-                        if (version.successfulUpdateRepliesReceived >= secret.thresholdForDeletion) {
-                            // if it hasn't already been set as successful
-                            if (!version.success) {
-                                lastConfirmedShareVersion = version.versionNumber;
-                                shares.get(version.versionNumber).confirmed = ZonedDateTime.now();
-                                version.success = true;
-                                version.future.complete(version);
-                                logger.info("Success from {} helpers", secret.thresholdForDeletion);
-                            }
-                        }
-                        return;
-                    }
-                }
-                handleFail();
-            }
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(helperId.address)
+                .POST(BodyPublishers.ofByteArray(share.shareContent))
+                .build();
 
-            private void handleFail() {
-                version.failedUpdateReplyReceived++;
-                if (version.successfulUpdateRepliesReceived + version.failedUpdateReplyReceived == version.shares.size()) {
-                    if (!version.future.isDone()) {
+        share.future = share.version.secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
+                .thenApply(processSharResponseStatusFn)
+                .thenApply(HttpResponse::body)
+                .thenApply(processShareResponseBody)
+                .exceptionally(shareRequestFailedHandler);
+
+        // todo: move code and synchronize
+        share.version.updateRequestSent++;
+    }
+
+    HttpResponse<byte[]> processShareResponseStatus(Secret.Share share, HttpResponse<byte[]> httpResponse) {
+        Secret.Version version = share.version;
+        //todo move code to share
+        synchronized (version) {
+            if (httpResponse.statusCode() == 200) {
+                version.successfulUpdateRepliesReceived++;
+                logger.info("Version {} Success from {} helpers", version.versionNumber,
+                        version.successfulUpdateRepliesReceived);
+                if (version.successfulUpdateRepliesReceived >= secret.thresholdForDeletion) {
+                    // if it hasn't already been set as successful
+                    if (!version.success) {
+                        share.confirmed = ZonedDateTime.now();
+                        version.success = true;
                         version.future.complete(version);
                     }
                 }
+            } else {
+                version.failedUpdateReplyReceived++;
+                // too many failed??
+                if (version.shares.size() - version.failedUpdateReplyReceived < secret.thresholdForDeletion) {
+                    version.future.complete(version);
+                }
             }
-        });
-        version.updateRequestSent++;
+        }
+        return httpResponse;
     }
 
     /**
      * Remove pairing with this helper
      */
     public void unPair() {
-        if (!status.equals(Status.PAIRED)) {
-            // todo need to cancel an in progress pairing
-            throw new IllegalStateException("Cannot unpair an unpaired helper");
-        }
-        status = Status.PENDING_REMOVAL;
-
-        Request request = null;
-        try {
-            request = new Request.Builder()
-                    .url(helperId.address.toURL())
-                    .post(RequestBody.create(("UnPair Request: " + secret.sharerId.name).getBytes(StandardCharsets.UTF_8)))
-                    .build();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+        synchronized (this) {
+            if (!status.equals(Status.PAIRED)) {
+                // todo need to cancel an in progress pairing
+                throw new IllegalStateException("Cannot unpair an unpaired helper");
+            }
+            status = Status.PENDING_REMOVAL;
         }
 
+        HttpRequest request = HttpRequest
+                .newBuilder()
+                .uri(helperId.address)
+                .POST(BodyPublishers.ofByteArray(("UnPair Request: " + secret.sharerId.name).getBytes(StandardCharsets.UTF_8)))
+                .build();
 
-        Call call = client.newCall(request);
-        pairingFuture = new CompletableFuture<>();
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                handleFail();
-            }
 
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    if (response.isSuccessful()) {
-                        status = Status.REMOVED;
-                        pairingFuture.complete(HelperClient.this);
-                        return;
-                    }
-                }
-                handleFail();
-            }
-
-            private void handleFail() {
-                status = Status.REMOVED;
-                pairingFuture.complete(HelperClient.this);
-            }
-        });
+        pairingFuture = secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
+                .thenApply(this::processUnPairingResponseStatus)
+                .thenApply(HttpResponse::body)
+                .thenApply(this::processUnPairingResponseBody)
+                .exceptionally(t -> {
+                    this.status = Status.FAILED;
+                    return this;
+                });
     }
 
+    private HttpResponse<byte[]> processUnPairingResponseStatus(HttpResponse<byte[]> response) {
+        this.status = response.statusCode() == 200 ? Status.REMOVED : Status.FAILED;
+        return response;
+    }
+
+    private HelperClient processUnPairingResponseBody(byte[] bytes) {
+        // todo: process the returned message
+        return this;
+    }
 
     public void close() {
         if (status.equals(Status.PAIRED)) {
             unPair();
         }
         try {
+            // todo: actual timeout
             pairingFuture.get(1, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             logger.error("Error unpairing from {}", helperId.name, e);
         }
-        client.dispatcher().executorService().shutdownNow();
-        client.connectionPool().evictAll();
+    }
+
+    public enum Status {
+        NONE, // not yet invited
+        INVITED, // no reply yet
+        PAIRED, // replied positively
+        REFUSED, // replied negatively
+        PENDING_REMOVAL, // in the process of being removed
+        REMOVED,
+        FAILED, GONE // timeout, disconnect etc.
     }
 }

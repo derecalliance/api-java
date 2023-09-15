@@ -55,7 +55,6 @@ public class Sharer {
         secret.sharerId = this.id;
         secret.secretId = secretId;
         secret.description = description;
-        secret.secret = bytesToProtect;
         secret.storageRequired = bytesToProtect.length; // assume that secret does not grow in size
         secret.thresholdSecretRecovery = defaultThresholdRecovery;
         secret.thresholdForDeletion = defaultHelpersRequiredForDeletion;
@@ -65,8 +64,8 @@ public class Sharer {
             System.err.println(secret.listHelpers());
             throw new IllegalStateException("Not enough helpers available to share secret");
         }
-        secret.share();
         secrets.put(secretId, secret);
+        secret.update(bytesToProtect);
         return secret;
     }
 
@@ -109,7 +108,9 @@ public class Sharer {
                 .id(new DeRecId("Secret Sammy", "mailto:test@example.org", null))
                 .build();
         Secret secret = me.newSecret("Martin Luther", "I have a dream".getBytes(StandardCharsets.UTF_8), Arrays.asList(DeRecId.DEFAULT_IDS));
-        Secret.Version v = secret.update("I have another dream".getBytes(StandardCharsets.UTF_8));
+        Secret.Version v = secret.versions.lastEntry().getValue();
+        logger.info("Secret version {}, {}", v.versionNumber, v.success);
+        v = secret.update("I have another dream".getBytes(StandardCharsets.UTF_8));
         logger.info("Secret version {}, {}", v.versionNumber, v.success);
         secret.close();
     }
