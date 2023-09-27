@@ -135,7 +135,7 @@ public class HelperClient implements Closeable {
         synchronized (version) {
             if (httpResponse.statusCode() == 200) {
                 version.successfulUpdateRepliesReceived++;
-                logger.info("Version {} Success from {} helpers", version.versionNumber,
+                logger.trace("Version {} Success from {} helpers", version.versionNumber,
                         version.successfulUpdateRepliesReceived);
                 if (version.successfulUpdateRepliesReceived >= secret.thresholdForDeletion) {
                     // if it hasn't already been set as successful

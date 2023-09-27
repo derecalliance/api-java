@@ -1,0 +1,25 @@
+syntax = "proto3";
+import "result.proto";
+/*
+ * ----------------------------------------------------------------------------
+ * Remove pairing. This is a request that the other party ceases to be a
+ * helper / sharer, and removes from use information about the relationship,
+ * within the terms of any service agreement governing the relationship.
+
+ * ----------------------------------------------------------------------------
+ */
+message UnpairHelperRequestMessage {
+  /*
+   * A human-readable reason for why the unpairing happened.
+   */
+  string memo = 1;
+}
+
+/*
+ * ----------------------------------------------------------------------------
+ * Response to the unpairing request.
+ * ----------------------------------------------------------------------------
+ */
+message UnpairHelperResponseMessage {
+  Result result = 1;
+}

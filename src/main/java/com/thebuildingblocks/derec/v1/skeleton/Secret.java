@@ -64,12 +64,12 @@ public class Secret implements Closeable {
                 throw new IllegalStateException("Cannot have the same helper more than once for a secret");
             }
             helpers.add(helper);
-            logger.info("Pairing {}", helper.helperId.name);
+            logger.trace("Pairing {}", helper.helperId.name);
             helper.pair();
             // block for completion if requested
             if (!async) {
                 helper.pairingFuture.get();
-                logger.info("Pair {} {}", helper.helperId.name, helper.status);
+                logger.trace("Pair {} {}", helper.helperId.name, helper.status);
             }
         }
         return addedHelpers;
