@@ -3,7 +3,7 @@ syntax = "proto3";
  * Result for DeRec response messages
  */
 message Result {
-  Result status = 1;
+  Status status = 1;
   string memo = 2;
 }
 
@@ -14,4 +14,5 @@ enum Status {
   OK = 0;
   FAIL = 1;
   PARTIAL = 2;
+  REQUEST_TO_CLOSE = 3;
 }
