@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.v1.skeleton;
+package com.thebuildingblocks.derec.v1.prototype;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;

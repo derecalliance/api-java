@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.v1.skeleton;
+package com.thebuildingblocks.derec.v1.prototype;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
