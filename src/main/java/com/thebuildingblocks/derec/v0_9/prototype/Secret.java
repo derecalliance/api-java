@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.v1.prototype;
+package com.thebuildingblocks.derec.v0_9.prototype;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 /**
  * Implements the idea of Helper Controller, which coordinates helpers in respect of a single secret
  */
-public class Secret implements Closeable {
+public class Secret implements Closeable, com.thebuildingblocks.derec.v0_9.prototype.interfaces.Secret {
     /* -- basic details of the secret -- */
     public DeRecId sharerId;
     public String secretId; // the ID of the secret
@@ -43,6 +43,7 @@ public class Secret implements Closeable {
      * @param helperIds the ids of the helpers to add
      * @return a list of {@link HelperClient} created and added
      */
+    @Override
     public List<HelperClient> addHelpers(List<DeRecId> helperIds) throws ExecutionException, InterruptedException {
         return addHelpers(helperIds, false);
     }
@@ -54,6 +55,7 @@ public class Secret implements Closeable {
      * @param async true to add the helpers asynchronously
      * @return a list of {@link HelperClient} created and added
      */
+    @Override
     public List<HelperClient> addHelpers(List<DeRecId> helperIds, boolean async) throws ExecutionException, InterruptedException {
         List<HelperClient> addedHelpers = new ArrayList<>();
         for (DeRecId helperId: helperIds) {
@@ -75,6 +77,7 @@ public class Secret implements Closeable {
         return addedHelpers;
     }
 
+    @Override
     public void removeHelpers(HelperClient... helper) {
         // update status of to-be-removed helpers
         // figure out the remaining threshold and re-share to those that remain
@@ -90,7 +93,8 @@ public class Secret implements Closeable {
      * @param bytesToProtect the content of the secret
      * @return the updated secret
      */
-    public Version update(byte []  bytesToProtect) {
+    @Override
+    public Version update(byte[] bytesToProtect) {
         try {
             logger.info("Updating secret");
             return updateAsync(bytesToProtect).get();
@@ -104,7 +108,8 @@ public class Secret implements Closeable {
      * @param bytesToProtect the content of the secret
      * @return a Future for this version
      */
-    public Future<Version> updateAsync(byte []  bytesToProtect) {
+    @Override
+    public Future<Version> updateAsync(byte[] bytesToProtect) {
         Version lastVersion = this.versions.get(latestShareVersion);
         if (!Objects.isNull(lastVersion) && !lastVersion.future.isDone()) {
             logger.info("Cancelling update of version {}", lastVersion.versionNumber);
@@ -130,6 +135,7 @@ public class Secret implements Closeable {
     /**
      * Unpair with all helpers and deactivate
      */
+    @Override
     public void close() {
         for (HelperClient helper: helpers) {
             helper.close();
@@ -140,6 +146,7 @@ public class Secret implements Closeable {
      * is the secret available for sharing - are there active helpers?
      * @return true if secrets can be shared
      */
+    @Override
     public boolean isAvailable() {
         return helpers.stream()
                 .filter(h -> h.status.equals(HelperClient.Status.PAIRED))
@@ -150,6 +157,7 @@ public class Secret implements Closeable {
      * List helpers and theie status
      * @return a printable list
      */
+    @Override
     public String listHelpers() {
         return helpers.stream()
                 .map(h -> h.helperId.name + ": " + h.status.name())
@@ -160,7 +168,8 @@ public class Secret implements Closeable {
      * Representing a version of a share
      */
     public static class Version {
-        final byte[] bytesToProtect; // copy of the secret when the version  was creates
+        final byte[] bytesToProtect; // copy of the secret when the version  was created
+
         public Secret secret;
         // version numbers to be allocated so that they are always larger than the last shared
         int versionNumber;
@@ -176,7 +185,7 @@ public class Secret implements Closeable {
         int successfulUpdateRepliesReceived;
         int failedUpdateReplyReceived;
 
-        public Version(Secret secret, byte[] bytesToProtect, int latestShareVersion, int numShares) {
+        Version(Secret secret, byte[] bytesToProtect, int latestShareVersion, int numShares) {
             this.versionNumber = latestShareVersion;
             this.secret = secret;
             this.bytesToProtect = bytesToProtect;
@@ -185,6 +194,14 @@ public class Secret implements Closeable {
 
         List<Share> createShares(byte [] bytesToProtect, int numShares) {
            return IntStream.range(0, numShares).mapToObj(i -> new Share(bytesToProtect, this)).toList();
+        }
+
+        public int getVersionNumber() {
+            return versionNumber;
+        }
+
+        public boolean getSuccess() {
+            return success;
         }
     }
 

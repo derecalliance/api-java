@@ -1,4 +1,4 @@
-package com.thebuildingblocks.derec.v1.prototype;
+package com.thebuildingblocks.derec.v0_9.prototype;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-public class Sharer {
+public class Sharer implements com.thebuildingblocks.derec.v0_9.prototype.interfaces.Sharer {
     public static final List<String> availableVersions = List.of("0.9");
     public DeRecId id; // sharer's id
     public KeyPair keyPair; // public/private key pair
@@ -35,7 +35,8 @@ public class Sharer {
      * @param bytesToProtect the content of the secret
      * @return a new secret
      */
-    public Secret newSecret(String description, byte [] bytesToProtect, List<DeRecId> helperIds) throws ExecutionException, InterruptedException {
+    @Override
+    public Secret newSecret(String description, byte[] bytesToProtect, List<DeRecId> helperIds) throws ExecutionException, InterruptedException {
         String secretId = UUID.randomUUID().toString();
         return newSecret(secretId, description, bytesToProtect, helperIds);
     }
@@ -46,7 +47,8 @@ public class Sharer {
      * @param bytesToProtect the content of the secret
      * @return a new secret
      */
-    public Secret newSecret(String secretId, String description, byte [] bytesToProtect, List<DeRecId> helperIds) throws ExecutionException, InterruptedException {
+    @Override
+    public Secret newSecret(String secretId, String description, byte[] bytesToProtect, List<DeRecId> helperIds) throws ExecutionException, InterruptedException {
         if (secrets.containsKey(secretId)) {
             throw new IllegalStateException("Secret with that Id already exists");
         }
@@ -69,10 +71,12 @@ public class Sharer {
         return secret;
     }
 
+    @Override
     public Secret getSecret(String secretId) {
         return secrets.get(secretId);
     }
 
+    @Override
     public List<String> getSecrets() {
         return secrets.keySet().stream().toList();
     }
@@ -80,28 +84,33 @@ public class Sharer {
     /**
      * A builder for a sharer
      */
-    public static class Builder {
+    public static class Builder implements com.thebuildingblocks.derec.v0_9.prototype.interfaces.Sharer.Builder {
         private final Sharer sharer = new Sharer();
 
-        public Builder id (DeRecId id) {
+        @Override
+        public Builder id(DeRecId id) {
             sharer.id = id;
             return this;
         }
 
-        public Builder keyPair (KeyPair keyPair) {
+        @Override
+        public Builder keyPair(KeyPair keyPair) {
             sharer.keyPair = keyPair;
             return this;
         }
 
-        public Builder x509Certificate (X509Certificate x509Certificate) {
+        @Override
+        public Builder x509Certificate(X509Certificate x509Certificate) {
             sharer.certificate = x509Certificate;
             return this;
         }
 
-        public Sharer build () {
+        @Override
+        public com.thebuildingblocks.derec.v0_9.prototype.Sharer build() {
             return sharer;
         }
     }
+
 
     public static void main(String [] args) throws ExecutionException, InterruptedException {
         Sharer me = new Sharer.Builder()
