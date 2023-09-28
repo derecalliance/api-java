@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "result.proto";
+import "google/protobuf/timestamp.proto";
 
 package derec.message;
 
@@ -19,22 +20,20 @@ package derec.message;
  * keepList, except this new received share should be added to the list.
  */
 message StoreShareRequestMessage {
-  /**
+  /*
    * The committed share to be stored by the helper,
    * and returned during recovery.
    */
   CommittedDeRecShare committedDeRecShare = 1;
 
-  /**
+  /*
   * All versions that the helper must retain (including this new one).
   * The helper should delete all other versions outside this list.
   */
   repeated int64 keepList = 3;
 }
 
-
-
-/**
+/*
  * A DeRec share that is committed and ready to be given to a helper to store.
  * During recovery, this protobuf message is returned.
  * The committment involves a Merkle tree.  The hash of the share given to
@@ -44,7 +43,7 @@ message StoreShareRequestMessage {
  * The root hash is called a "commitment".
  */
 message CommittedDeRecShare {
-  /**
+  /*
    * Protobuf serialization of DeRecShare.
    * The Helper will parse this to see the version number of the share
    * and the secret ID.
@@ -54,18 +53,18 @@ message CommittedDeRecShare {
   /** The Merkle root */
   bytes commitment = 2;
 
-  /** one leaf or interior node. isLeft is true if it's a left child */
+  /* one leaf or interior node. isLeft is true if it's a left child */
   message SiblingHash {
     bool isLeft = 1;
     bytes hash = 2;
   }
 
-  /** The bottom-up Merkle path */
+  /* The bottom-up Merkle path */
   repeated SiblingHash merklePath = 3;
 }
 
 
-/**
+/*
  * The information to share with a helper.
  * The sharer first generates a random AES-256 key k, and uses that
  * to AES-GCM encrypt the secret. A random polynomial f is generated
@@ -79,29 +78,29 @@ message CommittedDeRecShare {
  * together.
  */
 message DeRecShare {
-  /**
+  /*
    * The result of taking the secret to be shared, serializing it,
    * then encrypting it with a random AES-256 key.
    */
   bytes encryptedSecret = 1;
 
-  /**
+  /*
    * This is a random 256-bit integer, 2's complement, big endian.
    */
   bytes x = 2;
 
-  /**
+  /*
    * This is f(x)
    */
   bytes y = 3;
 
-  /**
+  /*
    * sharer-assigned identifier for the secret;
    * this is an opaque 64-bit value
    */
   int64 secretId = 4;
 
-  /**
+  /*
    * version number for the share;
    * note that helper is entitled to ignore any
    * StoreShareRequestMessage with a version less
@@ -110,41 +109,38 @@ message DeRecShare {
   int64 version = 5;
 }
 
-
-import "google/protobuf/timestamp.proto";
-
-/**
+/*
  * This is the sharer's data to be encrypted and stored with the helpers.
  * It includes both secret data and various pieces of secret metadata.
  */
 message Secret {
-  /**
+  /*
    * Any data that the sharer wants to keep secret, such as keys and
    * passwords, and documents. This is the serialized secret data and
    * secret metadata.
    */
   bytes secretData = 1;
 
-  /** The private encryption key used by the sharer.*/
+  /* The private encryption key used by the sharer.*/
   bytes privateEncryptionKey = 2;
 
-  /** The private signature key used by the sharer. */
+  /* The private signature key used by the sharer. */
   bytes privateSignatureKey = 3;
 
-  /** The time and date when the sharer created the shares of this secret. */
+  /* The time and date when the sharer created the shares of this secret. */
   google.protobuf.Timestamp creationTime = 4;
 
-  /** TODO: list of helpers */
+  /* TODO: list of helpers */
   repeated string helpers = 5;
 
-  /** Threshold for # of helpers for recovery */
+  /* Threshold for # of helpers for recovery */
   int64 helperThresholdForRecovery = 6;
 
-  /** Threshold for # of helpers confirming receipt of a share,
+  /* Threshold for # of helpers confirming receipt of a share,
    * to delete the old one
    */
   int64 helperThresholdForConfirmingShareReceipt = 7;
-  /** TODO:
+  /* TODO:
 List of helpers, each with their info (as shown in “per helper”, below, not including status and the share itself),
 optionally: move outside the secret
 including the protocol number
@@ -159,7 +155,7 @@ The chosen, agreed values for each parameter in the Parameters section, above
 
 message StoreShareResponseMessage {
   Result result = 1;
-  /**
+  /*
    * version number from the share message
    */
   int64 version = 2;

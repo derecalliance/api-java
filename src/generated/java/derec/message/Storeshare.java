@@ -20,7 +20,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * The committed share to be stored by the helper,
      * and returned during recovery.
      * </pre>
@@ -31,7 +31,7 @@ public final class Storeshare {
     boolean hasCommittedDeRecShare();
     /**
      * <pre>
-     **
+     *
      * The committed share to be stored by the helper,
      * and returned during recovery.
      * </pre>
@@ -42,7 +42,7 @@ public final class Storeshare {
     derec.message.Storeshare.CommittedDeRecShare getCommittedDeRecShare();
     /**
      * <pre>
-     **
+     *
      * The committed share to be stored by the helper,
      * and returned during recovery.
      * </pre>
@@ -53,7 +53,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * All versions that the helper must retain (including this new one).
      * The helper should delete all other versions outside this list.
      * </pre>
@@ -64,7 +64,7 @@ public final class Storeshare {
     java.util.List<java.lang.Long> getKeepListList();
     /**
      * <pre>
-     **
+     *
      * All versions that the helper must retain (including this new one).
      * The helper should delete all other versions outside this list.
      * </pre>
@@ -75,7 +75,7 @@ public final class Storeshare {
     int getKeepListCount();
     /**
      * <pre>
-     **
+     *
      * All versions that the helper must retain (including this new one).
      * The helper should delete all other versions outside this list.
      * </pre>
@@ -144,7 +144,7 @@ public final class Storeshare {
     private derec.message.Storeshare.CommittedDeRecShare committedDeRecShare_;
     /**
      * <pre>
-     **
+     *
      * The committed share to be stored by the helper,
      * and returned during recovery.
      * </pre>
@@ -158,7 +158,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     **
+     *
      * The committed share to be stored by the helper,
      * and returned during recovery.
      * </pre>
@@ -172,7 +172,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     **
+     *
      * The committed share to be stored by the helper,
      * and returned during recovery.
      * </pre>
@@ -190,7 +190,7 @@ public final class Storeshare {
         emptyLongList();
     /**
      * <pre>
-     **
+     *
      * All versions that the helper must retain (including this new one).
      * The helper should delete all other versions outside this list.
      * </pre>
@@ -205,7 +205,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     **
+     *
      * All versions that the helper must retain (including this new one).
      * The helper should delete all other versions outside this list.
      * </pre>
@@ -218,7 +218,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     **
+     *
      * All versions that the helper must retain (including this new one).
      * The helper should delete all other versions outside this list.
      * </pre>
@@ -661,7 +661,7 @@ public final class Storeshare {
           derec.message.Storeshare.CommittedDeRecShare, derec.message.Storeshare.CommittedDeRecShare.Builder, derec.message.Storeshare.CommittedDeRecShareOrBuilder> committedDeRecShareBuilder_;
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -674,7 +674,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -691,7 +691,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -713,7 +713,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -733,7 +733,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -760,7 +760,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -779,7 +779,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -793,7 +793,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -810,7 +810,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The committed share to be stored by the helper,
        * and returned during recovery.
        * </pre>
@@ -840,7 +840,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * All versions that the helper must retain (including this new one).
        * The helper should delete all other versions outside this list.
        * </pre>
@@ -855,7 +855,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * All versions that the helper must retain (including this new one).
        * The helper should delete all other versions outside this list.
        * </pre>
@@ -868,7 +868,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * All versions that the helper must retain (including this new one).
        * The helper should delete all other versions outside this list.
        * </pre>
@@ -882,7 +882,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * All versions that the helper must retain (including this new one).
        * The helper should delete all other versions outside this list.
        * </pre>
@@ -903,7 +903,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * All versions that the helper must retain (including this new one).
        * The helper should delete all other versions outside this list.
        * </pre>
@@ -922,7 +922,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * All versions that the helper must retain (including this new one).
        * The helper should delete all other versions outside this list.
        * </pre>
@@ -942,7 +942,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * All versions that the helper must retain (including this new one).
        * The helper should delete all other versions outside this list.
        * </pre>
@@ -1026,7 +1026,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * Protobuf serialization of DeRecShare.
      * The Helper will parse this to see the version number of the share
      * and the secret ID.
@@ -1049,7 +1049,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1058,7 +1058,7 @@ public final class Storeshare {
         getMerklePathList();
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1066,7 +1066,7 @@ public final class Storeshare {
     derec.message.Storeshare.CommittedDeRecShare.SiblingHash getMerklePath(int index);
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1074,7 +1074,7 @@ public final class Storeshare {
     int getMerklePathCount();
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1083,7 +1083,7 @@ public final class Storeshare {
         getMerklePathOrBuilderList();
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1093,7 +1093,7 @@ public final class Storeshare {
   }
   /**
    * <pre>
-   **
+   *
    * A DeRec share that is committed and ready to be given to a helper to store.
    * During recovery, this protobuf message is returned.
    * The committment involves a Merkle tree.  The hash of the share given to
@@ -1158,7 +1158,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** one leaf or interior node. isLeft is true if it's a left child 
+     * one leaf or interior node. isLeft is true if it's a left child 
      * </pre>
      *
      * Protobuf type {@code derec.message.CommittedDeRecShare.SiblingHash}
@@ -1389,7 +1389,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** one leaf or interior node. isLeft is true if it's a left child 
+       * one leaf or interior node. isLeft is true if it's a left child 
        * </pre>
        *
        * Protobuf type {@code derec.message.CommittedDeRecShare.SiblingHash}
@@ -1702,7 +1702,7 @@ public final class Storeshare {
     private com.google.protobuf.ByteString deRecShare_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * Protobuf serialization of DeRecShare.
      * The Helper will parse this to see the version number of the share
      * and the secret ID.
@@ -1736,7 +1736,7 @@ public final class Storeshare {
     private java.util.List<derec.message.Storeshare.CommittedDeRecShare.SiblingHash> merklePath_;
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1747,7 +1747,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1759,7 +1759,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1770,7 +1770,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1781,7 +1781,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** The bottom-up Merkle path 
+     * The bottom-up Merkle path 
      * </pre>
      *
      * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -1975,7 +1975,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     **
+     *
      * A DeRec share that is committed and ready to be given to a helper to store.
      * During recovery, this protobuf message is returned.
      * The committment involves a Merkle tree.  The hash of the share given to
@@ -2226,7 +2226,7 @@ public final class Storeshare {
       private com.google.protobuf.ByteString deRecShare_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * Protobuf serialization of DeRecShare.
        * The Helper will parse this to see the version number of the share
        * and the secret ID.
@@ -2241,7 +2241,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * Protobuf serialization of DeRecShare.
        * The Helper will parse this to see the version number of the share
        * and the secret ID.
@@ -2260,7 +2260,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * Protobuf serialization of DeRecShare.
        * The Helper will parse this to see the version number of the share
        * and the secret ID.
@@ -2334,7 +2334,7 @@ public final class Storeshare {
 
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2348,7 +2348,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2362,7 +2362,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2376,7 +2376,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2397,7 +2397,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2415,7 +2415,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2435,7 +2435,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2456,7 +2456,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2474,7 +2474,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2492,7 +2492,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2511,7 +2511,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2528,7 +2528,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2545,7 +2545,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2556,7 +2556,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2570,7 +2570,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2585,7 +2585,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2596,7 +2596,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2608,7 +2608,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The bottom-up Merkle path 
+       * The bottom-up Merkle path 
        * </pre>
        *
        * <code>repeated .derec.message.CommittedDeRecShare.SiblingHash merklePath = 3;</code>
@@ -2701,7 +2701,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * The result of taking the secret to be shared, serializing it,
      * then encrypting it with a random AES-256 key.
      * </pre>
@@ -2713,7 +2713,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * This is a random 256-bit integer, 2's complement, big endian.
      * </pre>
      *
@@ -2724,7 +2724,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * This is f(x)
      * </pre>
      *
@@ -2735,7 +2735,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * sharer-assigned identifier for the secret;
      * this is an opaque 64-bit value
      * </pre>
@@ -2747,7 +2747,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * version number for the share;
      * note that helper is entitled to ignore any
      * StoreShareRequestMessage with a version less
@@ -2761,7 +2761,7 @@ public final class Storeshare {
   }
   /**
    * <pre>
-   **
+   *
    * The information to share with a helper.
    * The sharer first generates a random AES-256 key k, and uses that
    * to AES-GCM encrypt the secret. A random polynomial f is generated
@@ -2816,7 +2816,7 @@ public final class Storeshare {
     private com.google.protobuf.ByteString encryptedSecret_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * The result of taking the secret to be shared, serializing it,
      * then encrypting it with a random AES-256 key.
      * </pre>
@@ -2833,7 +2833,7 @@ public final class Storeshare {
     private com.google.protobuf.ByteString x_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * This is a random 256-bit integer, 2's complement, big endian.
      * </pre>
      *
@@ -2849,7 +2849,7 @@ public final class Storeshare {
     private com.google.protobuf.ByteString y_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * This is f(x)
      * </pre>
      *
@@ -2865,7 +2865,7 @@ public final class Storeshare {
     private long secretId_ = 0L;
     /**
      * <pre>
-     **
+     *
      * sharer-assigned identifier for the secret;
      * this is an opaque 64-bit value
      * </pre>
@@ -2882,7 +2882,7 @@ public final class Storeshare {
     private long version_ = 0L;
     /**
      * <pre>
-     **
+     *
      * version number for the share;
      * note that helper is entitled to ignore any
      * StoreShareRequestMessage with a version less
@@ -3102,7 +3102,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     **
+     *
      * The information to share with a helper.
      * The sharer first generates a random AES-256 key k, and uses that
      * to AES-GCM encrypt the secret. A random polynomial f is generated
@@ -3334,7 +3334,7 @@ public final class Storeshare {
       private com.google.protobuf.ByteString encryptedSecret_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * The result of taking the secret to be shared, serializing it,
        * then encrypting it with a random AES-256 key.
        * </pre>
@@ -3348,7 +3348,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The result of taking the secret to be shared, serializing it,
        * then encrypting it with a random AES-256 key.
        * </pre>
@@ -3366,7 +3366,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * The result of taking the secret to be shared, serializing it,
        * then encrypting it with a random AES-256 key.
        * </pre>
@@ -3384,7 +3384,7 @@ public final class Storeshare {
       private com.google.protobuf.ByteString x_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * This is a random 256-bit integer, 2's complement, big endian.
        * </pre>
        *
@@ -3397,7 +3397,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * This is a random 256-bit integer, 2's complement, big endian.
        * </pre>
        *
@@ -3414,7 +3414,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * This is a random 256-bit integer, 2's complement, big endian.
        * </pre>
        *
@@ -3431,7 +3431,7 @@ public final class Storeshare {
       private com.google.protobuf.ByteString y_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * This is f(x)
        * </pre>
        *
@@ -3444,7 +3444,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * This is f(x)
        * </pre>
        *
@@ -3461,7 +3461,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * This is f(x)
        * </pre>
        *
@@ -3478,7 +3478,7 @@ public final class Storeshare {
       private long secretId_ ;
       /**
        * <pre>
-       **
+       *
        * sharer-assigned identifier for the secret;
        * this is an opaque 64-bit value
        * </pre>
@@ -3492,7 +3492,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * sharer-assigned identifier for the secret;
        * this is an opaque 64-bit value
        * </pre>
@@ -3510,7 +3510,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * sharer-assigned identifier for the secret;
        * this is an opaque 64-bit value
        * </pre>
@@ -3528,7 +3528,7 @@ public final class Storeshare {
       private long version_ ;
       /**
        * <pre>
-       **
+       *
        * version number for the share;
        * note that helper is entitled to ignore any
        * StoreShareRequestMessage with a version less
@@ -3544,7 +3544,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * version number for the share;
        * note that helper is entitled to ignore any
        * StoreShareRequestMessage with a version less
@@ -3564,7 +3564,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * version number for the share;
        * note that helper is entitled to ignore any
        * StoreShareRequestMessage with a version less
@@ -3650,7 +3650,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * Any data that the sharer wants to keep secret, such as keys and
      * passwords, and documents. This is the serialized secret data and
      * secret metadata.
@@ -3663,7 +3663,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     ** The private encryption key used by the sharer.
+     * The private encryption key used by the sharer.
      * </pre>
      *
      * <code>bytes privateEncryptionKey = 2;</code>
@@ -3673,7 +3673,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     ** The private signature key used by the sharer. 
+     * The private signature key used by the sharer. 
      * </pre>
      *
      * <code>bytes privateSignatureKey = 3;</code>
@@ -3683,7 +3683,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     ** The time and date when the sharer created the shares of this secret. 
+     * The time and date when the sharer created the shares of this secret. 
      * </pre>
      *
      * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -3692,7 +3692,7 @@ public final class Storeshare {
     boolean hasCreationTime();
     /**
      * <pre>
-     ** The time and date when the sharer created the shares of this secret. 
+     * The time and date when the sharer created the shares of this secret. 
      * </pre>
      *
      * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -3701,7 +3701,7 @@ public final class Storeshare {
     com.google.protobuf.Timestamp getCreationTime();
     /**
      * <pre>
-     ** The time and date when the sharer created the shares of this secret. 
+     * The time and date when the sharer created the shares of this secret. 
      * </pre>
      *
      * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -3710,7 +3710,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3720,7 +3720,7 @@ public final class Storeshare {
         getHelpersList();
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3729,7 +3729,7 @@ public final class Storeshare {
     int getHelpersCount();
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3739,7 +3739,7 @@ public final class Storeshare {
     java.lang.String getHelpers(int index);
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3751,7 +3751,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     ** Threshold for # of helpers for recovery 
+     * Threshold for # of helpers for recovery 
      * </pre>
      *
      * <code>int64 helperThresholdForRecovery = 6;</code>
@@ -3761,7 +3761,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     ** Threshold for # of helpers confirming receipt of a share,
+     * Threshold for # of helpers confirming receipt of a share,
      * to delete the old one
      * </pre>
      *
@@ -3772,7 +3772,7 @@ public final class Storeshare {
   }
   /**
    * <pre>
-   **
+   *
    * This is the sharer's data to be encrypted and stored with the helpers.
    * It includes both secret data and various pieces of secret metadata.
    * </pre>
@@ -3821,7 +3821,7 @@ public final class Storeshare {
     private com.google.protobuf.ByteString secretData_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * Any data that the sharer wants to keep secret, such as keys and
      * passwords, and documents. This is the serialized secret data and
      * secret metadata.
@@ -3839,7 +3839,7 @@ public final class Storeshare {
     private com.google.protobuf.ByteString privateEncryptionKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     ** The private encryption key used by the sharer.
+     * The private encryption key used by the sharer.
      * </pre>
      *
      * <code>bytes privateEncryptionKey = 2;</code>
@@ -3854,7 +3854,7 @@ public final class Storeshare {
     private com.google.protobuf.ByteString privateSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     ** The private signature key used by the sharer. 
+     * The private signature key used by the sharer. 
      * </pre>
      *
      * <code>bytes privateSignatureKey = 3;</code>
@@ -3869,7 +3869,7 @@ public final class Storeshare {
     private com.google.protobuf.Timestamp creationTime_;
     /**
      * <pre>
-     ** The time and date when the sharer created the shares of this secret. 
+     * The time and date when the sharer created the shares of this secret. 
      * </pre>
      *
      * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -3881,7 +3881,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** The time and date when the sharer created the shares of this secret. 
+     * The time and date when the sharer created the shares of this secret. 
      * </pre>
      *
      * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -3893,7 +3893,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** The time and date when the sharer created the shares of this secret. 
+     * The time and date when the sharer created the shares of this secret. 
      * </pre>
      *
      * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -3909,7 +3909,7 @@ public final class Storeshare {
         com.google.protobuf.LazyStringArrayList.emptyList();
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3921,7 +3921,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3932,7 +3932,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3944,7 +3944,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     ** TODO: list of helpers 
+     * TODO: list of helpers 
      * </pre>
      *
      * <code>repeated string helpers = 5;</code>
@@ -3960,7 +3960,7 @@ public final class Storeshare {
     private long helperThresholdForRecovery_ = 0L;
     /**
      * <pre>
-     ** Threshold for # of helpers for recovery 
+     * Threshold for # of helpers for recovery 
      * </pre>
      *
      * <code>int64 helperThresholdForRecovery = 6;</code>
@@ -3975,7 +3975,7 @@ public final class Storeshare {
     private long helperThresholdForConfirmingShareReceipt_ = 0L;
     /**
      * <pre>
-     ** Threshold for # of helpers confirming receipt of a share,
+     * Threshold for # of helpers confirming receipt of a share,
      * to delete the old one
      * </pre>
      *
@@ -4225,7 +4225,7 @@ public final class Storeshare {
     }
     /**
      * <pre>
-     **
+     *
      * This is the sharer's data to be encrypted and stored with the helpers.
      * It includes both secret data and various pieces of secret metadata.
      * </pre>
@@ -4499,7 +4499,7 @@ public final class Storeshare {
       private com.google.protobuf.ByteString secretData_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * Any data that the sharer wants to keep secret, such as keys and
        * passwords, and documents. This is the serialized secret data and
        * secret metadata.
@@ -4514,7 +4514,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * Any data that the sharer wants to keep secret, such as keys and
        * passwords, and documents. This is the serialized secret data and
        * secret metadata.
@@ -4533,7 +4533,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * Any data that the sharer wants to keep secret, such as keys and
        * passwords, and documents. This is the serialized secret data and
        * secret metadata.
@@ -4552,7 +4552,7 @@ public final class Storeshare {
       private com.google.protobuf.ByteString privateEncryptionKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       ** The private encryption key used by the sharer.
+       * The private encryption key used by the sharer.
        * </pre>
        *
        * <code>bytes privateEncryptionKey = 2;</code>
@@ -4564,7 +4564,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The private encryption key used by the sharer.
+       * The private encryption key used by the sharer.
        * </pre>
        *
        * <code>bytes privateEncryptionKey = 2;</code>
@@ -4580,7 +4580,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The private encryption key used by the sharer.
+       * The private encryption key used by the sharer.
        * </pre>
        *
        * <code>bytes privateEncryptionKey = 2;</code>
@@ -4596,7 +4596,7 @@ public final class Storeshare {
       private com.google.protobuf.ByteString privateSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       ** The private signature key used by the sharer. 
+       * The private signature key used by the sharer. 
        * </pre>
        *
        * <code>bytes privateSignatureKey = 3;</code>
@@ -4608,7 +4608,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The private signature key used by the sharer. 
+       * The private signature key used by the sharer. 
        * </pre>
        *
        * <code>bytes privateSignatureKey = 3;</code>
@@ -4624,7 +4624,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The private signature key used by the sharer. 
+       * The private signature key used by the sharer. 
        * </pre>
        *
        * <code>bytes privateSignatureKey = 3;</code>
@@ -4642,7 +4642,7 @@ public final class Storeshare {
           com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> creationTimeBuilder_;
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4653,7 +4653,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4668,7 +4668,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4688,7 +4688,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4706,7 +4706,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4731,7 +4731,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4748,7 +4748,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4760,7 +4760,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4775,7 +4775,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** The time and date when the sharer created the shares of this secret. 
+       * The time and date when the sharer created the shares of this secret. 
        * </pre>
        *
        * <code>.google.protobuf.Timestamp creationTime = 4;</code>
@@ -4804,7 +4804,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4817,7 +4817,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4828,7 +4828,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4840,7 +4840,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4853,7 +4853,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4872,7 +4872,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4890,7 +4890,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4908,7 +4908,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4923,7 +4923,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** TODO: list of helpers 
+       * TODO: list of helpers 
        * </pre>
        *
        * <code>repeated string helpers = 5;</code>
@@ -4944,7 +4944,7 @@ public final class Storeshare {
       private long helperThresholdForRecovery_ ;
       /**
        * <pre>
-       ** Threshold for # of helpers for recovery 
+       * Threshold for # of helpers for recovery 
        * </pre>
        *
        * <code>int64 helperThresholdForRecovery = 6;</code>
@@ -4956,7 +4956,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** Threshold for # of helpers for recovery 
+       * Threshold for # of helpers for recovery 
        * </pre>
        *
        * <code>int64 helperThresholdForRecovery = 6;</code>
@@ -4972,7 +4972,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** Threshold for # of helpers for recovery 
+       * Threshold for # of helpers for recovery 
        * </pre>
        *
        * <code>int64 helperThresholdForRecovery = 6;</code>
@@ -4988,7 +4988,7 @@ public final class Storeshare {
       private long helperThresholdForConfirmingShareReceipt_ ;
       /**
        * <pre>
-       ** Threshold for # of helpers confirming receipt of a share,
+       * Threshold for # of helpers confirming receipt of a share,
        * to delete the old one
        * </pre>
        *
@@ -5001,7 +5001,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** Threshold for # of helpers confirming receipt of a share,
+       * Threshold for # of helpers confirming receipt of a share,
        * to delete the old one
        * </pre>
        *
@@ -5018,7 +5018,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       ** Threshold for # of helpers confirming receipt of a share,
+       * Threshold for # of helpers confirming receipt of a share,
        * to delete the old one
        * </pre>
        *
@@ -5116,7 +5116,7 @@ public final class Storeshare {
 
     /**
      * <pre>
-     **
+     *
      * version number from the share message
      * </pre>
      *
@@ -5191,7 +5191,7 @@ public final class Storeshare {
     private long version_ = 0L;
     /**
      * <pre>
-     **
+     *
      * version number from the share message
      * </pre>
      *
@@ -5698,7 +5698,7 @@ public final class Storeshare {
       private long version_ ;
       /**
        * <pre>
-       **
+       *
        * version number from the share message
        * </pre>
        *
@@ -5711,7 +5711,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * version number from the share message
        * </pre>
        *
@@ -5728,7 +5728,7 @@ public final class Storeshare {
       }
       /**
        * <pre>
-       **
+       *
        * version number from the share message
        * </pre>
        *

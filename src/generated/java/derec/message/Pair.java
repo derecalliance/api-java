@@ -14,138 +14,250 @@ public final class Pair {
     registerAllExtensions(
         (com.google.protobuf.ExtensionRegistryLite) registry);
   }
+  /**
+   * <pre>
+   *
+   * Is the sender of this message (i.e., the responder) a
+   * helper, or a sharer that is not in recovery mode, or a sharer that is
+   * in recovery mode?
+   * </pre>
+   *
+   * Protobuf enum {@code derec.message.SenderKind}
+   */
+  public enum SenderKind
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>SHARER_NON_RECOVERY = 0;</code>
+     */
+    SHARER_NON_RECOVERY(0),
+    /**
+     * <code>SHARER_RECOVERY = 1;</code>
+     */
+    SHARER_RECOVERY(1),
+    /**
+     * <code>HELPER = 2;</code>
+     */
+    HELPER(2),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>SHARER_NON_RECOVERY = 0;</code>
+     */
+    public static final int SHARER_NON_RECOVERY_VALUE = 0;
+    /**
+     * <code>SHARER_RECOVERY = 1;</code>
+     */
+    public static final int SHARER_RECOVERY_VALUE = 1;
+    /**
+     * <code>HELPER = 2;</code>
+     */
+    public static final int HELPER_VALUE = 2;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static SenderKind valueOf(int value) {
+      return forNumber(value);
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
+    public static SenderKind forNumber(int value) {
+      switch (value) {
+        case 0: return SHARER_NON_RECOVERY;
+        case 1: return SHARER_RECOVERY;
+        case 2: return HELPER;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<SenderKind>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        SenderKind> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<SenderKind>() {
+            public SenderKind findValueByNumber(int number) {
+              return SenderKind.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalStateException(
+            "Can't get the descriptor of an unrecognized enum value.");
+      }
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return derec.message.Pair.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final SenderKind[] VALUES = values();
+
+    public static SenderKind valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private SenderKind(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:derec.message.SenderKind)
+  }
+
   public interface PairRequestMessageOrBuilder extends
       // @@protoc_insertion_point(interface_extends:derec.message.PairRequestMessage)
       com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
-     **
-     * Is the sharer in recovery mode (or adding a new secret), and so
-     * possibly reconnecting to an old helper?
+     *
+     * The kind of the sender of this message (i.e., the responder)
      * </pre>
      *
-     * <code>bool recoveryMode = 1;</code>
-     * @return The recoveryMode.
+     * <code>.derec.message.SenderKind senderKind = 1;</code>
+     * @return The enum numeric value on the wire for senderKind.
      */
-    boolean getRecoveryMode();
+    int getSenderKindValue();
+    /**
+     * <pre>
+     *
+     * The kind of the sender of this message (i.e., the responder)
+     * </pre>
+     *
+     * <code>.derec.message.SenderKind senderKind = 1;</code>
+     * @return The senderKind.
+     */
+    derec.message.Pair.SenderKind getSenderKind();
 
     /**
      * <pre>
-     **
+     *
      * public key used for signatures of messages from the initiator;
      * </pre>
      *
-     * <code>bytes publicSignatureKey = 2;</code>
+     * <code>bytes publicSignatureKey = 3;</code>
      * @return The publicSignatureKey.
      */
     com.google.protobuf.ByteString getPublicSignatureKey();
 
     /**
      * <pre>
-     **
+     *
      * public key used for encrypting messages to the initiator;
      * </pre>
      *
-     * <code>bytes publicEncryptionKey = 3;</code>
+     * <code>bytes publicEncryptionKey = 4;</code>
      * @return The publicEncryptionKey.
      */
     com.google.protobuf.ByteString getPublicEncryptionKey();
 
     /**
      * <pre>
-     **
+     *
      * sender’s app-readable contact information,
      * such as name, phone number, etc.
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
      * @return Whether the communicationInfo field is set.
      */
     boolean hasCommunicationInfo();
     /**
      * <pre>
-     **
+     *
      * sender’s app-readable contact information,
      * such as name, phone number, etc.
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
      * @return The communicationInfo.
      */
     derec.message.Communicationinfo.CommunicationInfo getCommunicationInfo();
     /**
      * <pre>
-     **
+     *
      * sender’s app-readable contact information,
      * such as name, phone number, etc.
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
      */
     derec.message.Communicationinfo.CommunicationInfoOrBuilder getCommunicationInfoOrBuilder();
 
     /**
      * <pre>
-     **
+     *
      * 32-byte (random) nonce to identify the pairing session
      * </pre>
      *
-     * <code>bytes nonce = 5;</code>
+     * <code>bytes nonce = 6;</code>
      * @return The nonce.
      */
     com.google.protobuf.ByteString getNonce();
 
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter ranges.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
-     * @return Whether the sharerParameterRange field is set.
+     * <code>.derec.message.ParameterRange parameterRange = 7;</code>
+     * @return Whether the parameterRange field is set.
      */
-    boolean hasSharerParameterRange();
+    boolean hasParameterRange();
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter ranges.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
-     * @return The sharerParameterRange.
+     * <code>.derec.message.ParameterRange parameterRange = 7;</code>
+     * @return The parameterRange.
      */
-    derec.message.Parameterrange.ParameterRange getSharerParameterRange();
+    derec.message.Parameterrange.ParameterRange getParameterRange();
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter ranges.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+     * <code>.derec.message.ParameterRange parameterRange = 7;</code>
      */
-    derec.message.Parameterrange.ParameterRangeOrBuilder getSharerParameterRangeOrBuilder();
-
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-     * @return Whether the helperParameterRange field is set.
-     */
-    boolean hasHelperParameterRange();
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-     * @return The helperParameterRange.
-     */
-    derec.message.Parameterrange.ParameterRange getHelperParameterRange();
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-     */
-    derec.message.Parameterrange.ParameterRangeOrBuilder getHelperParameterRangeOrBuilder();
+    derec.message.Parameterrange.ParameterRangeOrBuilder getParameterRangeOrBuilder();
   }
   /**
    * <pre>
@@ -153,11 +265,12 @@ public final class Pair {
    * ----------------------------------------------------------------------------
    * Pairing protocol
    * First message sent from the pairing initiator to the pairing
-   * responder. There would earlier have been a ContactMessage sent
-   * from the responder to the initiator by some other means. For example,
-   * the responder could display a QR code that the initiator scanned.
+   * responder. There would earlier have been communication of the information
+   * in a ContactMessage that was sent from the responder to the initiator by some
+   * other means. For example, the responder could display a QR code that the
+   * initiator scanned.
    * The initiator can be helper or sharer, and
-   * the responder can be helper or sharer.
+   * the responder can be sharer or helper.
    * ----------------------------------------------------------------------------
    * </pre>
    *
@@ -173,6 +286,7 @@ public final class Pair {
       super(builder);
     }
     private PairRequestMessage() {
+      senderKind_ = 0;
       publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
       publicEncryptionKey_ = com.google.protobuf.ByteString.EMPTY;
       nonce_ = com.google.protobuf.ByteString.EMPTY;
@@ -199,32 +313,43 @@ public final class Pair {
     }
 
     private int bitField0_;
-    public static final int RECOVERYMODE_FIELD_NUMBER = 1;
-    private boolean recoveryMode_ = false;
+    public static final int SENDERKIND_FIELD_NUMBER = 1;
+    private int senderKind_ = 0;
     /**
      * <pre>
-     **
-     * Is the sharer in recovery mode (or adding a new secret), and so
-     * possibly reconnecting to an old helper?
+     *
+     * The kind of the sender of this message (i.e., the responder)
      * </pre>
      *
-     * <code>bool recoveryMode = 1;</code>
-     * @return The recoveryMode.
+     * <code>.derec.message.SenderKind senderKind = 1;</code>
+     * @return The enum numeric value on the wire for senderKind.
      */
-    @java.lang.Override
-    public boolean getRecoveryMode() {
-      return recoveryMode_;
+    @java.lang.Override public int getSenderKindValue() {
+      return senderKind_;
+    }
+    /**
+     * <pre>
+     *
+     * The kind of the sender of this message (i.e., the responder)
+     * </pre>
+     *
+     * <code>.derec.message.SenderKind senderKind = 1;</code>
+     * @return The senderKind.
+     */
+    @java.lang.Override public derec.message.Pair.SenderKind getSenderKind() {
+      derec.message.Pair.SenderKind result = derec.message.Pair.SenderKind.forNumber(senderKind_);
+      return result == null ? derec.message.Pair.SenderKind.UNRECOGNIZED : result;
     }
 
-    public static final int PUBLICSIGNATUREKEY_FIELD_NUMBER = 2;
+    public static final int PUBLICSIGNATUREKEY_FIELD_NUMBER = 3;
     private com.google.protobuf.ByteString publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * public key used for signatures of messages from the initiator;
      * </pre>
      *
-     * <code>bytes publicSignatureKey = 2;</code>
+     * <code>bytes publicSignatureKey = 3;</code>
      * @return The publicSignatureKey.
      */
     @java.lang.Override
@@ -232,15 +357,15 @@ public final class Pair {
       return publicSignatureKey_;
     }
 
-    public static final int PUBLICENCRYPTIONKEY_FIELD_NUMBER = 3;
+    public static final int PUBLICENCRYPTIONKEY_FIELD_NUMBER = 4;
     private com.google.protobuf.ByteString publicEncryptionKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * public key used for encrypting messages to the initiator;
      * </pre>
      *
-     * <code>bytes publicEncryptionKey = 3;</code>
+     * <code>bytes publicEncryptionKey = 4;</code>
      * @return The publicEncryptionKey.
      */
     @java.lang.Override
@@ -248,16 +373,16 @@ public final class Pair {
       return publicEncryptionKey_;
     }
 
-    public static final int COMMUNICATIONINFO_FIELD_NUMBER = 4;
+    public static final int COMMUNICATIONINFO_FIELD_NUMBER = 5;
     private derec.message.Communicationinfo.CommunicationInfo communicationInfo_;
     /**
      * <pre>
-     **
+     *
      * sender’s app-readable contact information,
      * such as name, phone number, etc.
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
      * @return Whether the communicationInfo field is set.
      */
     @java.lang.Override
@@ -266,12 +391,12 @@ public final class Pair {
     }
     /**
      * <pre>
-     **
+     *
      * sender’s app-readable contact information,
      * such as name, phone number, etc.
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
      * @return The communicationInfo.
      */
     @java.lang.Override
@@ -280,27 +405,27 @@ public final class Pair {
     }
     /**
      * <pre>
-     **
+     *
      * sender’s app-readable contact information,
      * such as name, phone number, etc.
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
      */
     @java.lang.Override
     public derec.message.Communicationinfo.CommunicationInfoOrBuilder getCommunicationInfoOrBuilder() {
       return communicationInfo_ == null ? derec.message.Communicationinfo.CommunicationInfo.getDefaultInstance() : communicationInfo_;
     }
 
-    public static final int NONCE_FIELD_NUMBER = 5;
+    public static final int NONCE_FIELD_NUMBER = 6;
     private com.google.protobuf.ByteString nonce_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * 32-byte (random) nonce to identify the pairing session
      * </pre>
      *
-     * <code>bytes nonce = 5;</code>
+     * <code>bytes nonce = 6;</code>
      * @return The nonce.
      */
     @java.lang.Override
@@ -308,77 +433,45 @@ public final class Pair {
       return nonce_;
     }
 
-    public static final int SHARERPARAMETERRANGE_FIELD_NUMBER = 6;
-    private derec.message.Parameterrange.ParameterRange sharerParameterRange_;
+    public static final int PARAMETERRANGE_FIELD_NUMBER = 7;
+    private derec.message.Parameterrange.ParameterRange parameterRange_;
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter ranges.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
-     * @return Whether the sharerParameterRange field is set.
+     * <code>.derec.message.ParameterRange parameterRange = 7;</code>
+     * @return Whether the parameterRange field is set.
      */
     @java.lang.Override
-    public boolean hasSharerParameterRange() {
+    public boolean hasParameterRange() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter ranges.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
-     * @return The sharerParameterRange.
+     * <code>.derec.message.ParameterRange parameterRange = 7;</code>
+     * @return The parameterRange.
      */
     @java.lang.Override
-    public derec.message.Parameterrange.ParameterRange getSharerParameterRange() {
-      return sharerParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
+    public derec.message.Parameterrange.ParameterRange getParameterRange() {
+      return parameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
     }
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter ranges.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+     * <code>.derec.message.ParameterRange parameterRange = 7;</code>
      */
     @java.lang.Override
-    public derec.message.Parameterrange.ParameterRangeOrBuilder getSharerParameterRangeOrBuilder() {
-      return sharerParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
-    }
-
-    public static final int HELPERPARAMETERRANGE_FIELD_NUMBER = 7;
-    private derec.message.Parameterrange.ParameterRange helperParameterRange_;
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-     * @return Whether the helperParameterRange field is set.
-     */
-    @java.lang.Override
-    public boolean hasHelperParameterRange() {
-      return ((bitField0_ & 0x00000004) != 0);
-    }
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-     * @return The helperParameterRange.
-     */
-    @java.lang.Override
-    public derec.message.Parameterrange.ParameterRange getHelperParameterRange() {
-      return helperParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
-    }
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-     */
-    @java.lang.Override
-    public derec.message.Parameterrange.ParameterRangeOrBuilder getHelperParameterRangeOrBuilder() {
-      return helperParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
+    public derec.message.Parameterrange.ParameterRangeOrBuilder getParameterRangeOrBuilder() {
+      return parameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -395,26 +488,23 @@ public final class Pair {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (recoveryMode_ != false) {
-        output.writeBool(1, recoveryMode_);
+      if (senderKind_ != derec.message.Pair.SenderKind.SHARER_NON_RECOVERY.getNumber()) {
+        output.writeEnum(1, senderKind_);
       }
       if (!publicSignatureKey_.isEmpty()) {
-        output.writeBytes(2, publicSignatureKey_);
+        output.writeBytes(3, publicSignatureKey_);
       }
       if (!publicEncryptionKey_.isEmpty()) {
-        output.writeBytes(3, publicEncryptionKey_);
+        output.writeBytes(4, publicEncryptionKey_);
       }
       if (((bitField0_ & 0x00000001) != 0)) {
-        output.writeMessage(4, getCommunicationInfo());
+        output.writeMessage(5, getCommunicationInfo());
       }
       if (!nonce_.isEmpty()) {
-        output.writeBytes(5, nonce_);
+        output.writeBytes(6, nonce_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        output.writeMessage(6, getSharerParameterRange());
-      }
-      if (((bitField0_ & 0x00000004) != 0)) {
-        output.writeMessage(7, getHelperParameterRange());
+        output.writeMessage(7, getParameterRange());
       }
       getUnknownFields().writeTo(output);
     }
@@ -425,33 +515,29 @@ public final class Pair {
       if (size != -1) return size;
 
       size = 0;
-      if (recoveryMode_ != false) {
+      if (senderKind_ != derec.message.Pair.SenderKind.SHARER_NON_RECOVERY.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, recoveryMode_);
+          .computeEnumSize(1, senderKind_);
       }
       if (!publicSignatureKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, publicSignatureKey_);
+          .computeBytesSize(3, publicSignatureKey_);
       }
       if (!publicEncryptionKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, publicEncryptionKey_);
+          .computeBytesSize(4, publicEncryptionKey_);
       }
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getCommunicationInfo());
+          .computeMessageSize(5, getCommunicationInfo());
       }
       if (!nonce_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, nonce_);
+          .computeBytesSize(6, nonce_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, getSharerParameterRange());
-      }
-      if (((bitField0_ & 0x00000004) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(7, getHelperParameterRange());
+          .computeMessageSize(7, getParameterRange());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -468,8 +554,7 @@ public final class Pair {
       }
       derec.message.Pair.PairRequestMessage other = (derec.message.Pair.PairRequestMessage) obj;
 
-      if (getRecoveryMode()
-          != other.getRecoveryMode()) return false;
+      if (senderKind_ != other.senderKind_) return false;
       if (!getPublicSignatureKey()
           .equals(other.getPublicSignatureKey())) return false;
       if (!getPublicEncryptionKey()
@@ -481,15 +566,10 @@ public final class Pair {
       }
       if (!getNonce()
           .equals(other.getNonce())) return false;
-      if (hasSharerParameterRange() != other.hasSharerParameterRange()) return false;
-      if (hasSharerParameterRange()) {
-        if (!getSharerParameterRange()
-            .equals(other.getSharerParameterRange())) return false;
-      }
-      if (hasHelperParameterRange() != other.hasHelperParameterRange()) return false;
-      if (hasHelperParameterRange()) {
-        if (!getHelperParameterRange()
-            .equals(other.getHelperParameterRange())) return false;
+      if (hasParameterRange() != other.hasParameterRange()) return false;
+      if (hasParameterRange()) {
+        if (!getParameterRange()
+            .equals(other.getParameterRange())) return false;
       }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
@@ -502,9 +582,8 @@ public final class Pair {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + RECOVERYMODE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getRecoveryMode());
+      hash = (37 * hash) + SENDERKIND_FIELD_NUMBER;
+      hash = (53 * hash) + senderKind_;
       hash = (37 * hash) + PUBLICSIGNATUREKEY_FIELD_NUMBER;
       hash = (53 * hash) + getPublicSignatureKey().hashCode();
       hash = (37 * hash) + PUBLICENCRYPTIONKEY_FIELD_NUMBER;
@@ -515,13 +594,9 @@ public final class Pair {
       }
       hash = (37 * hash) + NONCE_FIELD_NUMBER;
       hash = (53 * hash) + getNonce().hashCode();
-      if (hasSharerParameterRange()) {
-        hash = (37 * hash) + SHARERPARAMETERRANGE_FIELD_NUMBER;
-        hash = (53 * hash) + getSharerParameterRange().hashCode();
-      }
-      if (hasHelperParameterRange()) {
-        hash = (37 * hash) + HELPERPARAMETERRANGE_FIELD_NUMBER;
-        hash = (53 * hash) + getHelperParameterRange().hashCode();
+      if (hasParameterRange()) {
+        hash = (37 * hash) + PARAMETERRANGE_FIELD_NUMBER;
+        hash = (53 * hash) + getParameterRange().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -626,11 +701,12 @@ public final class Pair {
      * ----------------------------------------------------------------------------
      * Pairing protocol
      * First message sent from the pairing initiator to the pairing
-     * responder. There would earlier have been a ContactMessage sent
-     * from the responder to the initiator by some other means. For example,
-     * the responder could display a QR code that the initiator scanned.
+     * responder. There would earlier have been communication of the information
+     * in a ContactMessage that was sent from the responder to the initiator by some
+     * other means. For example, the responder could display a QR code that the
+     * initiator scanned.
      * The initiator can be helper or sharer, and
-     * the responder can be helper or sharer.
+     * the responder can be sharer or helper.
      * ----------------------------------------------------------------------------
      * </pre>
      *
@@ -667,15 +743,14 @@ public final class Pair {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getCommunicationInfoFieldBuilder();
-          getSharerParameterRangeFieldBuilder();
-          getHelperParameterRangeFieldBuilder();
+          getParameterRangeFieldBuilder();
         }
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
-        recoveryMode_ = false;
+        senderKind_ = 0;
         publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
         publicEncryptionKey_ = com.google.protobuf.ByteString.EMPTY;
         communicationInfo_ = null;
@@ -684,15 +759,10 @@ public final class Pair {
           communicationInfoBuilder_ = null;
         }
         nonce_ = com.google.protobuf.ByteString.EMPTY;
-        sharerParameterRange_ = null;
-        if (sharerParameterRangeBuilder_ != null) {
-          sharerParameterRangeBuilder_.dispose();
-          sharerParameterRangeBuilder_ = null;
-        }
-        helperParameterRange_ = null;
-        if (helperParameterRangeBuilder_ != null) {
-          helperParameterRangeBuilder_.dispose();
-          helperParameterRangeBuilder_ = null;
+        parameterRange_ = null;
+        if (parameterRangeBuilder_ != null) {
+          parameterRangeBuilder_.dispose();
+          parameterRangeBuilder_ = null;
         }
         return this;
       }
@@ -728,7 +798,7 @@ public final class Pair {
       private void buildPartial0(derec.message.Pair.PairRequestMessage result) {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
-          result.recoveryMode_ = recoveryMode_;
+          result.senderKind_ = senderKind_;
         }
         if (((from_bitField0_ & 0x00000002) != 0)) {
           result.publicSignatureKey_ = publicSignatureKey_;
@@ -747,16 +817,10 @@ public final class Pair {
           result.nonce_ = nonce_;
         }
         if (((from_bitField0_ & 0x00000020) != 0)) {
-          result.sharerParameterRange_ = sharerParameterRangeBuilder_ == null
-              ? sharerParameterRange_
-              : sharerParameterRangeBuilder_.build();
+          result.parameterRange_ = parameterRangeBuilder_ == null
+              ? parameterRange_
+              : parameterRangeBuilder_.build();
           to_bitField0_ |= 0x00000002;
-        }
-        if (((from_bitField0_ & 0x00000040) != 0)) {
-          result.helperParameterRange_ = helperParameterRangeBuilder_ == null
-              ? helperParameterRange_
-              : helperParameterRangeBuilder_.build();
-          to_bitField0_ |= 0x00000004;
         }
         result.bitField0_ |= to_bitField0_;
       }
@@ -805,8 +869,8 @@ public final class Pair {
 
       public Builder mergeFrom(derec.message.Pair.PairRequestMessage other) {
         if (other == derec.message.Pair.PairRequestMessage.getDefaultInstance()) return this;
-        if (other.getRecoveryMode() != false) {
-          setRecoveryMode(other.getRecoveryMode());
+        if (other.senderKind_ != 0) {
+          setSenderKindValue(other.getSenderKindValue());
         }
         if (other.getPublicSignatureKey() != com.google.protobuf.ByteString.EMPTY) {
           setPublicSignatureKey(other.getPublicSignatureKey());
@@ -820,11 +884,8 @@ public final class Pair {
         if (other.getNonce() != com.google.protobuf.ByteString.EMPTY) {
           setNonce(other.getNonce());
         }
-        if (other.hasSharerParameterRange()) {
-          mergeSharerParameterRange(other.getSharerParameterRange());
-        }
-        if (other.hasHelperParameterRange()) {
-          mergeHelperParameterRange(other.getHelperParameterRange());
+        if (other.hasParameterRange()) {
+          mergeParameterRange(other.getParameterRange());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -853,44 +914,37 @@ public final class Pair {
                 done = true;
                 break;
               case 8: {
-                recoveryMode_ = input.readBool();
+                senderKind_ = input.readEnum();
                 bitField0_ |= 0x00000001;
                 break;
               } // case 8
-              case 18: {
+              case 26: {
                 publicSignatureKey_ = input.readBytes();
                 bitField0_ |= 0x00000002;
                 break;
-              } // case 18
-              case 26: {
+              } // case 26
+              case 34: {
                 publicEncryptionKey_ = input.readBytes();
                 bitField0_ |= 0x00000004;
                 break;
-              } // case 26
-              case 34: {
+              } // case 34
+              case 42: {
                 input.readMessage(
                     getCommunicationInfoFieldBuilder().getBuilder(),
                     extensionRegistry);
                 bitField0_ |= 0x00000008;
                 break;
-              } // case 34
-              case 42: {
-                nonce_ = input.readBytes();
-                bitField0_ |= 0x00000010;
-                break;
               } // case 42
               case 50: {
-                input.readMessage(
-                    getSharerParameterRangeFieldBuilder().getBuilder(),
-                    extensionRegistry);
-                bitField0_ |= 0x00000020;
+                nonce_ = input.readBytes();
+                bitField0_ |= 0x00000010;
                 break;
               } // case 50
               case 58: {
                 input.readMessage(
-                    getHelperParameterRangeFieldBuilder().getBuilder(),
+                    getParameterRangeFieldBuilder().getBuilder(),
                     extensionRegistry);
-                bitField0_ |= 0x00000040;
+                bitField0_ |= 0x00000020;
                 break;
               } // case 58
               default: {
@@ -910,52 +964,80 @@ public final class Pair {
       }
       private int bitField0_;
 
-      private boolean recoveryMode_ ;
+      private int senderKind_ = 0;
       /**
        * <pre>
-       **
-       * Is the sharer in recovery mode (or adding a new secret), and so
-       * possibly reconnecting to an old helper?
+       *
+       * The kind of the sender of this message (i.e., the responder)
        * </pre>
        *
-       * <code>bool recoveryMode = 1;</code>
-       * @return The recoveryMode.
+       * <code>.derec.message.SenderKind senderKind = 1;</code>
+       * @return The enum numeric value on the wire for senderKind.
        */
-      @java.lang.Override
-      public boolean getRecoveryMode() {
-        return recoveryMode_;
+      @java.lang.Override public int getSenderKindValue() {
+        return senderKind_;
       }
       /**
        * <pre>
-       **
-       * Is the sharer in recovery mode (or adding a new secret), and so
-       * possibly reconnecting to an old helper?
+       *
+       * The kind of the sender of this message (i.e., the responder)
        * </pre>
        *
-       * <code>bool recoveryMode = 1;</code>
-       * @param value The recoveryMode to set.
+       * <code>.derec.message.SenderKind senderKind = 1;</code>
+       * @param value The enum numeric value on the wire for senderKind to set.
        * @return This builder for chaining.
        */
-      public Builder setRecoveryMode(boolean value) {
-
-        recoveryMode_ = value;
+      public Builder setSenderKindValue(int value) {
+        senderKind_ = value;
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       **
-       * Is the sharer in recovery mode (or adding a new secret), and so
-       * possibly reconnecting to an old helper?
+       *
+       * The kind of the sender of this message (i.e., the responder)
        * </pre>
        *
-       * <code>bool recoveryMode = 1;</code>
+       * <code>.derec.message.SenderKind senderKind = 1;</code>
+       * @return The senderKind.
+       */
+      @java.lang.Override
+      public derec.message.Pair.SenderKind getSenderKind() {
+        derec.message.Pair.SenderKind result = derec.message.Pair.SenderKind.forNumber(senderKind_);
+        return result == null ? derec.message.Pair.SenderKind.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       *
+       * The kind of the sender of this message (i.e., the responder)
+       * </pre>
+       *
+       * <code>.derec.message.SenderKind senderKind = 1;</code>
+       * @param value The senderKind to set.
        * @return This builder for chaining.
        */
-      public Builder clearRecoveryMode() {
+      public Builder setSenderKind(derec.message.Pair.SenderKind value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        senderKind_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *
+       * The kind of the sender of this message (i.e., the responder)
+       * </pre>
+       *
+       * <code>.derec.message.SenderKind senderKind = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSenderKind() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        recoveryMode_ = false;
+        senderKind_ = 0;
         onChanged();
         return this;
       }
@@ -963,11 +1045,11 @@ public final class Pair {
       private com.google.protobuf.ByteString publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * public key used for signatures of messages from the initiator;
        * </pre>
        *
-       * <code>bytes publicSignatureKey = 2;</code>
+       * <code>bytes publicSignatureKey = 3;</code>
        * @return The publicSignatureKey.
        */
       @java.lang.Override
@@ -976,11 +1058,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * public key used for signatures of messages from the initiator;
        * </pre>
        *
-       * <code>bytes publicSignatureKey = 2;</code>
+       * <code>bytes publicSignatureKey = 3;</code>
        * @param value The publicSignatureKey to set.
        * @return This builder for chaining.
        */
@@ -993,11 +1075,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * public key used for signatures of messages from the initiator;
        * </pre>
        *
-       * <code>bytes publicSignatureKey = 2;</code>
+       * <code>bytes publicSignatureKey = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearPublicSignatureKey() {
@@ -1010,11 +1092,11 @@ public final class Pair {
       private com.google.protobuf.ByteString publicEncryptionKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * public key used for encrypting messages to the initiator;
        * </pre>
        *
-       * <code>bytes publicEncryptionKey = 3;</code>
+       * <code>bytes publicEncryptionKey = 4;</code>
        * @return The publicEncryptionKey.
        */
       @java.lang.Override
@@ -1023,11 +1105,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * public key used for encrypting messages to the initiator;
        * </pre>
        *
-       * <code>bytes publicEncryptionKey = 3;</code>
+       * <code>bytes publicEncryptionKey = 4;</code>
        * @param value The publicEncryptionKey to set.
        * @return This builder for chaining.
        */
@@ -1040,11 +1122,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * public key used for encrypting messages to the initiator;
        * </pre>
        *
-       * <code>bytes publicEncryptionKey = 3;</code>
+       * <code>bytes publicEncryptionKey = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearPublicEncryptionKey() {
@@ -1059,12 +1141,12 @@ public final class Pair {
           derec.message.Communicationinfo.CommunicationInfo, derec.message.Communicationinfo.CommunicationInfo.Builder, derec.message.Communicationinfo.CommunicationInfoOrBuilder> communicationInfoBuilder_;
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        * @return Whether the communicationInfo field is set.
        */
       public boolean hasCommunicationInfo() {
@@ -1072,12 +1154,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        * @return The communicationInfo.
        */
       public derec.message.Communicationinfo.CommunicationInfo getCommunicationInfo() {
@@ -1089,12 +1171,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        */
       public Builder setCommunicationInfo(derec.message.Communicationinfo.CommunicationInfo value) {
         if (communicationInfoBuilder_ == null) {
@@ -1111,12 +1193,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        */
       public Builder setCommunicationInfo(
           derec.message.Communicationinfo.CommunicationInfo.Builder builderForValue) {
@@ -1131,12 +1213,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        */
       public Builder mergeCommunicationInfo(derec.message.Communicationinfo.CommunicationInfo value) {
         if (communicationInfoBuilder_ == null) {
@@ -1158,12 +1240,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        */
       public Builder clearCommunicationInfo() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -1177,12 +1259,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        */
       public derec.message.Communicationinfo.CommunicationInfo.Builder getCommunicationInfoBuilder() {
         bitField0_ |= 0x00000008;
@@ -1191,12 +1273,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        */
       public derec.message.Communicationinfo.CommunicationInfoOrBuilder getCommunicationInfoOrBuilder() {
         if (communicationInfoBuilder_ != null) {
@@ -1208,12 +1290,12 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * sender’s app-readable contact information,
        * such as name, phone number, etc.
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           derec.message.Communicationinfo.CommunicationInfo, derec.message.Communicationinfo.CommunicationInfo.Builder, derec.message.Communicationinfo.CommunicationInfoOrBuilder> 
@@ -1232,11 +1314,11 @@ public final class Pair {
       private com.google.protobuf.ByteString nonce_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * 32-byte (random) nonce to identify the pairing session
        * </pre>
        *
-       * <code>bytes nonce = 5;</code>
+       * <code>bytes nonce = 6;</code>
        * @return The nonce.
        */
       @java.lang.Override
@@ -1245,11 +1327,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * 32-byte (random) nonce to identify the pairing session
        * </pre>
        *
-       * <code>bytes nonce = 5;</code>
+       * <code>bytes nonce = 6;</code>
        * @param value The nonce to set.
        * @return This builder for chaining.
        */
@@ -1262,11 +1344,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * 32-byte (random) nonce to identify the pairing session
        * </pre>
        *
-       * <code>bytes nonce = 5;</code>
+       * <code>bytes nonce = 6;</code>
        * @return This builder for chaining.
        */
       public Builder clearNonce() {
@@ -1276,59 +1358,53 @@ public final class Pair {
         return this;
       }
 
-      private derec.message.Parameterrange.ParameterRange sharerParameterRange_;
+      private derec.message.Parameterrange.ParameterRange parameterRange_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> sharerParameterRangeBuilder_;
+          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> parameterRangeBuilder_;
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
-       * @return Whether the sharerParameterRange field is set.
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
+       * @return Whether the parameterRange field is set.
        */
-      public boolean hasSharerParameterRange() {
+      public boolean hasParameterRange() {
         return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
-       * @return The sharerParameterRange.
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
+       * @return The parameterRange.
        */
-      public derec.message.Parameterrange.ParameterRange getSharerParameterRange() {
-        if (sharerParameterRangeBuilder_ == null) {
-          return sharerParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
+      public derec.message.Parameterrange.ParameterRange getParameterRange() {
+        if (parameterRangeBuilder_ == null) {
+          return parameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
         } else {
-          return sharerParameterRangeBuilder_.getMessage();
+          return parameterRangeBuilder_.getMessage();
         }
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
        */
-      public Builder setSharerParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (sharerParameterRangeBuilder_ == null) {
+      public Builder setParameterRange(derec.message.Parameterrange.ParameterRange value) {
+        if (parameterRangeBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          sharerParameterRange_ = value;
+          parameterRange_ = value;
         } else {
-          sharerParameterRangeBuilder_.setMessage(value);
+          parameterRangeBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000020;
         onChanged();
@@ -1336,20 +1412,18 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
        */
-      public Builder setSharerParameterRange(
+      public Builder setParameterRange(
           derec.message.Parameterrange.ParameterRange.Builder builderForValue) {
-        if (sharerParameterRangeBuilder_ == null) {
-          sharerParameterRange_ = builderForValue.build();
+        if (parameterRangeBuilder_ == null) {
+          parameterRange_ = builderForValue.build();
         } else {
-          sharerParameterRangeBuilder_.setMessage(builderForValue.build());
+          parameterRangeBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000020;
         onChanged();
@@ -1357,27 +1431,25 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
        */
-      public Builder mergeSharerParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (sharerParameterRangeBuilder_ == null) {
+      public Builder mergeParameterRange(derec.message.Parameterrange.ParameterRange value) {
+        if (parameterRangeBuilder_ == null) {
           if (((bitField0_ & 0x00000020) != 0) &&
-            sharerParameterRange_ != null &&
-            sharerParameterRange_ != derec.message.Parameterrange.ParameterRange.getDefaultInstance()) {
-            getSharerParameterRangeBuilder().mergeFrom(value);
+            parameterRange_ != null &&
+            parameterRange_ != derec.message.Parameterrange.ParameterRange.getDefaultInstance()) {
+            getParameterRangeBuilder().mergeFrom(value);
           } else {
-            sharerParameterRange_ = value;
+            parameterRange_ = value;
           }
         } else {
-          sharerParameterRangeBuilder_.mergeFrom(value);
+          parameterRangeBuilder_.mergeFrom(value);
         }
-        if (sharerParameterRange_ != null) {
+        if (parameterRange_ != null) {
           bitField0_ |= 0x00000020;
           onChanged();
         }
@@ -1385,200 +1457,71 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
        */
-      public Builder clearSharerParameterRange() {
+      public Builder clearParameterRange() {
         bitField0_ = (bitField0_ & ~0x00000020);
-        sharerParameterRange_ = null;
-        if (sharerParameterRangeBuilder_ != null) {
-          sharerParameterRangeBuilder_.dispose();
-          sharerParameterRangeBuilder_ = null;
+        parameterRange_ = null;
+        if (parameterRangeBuilder_ != null) {
+          parameterRangeBuilder_.dispose();
+          parameterRangeBuilder_ = null;
         }
         onChanged();
         return this;
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
        */
-      public derec.message.Parameterrange.ParameterRange.Builder getSharerParameterRangeBuilder() {
+      public derec.message.Parameterrange.ParameterRange.Builder getParameterRangeBuilder() {
         bitField0_ |= 0x00000020;
         onChanged();
-        return getSharerParameterRangeFieldBuilder().getBuilder();
+        return getParameterRangeFieldBuilder().getBuilder();
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
        */
-      public derec.message.Parameterrange.ParameterRangeOrBuilder getSharerParameterRangeOrBuilder() {
-        if (sharerParameterRangeBuilder_ != null) {
-          return sharerParameterRangeBuilder_.getMessageOrBuilder();
+      public derec.message.Parameterrange.ParameterRangeOrBuilder getParameterRangeOrBuilder() {
+        if (parameterRangeBuilder_ != null) {
+          return parameterRangeBuilder_.getMessageOrBuilder();
         } else {
-          return sharerParameterRange_ == null ?
-              derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
+          return parameterRange_ == null ?
+              derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
         }
       }
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter ranges.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 6;</code>
+       * <code>.derec.message.ParameterRange parameterRange = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> 
-          getSharerParameterRangeFieldBuilder() {
-        if (sharerParameterRangeBuilder_ == null) {
-          sharerParameterRangeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          getParameterRangeFieldBuilder() {
+        if (parameterRangeBuilder_ == null) {
+          parameterRangeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder>(
-                  getSharerParameterRange(),
+                  getParameterRange(),
                   getParentForChildren(),
                   isClean());
-          sharerParameterRange_ = null;
+          parameterRange_ = null;
         }
-        return sharerParameterRangeBuilder_;
-      }
-
-      private derec.message.Parameterrange.ParameterRange helperParameterRange_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> helperParameterRangeBuilder_;
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       * @return Whether the helperParameterRange field is set.
-       */
-      public boolean hasHelperParameterRange() {
-        return ((bitField0_ & 0x00000040) != 0);
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       * @return The helperParameterRange.
-       */
-      public derec.message.Parameterrange.ParameterRange getHelperParameterRange() {
-        if (helperParameterRangeBuilder_ == null) {
-          return helperParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
-        } else {
-          return helperParameterRangeBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       */
-      public Builder setHelperParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (helperParameterRangeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          helperParameterRange_ = value;
-        } else {
-          helperParameterRangeBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000040;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       */
-      public Builder setHelperParameterRange(
-          derec.message.Parameterrange.ParameterRange.Builder builderForValue) {
-        if (helperParameterRangeBuilder_ == null) {
-          helperParameterRange_ = builderForValue.build();
-        } else {
-          helperParameterRangeBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000040;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       */
-      public Builder mergeHelperParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (helperParameterRangeBuilder_ == null) {
-          if (((bitField0_ & 0x00000040) != 0) &&
-            helperParameterRange_ != null &&
-            helperParameterRange_ != derec.message.Parameterrange.ParameterRange.getDefaultInstance()) {
-            getHelperParameterRangeBuilder().mergeFrom(value);
-          } else {
-            helperParameterRange_ = value;
-          }
-        } else {
-          helperParameterRangeBuilder_.mergeFrom(value);
-        }
-        if (helperParameterRange_ != null) {
-          bitField0_ |= 0x00000040;
-          onChanged();
-        }
-        return this;
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       */
-      public Builder clearHelperParameterRange() {
-        bitField0_ = (bitField0_ & ~0x00000040);
-        helperParameterRange_ = null;
-        if (helperParameterRangeBuilder_ != null) {
-          helperParameterRangeBuilder_.dispose();
-          helperParameterRangeBuilder_ = null;
-        }
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       */
-      public derec.message.Parameterrange.ParameterRange.Builder getHelperParameterRangeBuilder() {
-        bitField0_ |= 0x00000040;
-        onChanged();
-        return getHelperParameterRangeFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       */
-      public derec.message.Parameterrange.ParameterRangeOrBuilder getHelperParameterRangeOrBuilder() {
-        if (helperParameterRangeBuilder_ != null) {
-          return helperParameterRangeBuilder_.getMessageOrBuilder();
-        } else {
-          return helperParameterRange_ == null ?
-              derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
-        }
-      }
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 7;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> 
-          getHelperParameterRangeFieldBuilder() {
-        if (helperParameterRangeBuilder_ == null) {
-          helperParameterRangeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder>(
-                  getHelperParameterRange(),
-                  getParentForChildren(),
-                  isClean());
-          helperParameterRange_ = null;
-        }
-        return helperParameterRangeBuilder_;
+        return parameterRangeBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -1650,122 +1593,138 @@ public final class Pair {
 
     /**
      * <pre>
-     **
-     * Is the responder in recovery mode?
+     ** the success or failure of processing the request 
      * </pre>
      *
-     * <code>bool recoveryMode = 1;</code>
-     * @return The recoveryMode.
+     * <code>.derec.message.Result result = 1;</code>
+     * @return Whether the result field is set.
      */
-    boolean getRecoveryMode();
+    boolean hasResult();
+    /**
+     * <pre>
+     ** the success or failure of processing the request 
+     * </pre>
+     *
+     * <code>.derec.message.Result result = 1;</code>
+     * @return The result.
+     */
+    derec.message.ResultOuterClass.Result getResult();
+    /**
+     * <pre>
+     ** the success or failure of processing the request 
+     * </pre>
+     *
+     * <code>.derec.message.Result result = 1;</code>
+     */
+    derec.message.ResultOuterClass.ResultOrBuilder getResultOrBuilder();
 
     /**
      * <pre>
-     **
+     *
+     * The kind of the sender of this message (i.e., the responder)
+     * </pre>
+     *
+     * <code>.derec.message.SenderKind senderKind = 2;</code>
+     * @return The enum numeric value on the wire for senderKind.
+     */
+    int getSenderKindValue();
+    /**
+     * <pre>
+     *
+     * The kind of the sender of this message (i.e., the responder)
+     * </pre>
+     *
+     * <code>.derec.message.SenderKind senderKind = 2;</code>
+     * @return The senderKind.
+     */
+    derec.message.Pair.SenderKind getSenderKind();
+
+    /**
+     * <pre>
+     *
      * public signature key (byte array supports many schemes) of the responder
      * </pre>
      *
-     * <code>bytes publicSignatureKey = 2;</code>
+     * <code>bytes publicSignatureKey = 3;</code>
      * @return The publicSignatureKey.
      */
     com.google.protobuf.ByteString getPublicSignatureKey();
 
     /**
      * <pre>
-     **
+     *
      * app-readable contact information (e.g. name, phone number, etc.)
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
      * @return Whether the communicationInfo field is set.
      */
     boolean hasCommunicationInfo();
     /**
      * <pre>
-     **
+     *
      * app-readable contact information (e.g. name, phone number, etc.)
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
      * @return The communicationInfo.
      */
     derec.message.Communicationinfo.CommunicationInfo getCommunicationInfo();
     /**
      * <pre>
-     **
+     *
      * app-readable contact information (e.g. name, phone number, etc.)
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
      */
     derec.message.Communicationinfo.CommunicationInfoOrBuilder getCommunicationInfoOrBuilder();
 
     /**
      * <pre>
-     **
+     *
      * 32-byte (random) nonce to identify the pairing session;
      * this is the same value as sent in the pairing request
      * </pre>
      *
-     * <code>bytes nonce = 4;</code>
+     * <code>bytes nonce = 5;</code>
      * @return The nonce.
      */
     com.google.protobuf.ByteString getNonce();
 
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-     * @return Whether the sharerParameterRange field is set.
+     * <code>.derec.message.ParameterRange parameterRange = 6;</code>
+     * @return Whether the parameterRange field is set.
      */
-    boolean hasSharerParameterRange();
+    boolean hasParameterRange();
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-     * @return The sharerParameterRange.
+     * <code>.derec.message.ParameterRange parameterRange = 6;</code>
+     * @return The parameterRange.
      */
-    derec.message.Parameterrange.ParameterRange getSharerParameterRange();
+    derec.message.Parameterrange.ParameterRange getParameterRange();
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
+     * <code>.derec.message.ParameterRange parameterRange = 6;</code>
      */
-    derec.message.Parameterrange.ParameterRangeOrBuilder getSharerParameterRangeOrBuilder();
-
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
-     * @return Whether the helperParameterRange field is set.
-     */
-    boolean hasHelperParameterRange();
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
-     * @return The helperParameterRange.
-     */
-    derec.message.Parameterrange.ParameterRange getHelperParameterRange();
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
-     */
-    derec.message.Parameterrange.ParameterRangeOrBuilder getHelperParameterRangeOrBuilder();
+    derec.message.Parameterrange.ParameterRangeOrBuilder getParameterRangeOrBuilder();
   }
   /**
    * <pre>
-   **
+   *
    * Response, which is identical to the request, except without the
    * public encryption key, because it already happened during contact.
    * </pre>
@@ -1782,6 +1741,7 @@ public final class Pair {
       super(builder);
     }
     private PairResponseMessage() {
+      senderKind_ = 0;
       publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
       nonce_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -1807,31 +1767,81 @@ public final class Pair {
     }
 
     private int bitField0_;
-    public static final int RECOVERYMODE_FIELD_NUMBER = 1;
-    private boolean recoveryMode_ = false;
+    public static final int RESULT_FIELD_NUMBER = 1;
+    private derec.message.ResultOuterClass.Result result_;
     /**
      * <pre>
-     **
-     * Is the responder in recovery mode?
+     ** the success or failure of processing the request 
      * </pre>
      *
-     * <code>bool recoveryMode = 1;</code>
-     * @return The recoveryMode.
+     * <code>.derec.message.Result result = 1;</code>
+     * @return Whether the result field is set.
      */
     @java.lang.Override
-    public boolean getRecoveryMode() {
-      return recoveryMode_;
+    public boolean hasResult() {
+      return ((bitField0_ & 0x00000001) != 0);
+    }
+    /**
+     * <pre>
+     ** the success or failure of processing the request 
+     * </pre>
+     *
+     * <code>.derec.message.Result result = 1;</code>
+     * @return The result.
+     */
+    @java.lang.Override
+    public derec.message.ResultOuterClass.Result getResult() {
+      return result_ == null ? derec.message.ResultOuterClass.Result.getDefaultInstance() : result_;
+    }
+    /**
+     * <pre>
+     ** the success or failure of processing the request 
+     * </pre>
+     *
+     * <code>.derec.message.Result result = 1;</code>
+     */
+    @java.lang.Override
+    public derec.message.ResultOuterClass.ResultOrBuilder getResultOrBuilder() {
+      return result_ == null ? derec.message.ResultOuterClass.Result.getDefaultInstance() : result_;
     }
 
-    public static final int PUBLICSIGNATUREKEY_FIELD_NUMBER = 2;
+    public static final int SENDERKIND_FIELD_NUMBER = 2;
+    private int senderKind_ = 0;
+    /**
+     * <pre>
+     *
+     * The kind of the sender of this message (i.e., the responder)
+     * </pre>
+     *
+     * <code>.derec.message.SenderKind senderKind = 2;</code>
+     * @return The enum numeric value on the wire for senderKind.
+     */
+    @java.lang.Override public int getSenderKindValue() {
+      return senderKind_;
+    }
+    /**
+     * <pre>
+     *
+     * The kind of the sender of this message (i.e., the responder)
+     * </pre>
+     *
+     * <code>.derec.message.SenderKind senderKind = 2;</code>
+     * @return The senderKind.
+     */
+    @java.lang.Override public derec.message.Pair.SenderKind getSenderKind() {
+      derec.message.Pair.SenderKind result = derec.message.Pair.SenderKind.forNumber(senderKind_);
+      return result == null ? derec.message.Pair.SenderKind.UNRECOGNIZED : result;
+    }
+
+    public static final int PUBLICSIGNATUREKEY_FIELD_NUMBER = 3;
     private com.google.protobuf.ByteString publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * public signature key (byte array supports many schemes) of the responder
      * </pre>
      *
-     * <code>bytes publicSignatureKey = 2;</code>
+     * <code>bytes publicSignatureKey = 3;</code>
      * @return The publicSignatureKey.
      */
     @java.lang.Override
@@ -1839,28 +1849,28 @@ public final class Pair {
       return publicSignatureKey_;
     }
 
-    public static final int COMMUNICATIONINFO_FIELD_NUMBER = 3;
+    public static final int COMMUNICATIONINFO_FIELD_NUMBER = 4;
     private derec.message.Communicationinfo.CommunicationInfo communicationInfo_;
     /**
      * <pre>
-     **
+     *
      * app-readable contact information (e.g. name, phone number, etc.)
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
      * @return Whether the communicationInfo field is set.
      */
     @java.lang.Override
     public boolean hasCommunicationInfo() {
-      return ((bitField0_ & 0x00000001) != 0);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <pre>
-     **
+     *
      * app-readable contact information (e.g. name, phone number, etc.)
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
      * @return The communicationInfo.
      */
     @java.lang.Override
@@ -1869,27 +1879,27 @@ public final class Pair {
     }
     /**
      * <pre>
-     **
+     *
      * app-readable contact information (e.g. name, phone number, etc.)
      * </pre>
      *
-     * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+     * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
      */
     @java.lang.Override
     public derec.message.Communicationinfo.CommunicationInfoOrBuilder getCommunicationInfoOrBuilder() {
       return communicationInfo_ == null ? derec.message.Communicationinfo.CommunicationInfo.getDefaultInstance() : communicationInfo_;
     }
 
-    public static final int NONCE_FIELD_NUMBER = 4;
+    public static final int NONCE_FIELD_NUMBER = 5;
     private com.google.protobuf.ByteString nonce_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
-     **
+     *
      * 32-byte (random) nonce to identify the pairing session;
      * this is the same value as sent in the pairing request
      * </pre>
      *
-     * <code>bytes nonce = 4;</code>
+     * <code>bytes nonce = 5;</code>
      * @return The nonce.
      */
     @java.lang.Override
@@ -1897,77 +1907,45 @@ public final class Pair {
       return nonce_;
     }
 
-    public static final int SHARERPARAMETERRANGE_FIELD_NUMBER = 5;
-    private derec.message.Parameterrange.ParameterRange sharerParameterRange_;
+    public static final int PARAMETERRANGE_FIELD_NUMBER = 6;
+    private derec.message.Parameterrange.ParameterRange parameterRange_;
     /**
      * <pre>
-     **
-     * Sharer and Helper parameter.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
+     *
+     * The parameter range for the sender.
      * </pre>
      *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-     * @return Whether the sharerParameterRange field is set.
+     * <code>.derec.message.ParameterRange parameterRange = 6;</code>
+     * @return Whether the parameterRange field is set.
      */
     @java.lang.Override
-    public boolean hasSharerParameterRange() {
-      return ((bitField0_ & 0x00000002) != 0);
-    }
-    /**
-     * <pre>
-     **
-     * Sharer and Helper parameter.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
-     * </pre>
-     *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-     * @return The sharerParameterRange.
-     */
-    @java.lang.Override
-    public derec.message.Parameterrange.ParameterRange getSharerParameterRange() {
-      return sharerParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
-    }
-    /**
-     * <pre>
-     **
-     * Sharer and Helper parameter.
-     * The sharer will set sharerParameterRange to something,
-     * and leave the other empty. The helper will do the opposite.
-     * </pre>
-     *
-     * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-     */
-    @java.lang.Override
-    public derec.message.Parameterrange.ParameterRangeOrBuilder getSharerParameterRangeOrBuilder() {
-      return sharerParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
-    }
-
-    public static final int HELPERPARAMETERRANGE_FIELD_NUMBER = 6;
-    private derec.message.Parameterrange.ParameterRange helperParameterRange_;
-    /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
-     * @return Whether the helperParameterRange field is set.
-     */
-    @java.lang.Override
-    public boolean hasHelperParameterRange() {
+    public boolean hasParameterRange() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
-     * @return The helperParameterRange.
+     * <pre>
+     *
+     * The parameter range for the sender.
+     * </pre>
+     *
+     * <code>.derec.message.ParameterRange parameterRange = 6;</code>
+     * @return The parameterRange.
      */
     @java.lang.Override
-    public derec.message.Parameterrange.ParameterRange getHelperParameterRange() {
-      return helperParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
+    public derec.message.Parameterrange.ParameterRange getParameterRange() {
+      return parameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
     }
     /**
-     * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+     * <pre>
+     *
+     * The parameter range for the sender.
+     * </pre>
+     *
+     * <code>.derec.message.ParameterRange parameterRange = 6;</code>
      */
     @java.lang.Override
-    public derec.message.Parameterrange.ParameterRangeOrBuilder getHelperParameterRangeOrBuilder() {
-      return helperParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
+    public derec.message.Parameterrange.ParameterRangeOrBuilder getParameterRangeOrBuilder() {
+      return parameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1984,23 +1962,23 @@ public final class Pair {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (recoveryMode_ != false) {
-        output.writeBool(1, recoveryMode_);
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeMessage(1, getResult());
+      }
+      if (senderKind_ != derec.message.Pair.SenderKind.SHARER_NON_RECOVERY.getNumber()) {
+        output.writeEnum(2, senderKind_);
       }
       if (!publicSignatureKey_.isEmpty()) {
-        output.writeBytes(2, publicSignatureKey_);
-      }
-      if (((bitField0_ & 0x00000001) != 0)) {
-        output.writeMessage(3, getCommunicationInfo());
-      }
-      if (!nonce_.isEmpty()) {
-        output.writeBytes(4, nonce_);
+        output.writeBytes(3, publicSignatureKey_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
-        output.writeMessage(5, getSharerParameterRange());
+        output.writeMessage(4, getCommunicationInfo());
+      }
+      if (!nonce_.isEmpty()) {
+        output.writeBytes(5, nonce_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
-        output.writeMessage(6, getHelperParameterRange());
+        output.writeMessage(6, getParameterRange());
       }
       getUnknownFields().writeTo(output);
     }
@@ -2011,29 +1989,29 @@ public final class Pair {
       if (size != -1) return size;
 
       size = 0;
-      if (recoveryMode_ != false) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, recoveryMode_);
+          .computeMessageSize(1, getResult());
+      }
+      if (senderKind_ != derec.message.Pair.SenderKind.SHARER_NON_RECOVERY.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, senderKind_);
       }
       if (!publicSignatureKey_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, publicSignatureKey_);
-      }
-      if (((bitField0_ & 0x00000001) != 0)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getCommunicationInfo());
-      }
-      if (!nonce_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, nonce_);
+          .computeBytesSize(3, publicSignatureKey_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getSharerParameterRange());
+          .computeMessageSize(4, getCommunicationInfo());
+      }
+      if (!nonce_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, nonce_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(6, getHelperParameterRange());
+          .computeMessageSize(6, getParameterRange());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -2050,8 +2028,12 @@ public final class Pair {
       }
       derec.message.Pair.PairResponseMessage other = (derec.message.Pair.PairResponseMessage) obj;
 
-      if (getRecoveryMode()
-          != other.getRecoveryMode()) return false;
+      if (hasResult() != other.hasResult()) return false;
+      if (hasResult()) {
+        if (!getResult()
+            .equals(other.getResult())) return false;
+      }
+      if (senderKind_ != other.senderKind_) return false;
       if (!getPublicSignatureKey()
           .equals(other.getPublicSignatureKey())) return false;
       if (hasCommunicationInfo() != other.hasCommunicationInfo()) return false;
@@ -2061,15 +2043,10 @@ public final class Pair {
       }
       if (!getNonce()
           .equals(other.getNonce())) return false;
-      if (hasSharerParameterRange() != other.hasSharerParameterRange()) return false;
-      if (hasSharerParameterRange()) {
-        if (!getSharerParameterRange()
-            .equals(other.getSharerParameterRange())) return false;
-      }
-      if (hasHelperParameterRange() != other.hasHelperParameterRange()) return false;
-      if (hasHelperParameterRange()) {
-        if (!getHelperParameterRange()
-            .equals(other.getHelperParameterRange())) return false;
+      if (hasParameterRange() != other.hasParameterRange()) return false;
+      if (hasParameterRange()) {
+        if (!getParameterRange()
+            .equals(other.getParameterRange())) return false;
       }
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
@@ -2082,9 +2059,12 @@ public final class Pair {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + RECOVERYMODE_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-          getRecoveryMode());
+      if (hasResult()) {
+        hash = (37 * hash) + RESULT_FIELD_NUMBER;
+        hash = (53 * hash) + getResult().hashCode();
+      }
+      hash = (37 * hash) + SENDERKIND_FIELD_NUMBER;
+      hash = (53 * hash) + senderKind_;
       hash = (37 * hash) + PUBLICSIGNATUREKEY_FIELD_NUMBER;
       hash = (53 * hash) + getPublicSignatureKey().hashCode();
       if (hasCommunicationInfo()) {
@@ -2093,13 +2073,9 @@ public final class Pair {
       }
       hash = (37 * hash) + NONCE_FIELD_NUMBER;
       hash = (53 * hash) + getNonce().hashCode();
-      if (hasSharerParameterRange()) {
-        hash = (37 * hash) + SHARERPARAMETERRANGE_FIELD_NUMBER;
-        hash = (53 * hash) + getSharerParameterRange().hashCode();
-      }
-      if (hasHelperParameterRange()) {
-        hash = (37 * hash) + HELPERPARAMETERRANGE_FIELD_NUMBER;
-        hash = (53 * hash) + getHelperParameterRange().hashCode();
+      if (hasParameterRange()) {
+        hash = (37 * hash) + PARAMETERRANGE_FIELD_NUMBER;
+        hash = (53 * hash) + getParameterRange().hashCode();
       }
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
@@ -2200,7 +2176,7 @@ public final class Pair {
     }
     /**
      * <pre>
-     **
+     *
      * Response, which is identical to the request, except without the
      * public encryption key, because it already happened during contact.
      * </pre>
@@ -2237,16 +2213,21 @@ public final class Pair {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getResultFieldBuilder();
           getCommunicationInfoFieldBuilder();
-          getSharerParameterRangeFieldBuilder();
-          getHelperParameterRangeFieldBuilder();
+          getParameterRangeFieldBuilder();
         }
       }
       @java.lang.Override
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
-        recoveryMode_ = false;
+        result_ = null;
+        if (resultBuilder_ != null) {
+          resultBuilder_.dispose();
+          resultBuilder_ = null;
+        }
+        senderKind_ = 0;
         publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
         communicationInfo_ = null;
         if (communicationInfoBuilder_ != null) {
@@ -2254,15 +2235,10 @@ public final class Pair {
           communicationInfoBuilder_ = null;
         }
         nonce_ = com.google.protobuf.ByteString.EMPTY;
-        sharerParameterRange_ = null;
-        if (sharerParameterRangeBuilder_ != null) {
-          sharerParameterRangeBuilder_.dispose();
-          sharerParameterRangeBuilder_ = null;
-        }
-        helperParameterRange_ = null;
-        if (helperParameterRangeBuilder_ != null) {
-          helperParameterRangeBuilder_.dispose();
-          helperParameterRangeBuilder_ = null;
+        parameterRange_ = null;
+        if (parameterRangeBuilder_ != null) {
+          parameterRangeBuilder_.dispose();
+          parameterRangeBuilder_ = null;
         }
         return this;
       }
@@ -2297,32 +2273,32 @@ public final class Pair {
 
       private void buildPartial0(derec.message.Pair.PairResponseMessage result) {
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) != 0)) {
-          result.recoveryMode_ = recoveryMode_;
+          result.result_ = resultBuilder_ == null
+              ? result_
+              : resultBuilder_.build();
+          to_bitField0_ |= 0x00000001;
         }
         if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.senderKind_ = senderKind_;
+        }
+        if (((from_bitField0_ & 0x00000004) != 0)) {
           result.publicSignatureKey_ = publicSignatureKey_;
         }
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000004) != 0)) {
+        if (((from_bitField0_ & 0x00000008) != 0)) {
           result.communicationInfo_ = communicationInfoBuilder_ == null
               ? communicationInfo_
               : communicationInfoBuilder_.build();
-          to_bitField0_ |= 0x00000001;
-        }
-        if (((from_bitField0_ & 0x00000008) != 0)) {
-          result.nonce_ = nonce_;
-        }
-        if (((from_bitField0_ & 0x00000010) != 0)) {
-          result.sharerParameterRange_ = sharerParameterRangeBuilder_ == null
-              ? sharerParameterRange_
-              : sharerParameterRangeBuilder_.build();
           to_bitField0_ |= 0x00000002;
         }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
+          result.nonce_ = nonce_;
+        }
         if (((from_bitField0_ & 0x00000020) != 0)) {
-          result.helperParameterRange_ = helperParameterRangeBuilder_ == null
-              ? helperParameterRange_
-              : helperParameterRangeBuilder_.build();
+          result.parameterRange_ = parameterRangeBuilder_ == null
+              ? parameterRange_
+              : parameterRangeBuilder_.build();
           to_bitField0_ |= 0x00000004;
         }
         result.bitField0_ |= to_bitField0_;
@@ -2372,8 +2348,11 @@ public final class Pair {
 
       public Builder mergeFrom(derec.message.Pair.PairResponseMessage other) {
         if (other == derec.message.Pair.PairResponseMessage.getDefaultInstance()) return this;
-        if (other.getRecoveryMode() != false) {
-          setRecoveryMode(other.getRecoveryMode());
+        if (other.hasResult()) {
+          mergeResult(other.getResult());
+        }
+        if (other.senderKind_ != 0) {
+          setSenderKindValue(other.getSenderKindValue());
         }
         if (other.getPublicSignatureKey() != com.google.protobuf.ByteString.EMPTY) {
           setPublicSignatureKey(other.getPublicSignatureKey());
@@ -2384,11 +2363,8 @@ public final class Pair {
         if (other.getNonce() != com.google.protobuf.ByteString.EMPTY) {
           setNonce(other.getNonce());
         }
-        if (other.hasSharerParameterRange()) {
-          mergeSharerParameterRange(other.getSharerParameterRange());
-        }
-        if (other.hasHelperParameterRange()) {
-          mergeHelperParameterRange(other.getHelperParameterRange());
+        if (other.hasParameterRange()) {
+          mergeParameterRange(other.getParameterRange());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
@@ -2416,38 +2392,38 @@ public final class Pair {
               case 0:
                 done = true;
                 break;
-              case 8: {
-                recoveryMode_ = input.readBool();
+              case 10: {
+                input.readMessage(
+                    getResultFieldBuilder().getBuilder(),
+                    extensionRegistry);
                 bitField0_ |= 0x00000001;
                 break;
-              } // case 8
-              case 18: {
-                publicSignatureKey_ = input.readBytes();
+              } // case 10
+              case 16: {
+                senderKind_ = input.readEnum();
                 bitField0_ |= 0x00000002;
                 break;
-              } // case 18
+              } // case 16
               case 26: {
-                input.readMessage(
-                    getCommunicationInfoFieldBuilder().getBuilder(),
-                    extensionRegistry);
+                publicSignatureKey_ = input.readBytes();
                 bitField0_ |= 0x00000004;
                 break;
               } // case 26
               case 34: {
-                nonce_ = input.readBytes();
+                input.readMessage(
+                    getCommunicationInfoFieldBuilder().getBuilder(),
+                    extensionRegistry);
                 bitField0_ |= 0x00000008;
                 break;
               } // case 34
               case 42: {
-                input.readMessage(
-                    getSharerParameterRangeFieldBuilder().getBuilder(),
-                    extensionRegistry);
+                nonce_ = input.readBytes();
                 bitField0_ |= 0x00000010;
                 break;
               } // case 42
               case 50: {
                 input.readMessage(
-                    getHelperParameterRangeFieldBuilder().getBuilder(),
+                    getParameterRangeFieldBuilder().getBuilder(),
                     extensionRegistry);
                 bitField0_ |= 0x00000020;
                 break;
@@ -2469,49 +2445,237 @@ public final class Pair {
       }
       private int bitField0_;
 
-      private boolean recoveryMode_ ;
+      private derec.message.ResultOuterClass.Result result_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          derec.message.ResultOuterClass.Result, derec.message.ResultOuterClass.Result.Builder, derec.message.ResultOuterClass.ResultOrBuilder> resultBuilder_;
       /**
        * <pre>
-       **
-       * Is the responder in recovery mode?
+       ** the success or failure of processing the request 
        * </pre>
        *
-       * <code>bool recoveryMode = 1;</code>
-       * @return The recoveryMode.
+       * <code>.derec.message.Result result = 1;</code>
+       * @return Whether the result field is set.
        */
-      @java.lang.Override
-      public boolean getRecoveryMode() {
-        return recoveryMode_;
+      public boolean hasResult() {
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <pre>
-       **
-       * Is the responder in recovery mode?
+       ** the success or failure of processing the request 
        * </pre>
        *
-       * <code>bool recoveryMode = 1;</code>
-       * @param value The recoveryMode to set.
-       * @return This builder for chaining.
+       * <code>.derec.message.Result result = 1;</code>
+       * @return The result.
        */
-      public Builder setRecoveryMode(boolean value) {
-
-        recoveryMode_ = value;
+      public derec.message.ResultOuterClass.Result getResult() {
+        if (resultBuilder_ == null) {
+          return result_ == null ? derec.message.ResultOuterClass.Result.getDefaultInstance() : result_;
+        } else {
+          return resultBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       ** the success or failure of processing the request 
+       * </pre>
+       *
+       * <code>.derec.message.Result result = 1;</code>
+       */
+      public Builder setResult(derec.message.ResultOuterClass.Result value) {
+        if (resultBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          result_ = value;
+        } else {
+          resultBuilder_.setMessage(value);
+        }
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       **
-       * Is the responder in recovery mode?
+       ** the success or failure of processing the request 
        * </pre>
        *
-       * <code>bool recoveryMode = 1;</code>
+       * <code>.derec.message.Result result = 1;</code>
+       */
+      public Builder setResult(
+          derec.message.ResultOuterClass.Result.Builder builderForValue) {
+        if (resultBuilder_ == null) {
+          result_ = builderForValue.build();
+        } else {
+          resultBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       ** the success or failure of processing the request 
+       * </pre>
+       *
+       * <code>.derec.message.Result result = 1;</code>
+       */
+      public Builder mergeResult(derec.message.ResultOuterClass.Result value) {
+        if (resultBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0) &&
+            result_ != null &&
+            result_ != derec.message.ResultOuterClass.Result.getDefaultInstance()) {
+            getResultBuilder().mergeFrom(value);
+          } else {
+            result_ = value;
+          }
+        } else {
+          resultBuilder_.mergeFrom(value);
+        }
+        if (result_ != null) {
+          bitField0_ |= 0x00000001;
+          onChanged();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       ** the success or failure of processing the request 
+       * </pre>
+       *
+       * <code>.derec.message.Result result = 1;</code>
+       */
+      public Builder clearResult() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        result_ = null;
+        if (resultBuilder_ != null) {
+          resultBuilder_.dispose();
+          resultBuilder_ = null;
+        }
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       ** the success or failure of processing the request 
+       * </pre>
+       *
+       * <code>.derec.message.Result result = 1;</code>
+       */
+      public derec.message.ResultOuterClass.Result.Builder getResultBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getResultFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       ** the success or failure of processing the request 
+       * </pre>
+       *
+       * <code>.derec.message.Result result = 1;</code>
+       */
+      public derec.message.ResultOuterClass.ResultOrBuilder getResultOrBuilder() {
+        if (resultBuilder_ != null) {
+          return resultBuilder_.getMessageOrBuilder();
+        } else {
+          return result_ == null ?
+              derec.message.ResultOuterClass.Result.getDefaultInstance() : result_;
+        }
+      }
+      /**
+       * <pre>
+       ** the success or failure of processing the request 
+       * </pre>
+       *
+       * <code>.derec.message.Result result = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          derec.message.ResultOuterClass.Result, derec.message.ResultOuterClass.Result.Builder, derec.message.ResultOuterClass.ResultOrBuilder> 
+          getResultFieldBuilder() {
+        if (resultBuilder_ == null) {
+          resultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              derec.message.ResultOuterClass.Result, derec.message.ResultOuterClass.Result.Builder, derec.message.ResultOuterClass.ResultOrBuilder>(
+                  getResult(),
+                  getParentForChildren(),
+                  isClean());
+          result_ = null;
+        }
+        return resultBuilder_;
+      }
+
+      private int senderKind_ = 0;
+      /**
+       * <pre>
+       *
+       * The kind of the sender of this message (i.e., the responder)
+       * </pre>
+       *
+       * <code>.derec.message.SenderKind senderKind = 2;</code>
+       * @return The enum numeric value on the wire for senderKind.
+       */
+      @java.lang.Override public int getSenderKindValue() {
+        return senderKind_;
+      }
+      /**
+       * <pre>
+       *
+       * The kind of the sender of this message (i.e., the responder)
+       * </pre>
+       *
+       * <code>.derec.message.SenderKind senderKind = 2;</code>
+       * @param value The enum numeric value on the wire for senderKind to set.
        * @return This builder for chaining.
        */
-      public Builder clearRecoveryMode() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        recoveryMode_ = false;
+      public Builder setSenderKindValue(int value) {
+        senderKind_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *
+       * The kind of the sender of this message (i.e., the responder)
+       * </pre>
+       *
+       * <code>.derec.message.SenderKind senderKind = 2;</code>
+       * @return The senderKind.
+       */
+      @java.lang.Override
+      public derec.message.Pair.SenderKind getSenderKind() {
+        derec.message.Pair.SenderKind result = derec.message.Pair.SenderKind.forNumber(senderKind_);
+        return result == null ? derec.message.Pair.SenderKind.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       *
+       * The kind of the sender of this message (i.e., the responder)
+       * </pre>
+       *
+       * <code>.derec.message.SenderKind senderKind = 2;</code>
+       * @param value The senderKind to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSenderKind(derec.message.Pair.SenderKind value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
+        senderKind_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       *
+       * The kind of the sender of this message (i.e., the responder)
+       * </pre>
+       *
+       * <code>.derec.message.SenderKind senderKind = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSenderKind() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        senderKind_ = 0;
         onChanged();
         return this;
       }
@@ -2519,11 +2683,11 @@ public final class Pair {
       private com.google.protobuf.ByteString publicSignatureKey_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * public signature key (byte array supports many schemes) of the responder
        * </pre>
        *
-       * <code>bytes publicSignatureKey = 2;</code>
+       * <code>bytes publicSignatureKey = 3;</code>
        * @return The publicSignatureKey.
        */
       @java.lang.Override
@@ -2532,32 +2696,32 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * public signature key (byte array supports many schemes) of the responder
        * </pre>
        *
-       * <code>bytes publicSignatureKey = 2;</code>
+       * <code>bytes publicSignatureKey = 3;</code>
        * @param value The publicSignatureKey to set.
        * @return This builder for chaining.
        */
       public Builder setPublicSignatureKey(com.google.protobuf.ByteString value) {
         if (value == null) { throw new NullPointerException(); }
         publicSignatureKey_ = value;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       **
+       *
        * public signature key (byte array supports many schemes) of the responder
        * </pre>
        *
-       * <code>bytes publicSignatureKey = 2;</code>
+       * <code>bytes publicSignatureKey = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearPublicSignatureKey() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         publicSignatureKey_ = getDefaultInstance().getPublicSignatureKey();
         onChanged();
         return this;
@@ -2568,23 +2732,23 @@ public final class Pair {
           derec.message.Communicationinfo.CommunicationInfo, derec.message.Communicationinfo.CommunicationInfo.Builder, derec.message.Communicationinfo.CommunicationInfoOrBuilder> communicationInfoBuilder_;
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        * @return Whether the communicationInfo field is set.
        */
       public boolean hasCommunicationInfo() {
-        return ((bitField0_ & 0x00000004) != 0);
+        return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        * @return The communicationInfo.
        */
       public derec.message.Communicationinfo.CommunicationInfo getCommunicationInfo() {
@@ -2596,11 +2760,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        */
       public Builder setCommunicationInfo(derec.message.Communicationinfo.CommunicationInfo value) {
         if (communicationInfoBuilder_ == null) {
@@ -2611,17 +2775,17 @@ public final class Pair {
         } else {
           communicationInfoBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        */
       public Builder setCommunicationInfo(
           derec.message.Communicationinfo.CommunicationInfo.Builder builderForValue) {
@@ -2630,21 +2794,21 @@ public final class Pair {
         } else {
           communicationInfoBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        */
       public Builder mergeCommunicationInfo(derec.message.Communicationinfo.CommunicationInfo value) {
         if (communicationInfoBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) != 0) &&
+          if (((bitField0_ & 0x00000008) != 0) &&
             communicationInfo_ != null &&
             communicationInfo_ != derec.message.Communicationinfo.CommunicationInfo.getDefaultInstance()) {
             getCommunicationInfoBuilder().mergeFrom(value);
@@ -2655,21 +2819,21 @@ public final class Pair {
           communicationInfoBuilder_.mergeFrom(value);
         }
         if (communicationInfo_ != null) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
           onChanged();
         }
         return this;
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        */
       public Builder clearCommunicationInfo() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         communicationInfo_ = null;
         if (communicationInfoBuilder_ != null) {
           communicationInfoBuilder_.dispose();
@@ -2680,24 +2844,24 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        */
       public derec.message.Communicationinfo.CommunicationInfo.Builder getCommunicationInfoBuilder() {
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         onChanged();
         return getCommunicationInfoFieldBuilder().getBuilder();
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        */
       public derec.message.Communicationinfo.CommunicationInfoOrBuilder getCommunicationInfoOrBuilder() {
         if (communicationInfoBuilder_ != null) {
@@ -2709,11 +2873,11 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * app-readable contact information (e.g. name, phone number, etc.)
        * </pre>
        *
-       * <code>.derec.message.CommunicationInfo communicationInfo = 3;</code>
+       * <code>.derec.message.CommunicationInfo communicationInfo = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           derec.message.Communicationinfo.CommunicationInfo, derec.message.Communicationinfo.CommunicationInfo.Builder, derec.message.Communicationinfo.CommunicationInfoOrBuilder> 
@@ -2732,12 +2896,12 @@ public final class Pair {
       private com.google.protobuf.ByteString nonce_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
-       **
+       *
        * 32-byte (random) nonce to identify the pairing session;
        * this is the same value as sent in the pairing request
        * </pre>
        *
-       * <code>bytes nonce = 4;</code>
+       * <code>bytes nonce = 5;</code>
        * @return The nonce.
        */
       @java.lang.Override
@@ -2746,342 +2910,203 @@ public final class Pair {
       }
       /**
        * <pre>
-       **
+       *
        * 32-byte (random) nonce to identify the pairing session;
        * this is the same value as sent in the pairing request
        * </pre>
        *
-       * <code>bytes nonce = 4;</code>
+       * <code>bytes nonce = 5;</code>
        * @param value The nonce to set.
        * @return This builder for chaining.
        */
       public Builder setNonce(com.google.protobuf.ByteString value) {
         if (value == null) { throw new NullPointerException(); }
         nonce_ = value;
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         onChanged();
         return this;
       }
       /**
        * <pre>
-       **
+       *
        * 32-byte (random) nonce to identify the pairing session;
        * this is the same value as sent in the pairing request
        * </pre>
        *
-       * <code>bytes nonce = 4;</code>
+       * <code>bytes nonce = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearNonce() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         nonce_ = getDefaultInstance().getNonce();
         onChanged();
         return this;
       }
 
-      private derec.message.Parameterrange.ParameterRange sharerParameterRange_;
+      private derec.message.Parameterrange.ParameterRange parameterRange_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> sharerParameterRangeBuilder_;
+          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> parameterRangeBuilder_;
       /**
        * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
+       *
+       * The parameter range for the sender.
        * </pre>
        *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       * @return Whether the sharerParameterRange field is set.
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
+       * @return Whether the parameterRange field is set.
        */
-      public boolean hasSharerParameterRange() {
-        return ((bitField0_ & 0x00000010) != 0);
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       * @return The sharerParameterRange.
-       */
-      public derec.message.Parameterrange.ParameterRange getSharerParameterRange() {
-        if (sharerParameterRangeBuilder_ == null) {
-          return sharerParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
-        } else {
-          return sharerParameterRangeBuilder_.getMessage();
-        }
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       */
-      public Builder setSharerParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (sharerParameterRangeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          sharerParameterRange_ = value;
-        } else {
-          sharerParameterRangeBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000010;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       */
-      public Builder setSharerParameterRange(
-          derec.message.Parameterrange.ParameterRange.Builder builderForValue) {
-        if (sharerParameterRangeBuilder_ == null) {
-          sharerParameterRange_ = builderForValue.build();
-        } else {
-          sharerParameterRangeBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000010;
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       */
-      public Builder mergeSharerParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (sharerParameterRangeBuilder_ == null) {
-          if (((bitField0_ & 0x00000010) != 0) &&
-            sharerParameterRange_ != null &&
-            sharerParameterRange_ != derec.message.Parameterrange.ParameterRange.getDefaultInstance()) {
-            getSharerParameterRangeBuilder().mergeFrom(value);
-          } else {
-            sharerParameterRange_ = value;
-          }
-        } else {
-          sharerParameterRangeBuilder_.mergeFrom(value);
-        }
-        if (sharerParameterRange_ != null) {
-          bitField0_ |= 0x00000010;
-          onChanged();
-        }
-        return this;
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       */
-      public Builder clearSharerParameterRange() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        sharerParameterRange_ = null;
-        if (sharerParameterRangeBuilder_ != null) {
-          sharerParameterRangeBuilder_.dispose();
-          sharerParameterRangeBuilder_ = null;
-        }
-        onChanged();
-        return this;
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       */
-      public derec.message.Parameterrange.ParameterRange.Builder getSharerParameterRangeBuilder() {
-        bitField0_ |= 0x00000010;
-        onChanged();
-        return getSharerParameterRangeFieldBuilder().getBuilder();
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       */
-      public derec.message.Parameterrange.ParameterRangeOrBuilder getSharerParameterRangeOrBuilder() {
-        if (sharerParameterRangeBuilder_ != null) {
-          return sharerParameterRangeBuilder_.getMessageOrBuilder();
-        } else {
-          return sharerParameterRange_ == null ?
-              derec.message.Parameterrange.ParameterRange.getDefaultInstance() : sharerParameterRange_;
-        }
-      }
-      /**
-       * <pre>
-       **
-       * Sharer and Helper parameter.
-       * The sharer will set sharerParameterRange to something,
-       * and leave the other empty. The helper will do the opposite.
-       * </pre>
-       *
-       * <code>.derec.message.ParameterRange sharerParameterRange = 5;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> 
-          getSharerParameterRangeFieldBuilder() {
-        if (sharerParameterRangeBuilder_ == null) {
-          sharerParameterRangeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder>(
-                  getSharerParameterRange(),
-                  getParentForChildren(),
-                  isClean());
-          sharerParameterRange_ = null;
-        }
-        return sharerParameterRangeBuilder_;
-      }
-
-      private derec.message.Parameterrange.ParameterRange helperParameterRange_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> helperParameterRangeBuilder_;
-      /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
-       * @return Whether the helperParameterRange field is set.
-       */
-      public boolean hasHelperParameterRange() {
+      public boolean hasParameterRange() {
         return ((bitField0_ & 0x00000020) != 0);
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
-       * @return The helperParameterRange.
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
+       * @return The parameterRange.
        */
-      public derec.message.Parameterrange.ParameterRange getHelperParameterRange() {
-        if (helperParameterRangeBuilder_ == null) {
-          return helperParameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
+      public derec.message.Parameterrange.ParameterRange getParameterRange() {
+        if (parameterRangeBuilder_ == null) {
+          return parameterRange_ == null ? derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
         } else {
-          return helperParameterRangeBuilder_.getMessage();
+          return parameterRangeBuilder_.getMessage();
         }
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
        */
-      public Builder setHelperParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (helperParameterRangeBuilder_ == null) {
+      public Builder setParameterRange(derec.message.Parameterrange.ParameterRange value) {
+        if (parameterRangeBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          helperParameterRange_ = value;
+          parameterRange_ = value;
         } else {
-          helperParameterRangeBuilder_.setMessage(value);
+          parameterRangeBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
        */
-      public Builder setHelperParameterRange(
+      public Builder setParameterRange(
           derec.message.Parameterrange.ParameterRange.Builder builderForValue) {
-        if (helperParameterRangeBuilder_ == null) {
-          helperParameterRange_ = builderForValue.build();
+        if (parameterRangeBuilder_ == null) {
+          parameterRange_ = builderForValue.build();
         } else {
-          helperParameterRangeBuilder_.setMessage(builderForValue.build());
+          parameterRangeBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
        */
-      public Builder mergeHelperParameterRange(derec.message.Parameterrange.ParameterRange value) {
-        if (helperParameterRangeBuilder_ == null) {
+      public Builder mergeParameterRange(derec.message.Parameterrange.ParameterRange value) {
+        if (parameterRangeBuilder_ == null) {
           if (((bitField0_ & 0x00000020) != 0) &&
-            helperParameterRange_ != null &&
-            helperParameterRange_ != derec.message.Parameterrange.ParameterRange.getDefaultInstance()) {
-            getHelperParameterRangeBuilder().mergeFrom(value);
+            parameterRange_ != null &&
+            parameterRange_ != derec.message.Parameterrange.ParameterRange.getDefaultInstance()) {
+            getParameterRangeBuilder().mergeFrom(value);
           } else {
-            helperParameterRange_ = value;
+            parameterRange_ = value;
           }
         } else {
-          helperParameterRangeBuilder_.mergeFrom(value);
+          parameterRangeBuilder_.mergeFrom(value);
         }
-        if (helperParameterRange_ != null) {
+        if (parameterRange_ != null) {
           bitField0_ |= 0x00000020;
           onChanged();
         }
         return this;
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
        */
-      public Builder clearHelperParameterRange() {
+      public Builder clearParameterRange() {
         bitField0_ = (bitField0_ & ~0x00000020);
-        helperParameterRange_ = null;
-        if (helperParameterRangeBuilder_ != null) {
-          helperParameterRangeBuilder_.dispose();
-          helperParameterRangeBuilder_ = null;
+        parameterRange_ = null;
+        if (parameterRangeBuilder_ != null) {
+          parameterRangeBuilder_.dispose();
+          parameterRangeBuilder_ = null;
         }
         onChanged();
         return this;
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
        */
-      public derec.message.Parameterrange.ParameterRange.Builder getHelperParameterRangeBuilder() {
+      public derec.message.Parameterrange.ParameterRange.Builder getParameterRangeBuilder() {
         bitField0_ |= 0x00000020;
         onChanged();
-        return getHelperParameterRangeFieldBuilder().getBuilder();
+        return getParameterRangeFieldBuilder().getBuilder();
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
        */
-      public derec.message.Parameterrange.ParameterRangeOrBuilder getHelperParameterRangeOrBuilder() {
-        if (helperParameterRangeBuilder_ != null) {
-          return helperParameterRangeBuilder_.getMessageOrBuilder();
+      public derec.message.Parameterrange.ParameterRangeOrBuilder getParameterRangeOrBuilder() {
+        if (parameterRangeBuilder_ != null) {
+          return parameterRangeBuilder_.getMessageOrBuilder();
         } else {
-          return helperParameterRange_ == null ?
-              derec.message.Parameterrange.ParameterRange.getDefaultInstance() : helperParameterRange_;
+          return parameterRange_ == null ?
+              derec.message.Parameterrange.ParameterRange.getDefaultInstance() : parameterRange_;
         }
       }
       /**
-       * <code>.derec.message.ParameterRange helperParameterRange = 6;</code>
+       * <pre>
+       *
+       * The parameter range for the sender.
+       * </pre>
+       *
+       * <code>.derec.message.ParameterRange parameterRange = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder> 
-          getHelperParameterRangeFieldBuilder() {
-        if (helperParameterRangeBuilder_ == null) {
-          helperParameterRangeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+          getParameterRangeFieldBuilder() {
+        if (parameterRangeBuilder_ == null) {
+          parameterRangeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
               derec.message.Parameterrange.ParameterRange, derec.message.Parameterrange.ParameterRange.Builder, derec.message.Parameterrange.ParameterRangeOrBuilder>(
-                  getHelperParameterRange(),
+                  getParameterRange(),
                   getParentForChildren(),
                   isClean());
-          helperParameterRange_ = null;
+          parameterRange_ = null;
         }
-        return helperParameterRangeBuilder_;
+        return parameterRangeBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -3167,43 +3192,46 @@ public final class Pair {
   static {
     java.lang.String[] descriptorData = {
       "\n\npair.proto\022\rderec.message\032\027communicati" +
-      "oninfo.proto\032\024parameterrange.proto\"\251\002\n\022P" +
-      "airRequestMessage\022\024\n\014recoveryMode\030\001 \001(\010\022" +
-      "\032\n\022publicSignatureKey\030\002 \001(\014\022\033\n\023publicEnc" +
-      "ryptionKey\030\003 \001(\014\022;\n\021communicationInfo\030\004 " +
-      "\001(\0132 .derec.message.CommunicationInfo\022\r\n" +
-      "\005nonce\030\005 \001(\014\022;\n\024sharerParameterRange\030\006 \001" +
-      "(\0132\035.derec.message.ParameterRange\022;\n\024hel" +
-      "perParameterRange\030\007 \001(\0132\035.derec.message." +
-      "ParameterRange\"\215\002\n\023PairResponseMessage\022\024" +
-      "\n\014recoveryMode\030\001 \001(\010\022\032\n\022publicSignatureK" +
-      "ey\030\002 \001(\014\022;\n\021communicationInfo\030\003 \001(\0132 .de" +
-      "rec.message.CommunicationInfo\022\r\n\005nonce\030\004" +
-      " \001(\014\022;\n\024sharerParameterRange\030\005 \001(\0132\035.der" +
-      "ec.message.ParameterRange\022;\n\024helperParam" +
-      "eterRange\030\006 \001(\0132\035.derec.message.Paramete" +
-      "rRangeb\006proto3"
+      "oninfo.proto\032\024parameterrange.proto\032\014resu" +
+      "lt.proto\"\377\001\n\022PairRequestMessage\022-\n\nsende" +
+      "rKind\030\001 \001(\0162\031.derec.message.SenderKind\022\032" +
+      "\n\022publicSignatureKey\030\003 \001(\014\022\033\n\023publicEncr" +
+      "yptionKey\030\004 \001(\014\022;\n\021communicationInfo\030\005 \001" +
+      "(\0132 .derec.message.CommunicationInfo\022\r\n\005" +
+      "nonce\030\006 \001(\014\0225\n\016parameterRange\030\007 \001(\0132\035.de" +
+      "rec.message.ParameterRange\"\212\002\n\023PairRespo" +
+      "nseMessage\022%\n\006result\030\001 \001(\0132\025.derec.messa" +
+      "ge.Result\022-\n\nsenderKind\030\002 \001(\0162\031.derec.me" +
+      "ssage.SenderKind\022\032\n\022publicSignatureKey\030\003" +
+      " \001(\014\022;\n\021communicationInfo\030\004 \001(\0132 .derec." +
+      "message.CommunicationInfo\022\r\n\005nonce\030\005 \001(\014" +
+      "\0225\n\016parameterRange\030\006 \001(\0132\035.derec.message" +
+      ".ParameterRange*F\n\nSenderKind\022\027\n\023SHARER_" +
+      "NON_RECOVERY\020\000\022\023\n\017SHARER_RECOVERY\020\001\022\n\n\006H" +
+      "ELPER\020\002b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           derec.message.Communicationinfo.getDescriptor(),
           derec.message.Parameterrange.getDescriptor(),
+          derec.message.ResultOuterClass.getDescriptor(),
         });
     internal_static_derec_message_PairRequestMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_derec_message_PairRequestMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_derec_message_PairRequestMessage_descriptor,
-        new java.lang.String[] { "RecoveryMode", "PublicSignatureKey", "PublicEncryptionKey", "CommunicationInfo", "Nonce", "SharerParameterRange", "HelperParameterRange", });
+        new java.lang.String[] { "SenderKind", "PublicSignatureKey", "PublicEncryptionKey", "CommunicationInfo", "Nonce", "ParameterRange", });
     internal_static_derec_message_PairResponseMessage_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_derec_message_PairResponseMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_derec_message_PairResponseMessage_descriptor,
-        new java.lang.String[] { "RecoveryMode", "PublicSignatureKey", "CommunicationInfo", "Nonce", "SharerParameterRange", "HelperParameterRange", });
+        new java.lang.String[] { "Result", "SenderKind", "PublicSignatureKey", "CommunicationInfo", "Nonce", "ParameterRange", });
     derec.message.Communicationinfo.getDescriptor();
     derec.message.Parameterrange.getDescriptor();
+    derec.message.ResultOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

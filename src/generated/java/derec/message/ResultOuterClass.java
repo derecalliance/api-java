@@ -17,7 +17,8 @@ public final class ResultOuterClass {
   /**
    * <pre>
    *
-   * Status for DeRec Response messages
+   * The success or failure of processing a request,
+   * used in DeRec Response messages
    * </pre>
    *
    * Protobuf enum {@code derec.message.StatusEnum}
@@ -25,26 +26,73 @@ public final class ResultOuterClass {
   public enum StatusEnum
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
+     * <pre>
+     * The request was successfully handled. 
+     * </pre>
+     *
      * <code>OK = 0;</code>
      */
     OK(0),
     /**
+     * <pre>
+     *
+     * The request was partially fulfilled. The memo will give more details.
+     * </pre>
+     *
      * <code>PARTIAL = 1;</code>
      */
     PARTIAL(1),
     /**
+     * <pre>
+     *
+     * The request fails for some reason other than one of the specific
+     * reasons below.
+     * </pre>
+     *
      * <code>FAIL = 2;</code>
      */
     FAIL(2),
     /**
+     * <pre>
+     *
+     * This request fails because it would cause the helper to be storing
+     * more bytes for this sharer than the agreed limit for this secret ID.
+     * </pre>
+     *
      * <code>SIZE_LIMIT_EXCEEDED = 3;</code>
      */
     SIZE_LIMIT_EXCEEDED(3),
     /**
+     * <pre>
+     * the request is being ignored because it is too frequent (it was
+     * sent too soon after the last request of that type, according to
+     * the agreed limit on the frequency.
+     * </pre>
+     *
      * <code>TOO_FREQUENT = 4;</code>
      */
     TOO_FREQUENT(4),
     /**
+     * <pre>
+     * This secret ID is not stored by this helper. 
+     * </pre>
+     *
+     * <code>UNKNOWN_SECRET_ID = 5;</code>
+     */
+    UNKNOWN_SECRET_ID(5),
+    /**
+     * <pre>
+     * This share version for this secret ID not stored by this helper. 
+     * </pre>
+     *
+     * <code>UNKNOWN_SHARE_VERSION = 6;</code>
+     */
+    UNKNOWN_SHARE_VERSION(6),
+    /**
+     * <pre>
+     * the helper is asking the sharer to send an unpair request 
+     * </pre>
+     *
      * <code>REQUEST_TO_CLOSE = 99;</code>
      */
     REQUEST_TO_CLOSE(99),
@@ -52,26 +100,73 @@ public final class ResultOuterClass {
     ;
 
     /**
+     * <pre>
+     * The request was successfully handled. 
+     * </pre>
+     *
      * <code>OK = 0;</code>
      */
     public static final int OK_VALUE = 0;
     /**
+     * <pre>
+     *
+     * The request was partially fulfilled. The memo will give more details.
+     * </pre>
+     *
      * <code>PARTIAL = 1;</code>
      */
     public static final int PARTIAL_VALUE = 1;
     /**
+     * <pre>
+     *
+     * The request fails for some reason other than one of the specific
+     * reasons below.
+     * </pre>
+     *
      * <code>FAIL = 2;</code>
      */
     public static final int FAIL_VALUE = 2;
     /**
+     * <pre>
+     *
+     * This request fails because it would cause the helper to be storing
+     * more bytes for this sharer than the agreed limit for this secret ID.
+     * </pre>
+     *
      * <code>SIZE_LIMIT_EXCEEDED = 3;</code>
      */
     public static final int SIZE_LIMIT_EXCEEDED_VALUE = 3;
     /**
+     * <pre>
+     * the request is being ignored because it is too frequent (it was
+     * sent too soon after the last request of that type, according to
+     * the agreed limit on the frequency.
+     * </pre>
+     *
      * <code>TOO_FREQUENT = 4;</code>
      */
     public static final int TOO_FREQUENT_VALUE = 4;
     /**
+     * <pre>
+     * This secret ID is not stored by this helper. 
+     * </pre>
+     *
+     * <code>UNKNOWN_SECRET_ID = 5;</code>
+     */
+    public static final int UNKNOWN_SECRET_ID_VALUE = 5;
+    /**
+     * <pre>
+     * This share version for this secret ID not stored by this helper. 
+     * </pre>
+     *
+     * <code>UNKNOWN_SHARE_VERSION = 6;</code>
+     */
+    public static final int UNKNOWN_SHARE_VERSION_VALUE = 6;
+    /**
+     * <pre>
+     * the helper is asking the sharer to send an unpair request 
+     * </pre>
+     *
      * <code>REQUEST_TO_CLOSE = 99;</code>
      */
     public static final int REQUEST_TO_CLOSE_VALUE = 99;
@@ -106,6 +201,8 @@ public final class ResultOuterClass {
         case 2: return FAIL;
         case 3: return SIZE_LIMIT_EXCEEDED;
         case 4: return TOO_FREQUENT;
+        case 5: return UNKNOWN_SECRET_ID;
+        case 6: return UNKNOWN_SHARE_VERSION;
         case 99: return REQUEST_TO_CLOSE;
         default: return null;
       }
@@ -193,7 +290,7 @@ public final class ResultOuterClass {
   /**
    * <pre>
    *
-   * Result for DeRec response messages
+   * Result of success or failure for processing the request messages
    * </pre>
    *
    * Protobuf type {@code derec.message.Result}
@@ -458,7 +555,7 @@ public final class ResultOuterClass {
     /**
      * <pre>
      *
-     * Result for DeRec response messages
+     * Result of success or failure for processing the request messages
      * </pre>
      *
      * Protobuf type {@code derec.message.Result}
@@ -846,10 +943,11 @@ public final class ResultOuterClass {
     java.lang.String[] descriptorData = {
       "\n\014result.proto\022\rderec.message\"A\n\006Result\022" +
       ")\n\006status\030\001 \001(\0162\031.derec.message.StatusEn" +
-      "um\022\014\n\004memo\030\002 \001(\t*l\n\nStatusEnum\022\006\n\002OK\020\000\022\013" +
-      "\n\007PARTIAL\020\001\022\010\n\004FAIL\020\002\022\027\n\023SIZE_LIMIT_EXCE" +
-      "EDED\020\003\022\020\n\014TOO_FREQUENT\020\004\022\024\n\020REQUEST_TO_C" +
-      "LOSE\020cb\006proto3"
+      "um\022\014\n\004memo\030\002 \001(\t*\236\001\n\nStatusEnum\022\006\n\002OK\020\000\022" +
+      "\013\n\007PARTIAL\020\001\022\010\n\004FAIL\020\002\022\027\n\023SIZE_LIMIT_EXC" +
+      "EEDED\020\003\022\020\n\014TOO_FREQUENT\020\004\022\025\n\021UNKNOWN_SEC" +
+      "RET_ID\020\005\022\031\n\025UNKNOWN_SHARE_VERSION\020\006\022\024\n\020R" +
+      "EQUEST_TO_CLOSE\020cb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

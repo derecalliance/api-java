@@ -1,86 +1,97 @@
 syntax = "proto3";
 import "communicationinfo.proto";
 import "parameterrange.proto";
+import "result.proto";
 
 package derec.message;
+/*
+ * Is the sender of this message (i.e., the responder) a
+ * helper, or a sharer that is not in recovery mode, or a sharer that is
+ * in recovery mode?
+ */
+enum SenderKind {
+  SHARER_NON_RECOVERY = 0;
+  SHARER_RECOVERY = 1;
+  HELPER = 2;
+}
+
 /*
 * ----------------------------------------------------------------------------
 * Pairing protocol
 * First message sent from the pairing initiator to the pairing
-* responder. There would earlier have been a ContactMessage sent
-* from the responder to the initiator by some other means. For example,
-* the responder could display a QR code that the initiator scanned.
+* responder. There would earlier have been communication of the information
+* in a ContactMessage that was sent from the responder to the initiator by some
+* other means. For example, the responder could display a QR code that the
+* initiator scanned.
 * The initiator can be helper or sharer, and
-* the responder can be helper or sharer.
+* the responder can be sharer or helper.
 * ----------------------------------------------------------------------------
 */
 message PairRequestMessage {
-  /**
-   * Is the sharer in recovery mode (or adding a new secret), and so
-   * possibly reconnecting to an old helper?
+  /*
+   * The kind of the sender of this message (i.e., the responder)
    */
-  bool recoveryMode = 1;
+  SenderKind senderKind = 1;
 
-  /**
+  /*
    * public key used for signatures of messages from the initiator;
    */
-  bytes publicSignatureKey = 2;
+  bytes publicSignatureKey = 3;
 
-  /**
+  /*
    * public key used for encrypting messages to the initiator;
    */
-  bytes publicEncryptionKey = 3;
+  bytes publicEncryptionKey = 4;
 
-  /**
+  /*
    * sender’s app-readable contact information,
    * such as name, phone number, etc.
    */
-  CommunicationInfo communicationInfo = 4;
+  CommunicationInfo communicationInfo = 5;
 
-  /**
+  /*
    * 32-byte (random) nonce to identify the pairing session
    */
-  bytes nonce = 5;
+  bytes nonce = 6;
 
-  /**
-   * Sharer and Helper parameter ranges.
-   * The sharer will set sharerParameterRange to something,
-   * and leave the other empty. The helper will do the opposite.
+  /*
+   * The parameter range for the sender.
    */
-  ParameterRange sharerParameterRange = 6;
-  ParameterRange helperParameterRange = 7;
+  ParameterRange parameterRange = 7;
 }
 
-/**
+/*
  * Response, which is identical to the request, except without the
  * public encryption key, because it already happened during contact.
  */
 message PairResponseMessage {
-  /**
-   * Is the responder in recovery mode?
+  /** the success or failure of processing the request */
+  Result result = 1;
+
+
+  /*
+   * The kind of the sender of this message (i.e., the responder)
    */
-  bool recoveryMode = 1;
-  /**
+  SenderKind senderKind = 2;
+
+  /*
    * public signature key (byte array supports many schemes) of the responder
    */
-  bytes publicSignatureKey = 2;
+  bytes publicSignatureKey = 3;
 
-  /**
+  /*
    * app-readable contact information (e.g. name, phone number, etc.)
    */
-  CommunicationInfo communicationInfo = 3;
+  CommunicationInfo communicationInfo = 4;
 
-  /**
+  /*
    * 32-byte (random) nonce to identify the pairing session;
    * this is the same value as sent in the pairing request
    */
-  bytes nonce = 4;
+  bytes nonce = 5;
 
-  /**
-   * Sharer and Helper parameter.
-   * The sharer will set sharerParameterRange to something,
-   * and leave the other empty. The helper will do the opposite.
+  /*
+   * The parameter range for the sender.
    */
-  ParameterRange sharerParameterRange = 5;
-  ParameterRange helperParameterRange = 6;
+  ParameterRange parameterRange = 6;
 }
