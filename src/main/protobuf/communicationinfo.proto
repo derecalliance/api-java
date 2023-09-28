@@ -1,4 +1,7 @@
 syntax = "proto3";
+
+package derec.message;
+
 message CommunicationInfoKeyValue {
   string key = 1;
   oneof value {

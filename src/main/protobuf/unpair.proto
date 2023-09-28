@@ -1,14 +1,17 @@
 syntax = "proto3";
 import "result.proto";
+
+package derec.message;
+
 /*
  * ----------------------------------------------------------------------------
  * Remove pairing. This is a request that the other party ceases to be a
- * helper / sharer, and removes from use information about the relationship,
- * within the terms of any service agreement governing the relationship.
-
+ * helper, and deletes any information about the sharer and the relationship,
+ * other than information that must be retained according to regulations or
+ * service agreements etc.
  * ----------------------------------------------------------------------------
  */
-message UnpairHelperRequestMessage {
+message UnpairRequestMessage {
   /*
    * A human-readable reason for why the unpairing happened.
    */
@@ -20,6 +23,6 @@ message UnpairHelperRequestMessage {
  * Response to the unpairing request.
  * ----------------------------------------------------------------------------
  */
-message UnpairHelperResponseMessage {
+message UnpairResponseMessage {
   Result result = 1;
 }

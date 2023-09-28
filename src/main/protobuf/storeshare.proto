@@ -1,4 +1,8 @@
 syntax = "proto3";
+import "result.proto";
+
+package derec.message;
+
 /*
  * Request that the given share be stored, and that all versions outside
  * the given keepList be removed from use.
@@ -45,19 +49,19 @@ message CommittedDeRecShare {
    * The Helper will parse this to see the version number of the share
    * and the secret ID.
    */
-  bytes deRecShare = 0;
+  bytes deRecShare = 1;
 
   /** The Merkle root */
-  bytes commitment = 1;
+  bytes commitment = 2;
 
   /** one leaf or interior node. isLeft is true if it's a left child */
   message SiblingHash {
-    boolean isLeft = 0;
-    bytes hash = 1;
+    bool isLeft = 1;
+    bytes hash = 2;
   }
 
   /** The bottom-up Merkle path */
-  repeated SiblingHash merklePath = 2;
+  repeated SiblingHash merklePath = 3;
 }
 
 
@@ -119,27 +123,27 @@ message Secret {
    * passwords, and documents. This is the serialized secret data and
    * secret metadata.
    */
-  bytes secretData = 0;
+  bytes secretData = 1;
 
   /** The private encryption key used by the sharer.*/
-  bytes privateEncryptionKey = 1;
+  bytes privateEncryptionKey = 2;
 
   /** The private signature key used by the sharer. */
-  bytes privateSignatureKey = 2;
+  bytes privateSignatureKey = 3;
 
   /** The time and date when the sharer created the shares of this secret. */
-  google.protobuf.Timestamp creationTime = 3;
+  google.protobuf.Timestamp creationTime = 4;
 
   /** TODO: list of helpers */
-  OTHER =4;
+  repeated string helpers = 5;
 
   /** Threshold for # of helpers for recovery */
-  int64 helperThresholdForRecovery = 5;
+  int64 helperThresholdForRecovery = 6;
 
   /** Threshold for # of helpers confirming receipt of a share,
    * to delete the old one
    */
-  int64 helperThresholdForConfirmingShareReceipt = 6;
+  int64 helperThresholdForConfirmingShareReceipt = 7;
   /** TODO:
 List of helpers, each with their info (as shown in “per helper”, below, not including status and the share itself),
 optionally: move outside the secret
@@ -154,46 +158,9 @@ The chosen, agreed values for each parameter in the Parameters section, above
 
 
 message StoreShareResponseMessage {
+  Result result = 1;
   /**
    * version number from the share message
    */
-  int64 version = 0;
-
-
-  /**
-   * helper's response on whether request message was valid:
-   * 1) Did the signature verify?
-   * 2) Did the secret size comply with the agreed settings?
-   * or VALID if there is no error */
-    */
-  ErrorEnum errorEnum = 1;
-
-
-  /** optional string describing the result, possibly human-readable */
-  string errorMessage = 2;
-
-
-  enum ErrorEnum {
-    /** no error, the share was stored correctly */
-    VALID = 0;
-
-
-    /**
-     * The total bytes of this plus the currently-stored
-     * shares exceed the limit
-     */
-    SIZE = 1;
-
-
-    /**
-     * The sharer sent this share request too soon after the last one.
-     * Exceded the agreed parameter MinTimeBetweenShareUpdates.
-     * The share was not stored / updated.
-     */
-    TOO_FREQUENT = 2;
-
-
-    /** Some other error. The share was not stored / updated. */
-    OTHER = 3;
-  }
+  int64 version = 2;
 }

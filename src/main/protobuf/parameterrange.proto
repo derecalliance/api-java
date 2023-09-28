@@ -1,4 +1,7 @@
 syntax = "proto3";
+
+package derec.message;
+
 message ParameterRange {
   /**
    * Min/Max number of bytes willing to store at any given time

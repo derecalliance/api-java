@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package derec.message;
+
+/*
+ * Result for DeRec response messages
+ */
+message Result {
+  StatusEnum status = 1;
+  string memo = 2;
+}
+
+/*
+ * Status for DeRec Response messages
+ */
+enum StatusEnum {
+  OK = 0;
+  PARTIAL = 1;
+  FAIL = 2;
+  SIZE_LIMIT_EXCEEDED = 3;
+  TOO_FREQUENT = 4;
+  REQUEST_TO_CLOSE = 99;
+}

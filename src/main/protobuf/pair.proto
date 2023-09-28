@@ -1,6 +1,8 @@
 syntax = "proto3";
 import "communicationinfo.proto";
 import "parameterrange.proto";
+
+package derec.message;
 /*
 * ----------------------------------------------------------------------------
 * Pairing protocol
@@ -12,7 +14,7 @@ import "parameterrange.proto";
 * the responder can be helper or sharer.
 * ----------------------------------------------------------------------------
 */
-message PairHelperRequestMessage {
+message PairRequestMessage {
   /**
    * Is the sharer in recovery mode (or adding a new secret), and so
    * possibly reconnecting to an old helper?
@@ -53,7 +55,7 @@ message PairHelperRequestMessage {
  * Response, which is identical to the request, except without the
  * public encryption key, because it already happened during contact.
  */
-message PairHelperResponseMessage {
+message PairResponseMessage {
   /**
    * Is the responder in recovery mode?
    */
