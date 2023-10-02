@@ -1,5 +1,7 @@
-package com.thebuildingblocks.derec.v0_9.prototype;
+package com.thebuildingblocks.derec.v0_9.httpprototype;
 
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +27,7 @@ import java.util.function.Function;
  * Sharer's view of a helper for a single secret, there will be multiple entries for the
  * same helper - one for each secret shared to that helper
  */
-public class HelperClient implements Closeable {
+public class HelperClient implements DeRecPairable, Closeable {
     private final Secret secret; // the secret this helper is a helper for
     DeRecId helperId; // unique Id for helper
     URI tsAndCs;    // link to legal conditions regarding what the helper is to do about
@@ -33,11 +35,11 @@ public class HelperClient implements Closeable {
     PublicKey publicKey; // public key for the helper (for this secret)
     X509Certificate certificate; // The helper's certificate
     String protocolVersion; // accepted protocol version
-    Status status = Status.NONE; // pairing not yet attempted
+    PairingStatus status = PairingStatus.NONE; // pairing not yet attempted
 
     // a list of the shares sent to this helper - this is basically
     // a filtered view of secret.versions for this helper
-    NavigableMap<Integer, Secret.Share> shares = Collections.synchronizedNavigableMap(new TreeMap<>());
+    NavigableMap<Integer, Version.Share> shares = Collections.synchronizedNavigableMap(new TreeMap<>());
     CompletableFuture<HelperClient> pairingFuture; // awaits completion of pairing or unpairing
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -51,16 +53,16 @@ public class HelperClient implements Closeable {
      */
     public void pair() {
         synchronized (this) {
-            if (!status.equals(Status.NONE) && !status.equals(Status.FAILED)) {
+            if (!status.equals(PairingStatus.NONE) && !status.equals(PairingStatus.FAILED)) {
                 throw new IllegalStateException(String.format("Cannot pair a helper with status %s", status));
             }
-            status = Status.INVITED;
+            status = PairingStatus.INVITED;
         }
 
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(helperId.address)
-                .POST(BodyPublishers.ofString("Pair Request: " + secret.sharerId.name, StandardCharsets.UTF_8))
+                .uri(helperId.getAddress())
+                .POST(BodyPublishers.ofString("Pair Request: " + secret.sharerId.getName(), StandardCharsets.UTF_8))
                 .build();
 
 
@@ -69,13 +71,13 @@ public class HelperClient implements Closeable {
                 .thenApply(HttpResponse::body)
                 .thenApply(this::processPairingResponseBody)
                 .exceptionally(t -> {
-                    this.status = Status.FAILED;
+                    this.status = PairingStatus.FAILED;
                     return this;
                 });
     }
 
     private HttpResponse<byte[]> processPairingResponseStatus(HttpResponse<byte[]> response) {
-        this.status = response.statusCode() == 200 ? Status.PAIRED : Status.REFUSED;
+        this.status = response.statusCode() == 200 ? PairingStatus.PAIRED : PairingStatus.REFUSED;
         return response;
     }
 
@@ -84,9 +86,9 @@ public class HelperClient implements Closeable {
         return this;
     }
 
-    public void send(Secret.Share share) {
+    public void send(Version.Share share) {
         synchronized (this) {
-            if (!status.equals(Status.PAIRED)) {
+            if (!status.equals(PairingStatus.PAIRED)) {
                 throw new IllegalStateException("Helper must be paired to share");
             }
             shares.put(share.version.versionNumber, share);
@@ -100,12 +102,12 @@ public class HelperClient implements Closeable {
         Function<HttpResponse<byte[]>, HttpResponse<byte[]>> processSharResponseStatusFn = httpResponse ->
                 processShareResponseStatus(share, httpResponse);
 
-        Function<byte[], Secret.Share> processShareResponseBody = bytes -> {
+        Function<byte[], Version.Share> processShareResponseBody = bytes -> {
             // todo: do something with the ShareResponse message
             return share;
         };
 
-        Function<Throwable, Secret.Share> shareRequestFailedHandler = throwable -> {
+        Function<Throwable, Version.Share> shareRequestFailedHandler = throwable -> {
             // todo: do something with exception
             // todo move code to share
             synchronized (share.version) {
@@ -115,7 +117,7 @@ public class HelperClient implements Closeable {
         };
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(helperId.address)
+                .uri(helperId.getAddress())
                 .POST(BodyPublishers.ofByteArray(share.shareContent))
                 .build();
 
@@ -129,8 +131,8 @@ public class HelperClient implements Closeable {
         share.version.updateRequestSent++;
     }
 
-    HttpResponse<byte[]> processShareResponseStatus(Secret.Share share, HttpResponse<byte[]> httpResponse) {
-        Secret.Version version = share.version;
+    HttpResponse<byte[]> processShareResponseStatus(Version.Share share, HttpResponse<byte[]> httpResponse) {
+        Version version = share.version;
         //todo move code to share
         synchronized (version) {
             if (httpResponse.statusCode() == 200) {
@@ -161,17 +163,17 @@ public class HelperClient implements Closeable {
      */
     public void unPair() {
         synchronized (this) {
-            if (!status.equals(Status.PAIRED)) {
+            if (!status.equals(PairingStatus.PAIRED)) {
                 // todo need to cancel an in progress pairing
                 throw new IllegalStateException("Cannot unpair an unpaired helper");
             }
-            status = Status.PENDING_REMOVAL;
+            status = PairingStatus.PENDING_REMOVAL;
         }
 
         HttpRequest request = HttpRequest
                 .newBuilder()
-                .uri(helperId.address)
-                .POST(BodyPublishers.ofByteArray(("UnPair Request: " + secret.sharerId.name).getBytes(StandardCharsets.UTF_8)))
+                .uri(helperId.getAddress())
+                .POST(BodyPublishers.ofByteArray(("UnPair Request: " + secret.sharerId.getName()).getBytes(StandardCharsets.UTF_8)))
                 .build();
 
 
@@ -180,13 +182,13 @@ public class HelperClient implements Closeable {
                 .thenApply(HttpResponse::body)
                 .thenApply(this::processUnPairingResponseBody)
                 .exceptionally(t -> {
-                    this.status = Status.FAILED;
+                    this.status = PairingStatus.FAILED;
                     return this;
                 });
     }
 
     private HttpResponse<byte[]> processUnPairingResponseStatus(HttpResponse<byte[]> response) {
-        this.status = response.statusCode() == 200 ? Status.REMOVED : Status.FAILED;
+        this.status = response.statusCode() == 200 ? PairingStatus.REMOVED : PairingStatus.FAILED;
         return response;
     }
 
@@ -196,24 +198,24 @@ public class HelperClient implements Closeable {
     }
 
     public void close() {
-        if (status.equals(Status.PAIRED)) {
+        if (status.equals(PairingStatus.PAIRED)) {
             unPair();
         }
         try {
             // todo: actual timeout
             pairingFuture.get(1, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            logger.error("Error unpairing from {}", helperId.name, e);
+            logger.error("Error unpairing from {}", helperId.getName(), e);
         }
     }
 
-    public enum Status {
-        NONE, // not yet invited
-        INVITED, // no reply yet
-        PAIRED, // replied positively
-        REFUSED, // replied negatively
-        PENDING_REMOVAL, // in the process of being removed
-        REMOVED,
-        FAILED, GONE // timeout, disconnect etc.
+    @Override
+    public DeRecId getId() {
+        return helperId;
+    }
+
+    @Override
+    public PairingStatus getStatus() {
+        return status;
     }
 }
