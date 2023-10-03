@@ -6,10 +6,16 @@ import java.util.Objects;
 /**
  * An identity for DeRec
  */
-public class DeRecId{
+public class DeRecId {
     String name; // human-readable identification
     URI contact; // how to contact me outside the protocol, an email address, for example
     URI address; // my transport address
+
+    public DeRecId(String name, String contact, String address) {
+        this.name = name;
+        this.contact = URI.create(contact);
+        this.address = Objects.isNull(address) ? null : URI.create(address);
+    }
 
     public String getName() {
         return name;
@@ -21,12 +27,6 @@ public class DeRecId{
 
     public URI getAddress() {
         return address;
-    }
-
-    public DeRecId(String name, String contact, String address) {
-        this.name = name;
-        this.contact = URI.create(contact);
-        this.address = Objects.isNull(address) ? null : URI.create(address);
     }
 
     @Override

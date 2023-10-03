@@ -6,10 +6,12 @@ package com.thebuildingblocks.derec.v0_9.interfaces;
  * returns true, representing that this version can be recovered.
  */
 public interface DeRecVersion {
+
     /**
      * The secret this version is a secret of
      */
     DeRecSecret getSecret();
+
     /**
      * The version number of this Version. Later versions have higher numbers.
      */

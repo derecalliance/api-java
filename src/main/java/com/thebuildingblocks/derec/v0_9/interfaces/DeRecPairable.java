@@ -5,6 +5,10 @@ package com.thebuildingblocks.derec.v0_9.interfaces;
  * an attempt to pair and an ongoing status reflecting the secret update and pairing life cycle.
  */
 public interface DeRecPairable {
+    DeRecId getId();
+
+    PairingStatus getStatus();
+
     enum PairingStatus {
         NONE, // not yet invited
         INVITED, // no reply yet
@@ -15,8 +19,4 @@ public interface DeRecPairable {
         FAILED, // timeout, disconnect etc.
         GONE // disconnected at Helper Request
     }
-
-    DeRecId getId();
-
-    PairingStatus getStatus();
 }

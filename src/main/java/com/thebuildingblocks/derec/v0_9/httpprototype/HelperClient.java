@@ -87,7 +87,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         secret.notificationListener.accept(new Notification.Builder()
                 .secret(secret)
                 .message(this.helperId.getName())
-                .type(DeRecStatusNotification.DeRecNotificationType.HELPER_READY)
+                .type(DeRecStatusNotification.Type.HELPER_READY)
                 .build());
         return this;
     }
@@ -153,7 +153,7 @@ public class HelperClient implements DeRecPairable, Closeable {
                         version.future.complete(version);
                         secret.notificationListener.accept(new Notification.Builder().
                                 message(share.version.secret.getSecretId().toString()).
-                                type(DeRecStatusNotification.DeRecNotificationType.UPDATE_AVAILABLE).
+                                type(DeRecStatusNotification.Type.UPDATE_AVAILABLE).
                                 version(version).
                                 secret(secret).
                                 build());
@@ -169,7 +169,7 @@ public class HelperClient implements DeRecPairable, Closeable {
             if (version.successfulUpdateRepliesReceived + version.failedUpdateReplyReceived == version.shares.size()) {
                 secret.notificationListener.accept(new Notification.Builder().
                         message(share.version.secret.getSecretId().toString()).
-                        type(DeRecStatusNotification.DeRecNotificationType.UPDATE_FINISHED).
+                        type(DeRecStatusNotification.Type.UPDATE_FINISHED).
                         version(version).
                         secret(secret).
                         build());
@@ -217,7 +217,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         secret.notificationListener.accept(new Notification.Builder()
                 .secret(secret)
                 .message(this.helperId.getName())
-                .type(DeRecStatusNotification.DeRecNotificationType.HELPER_INACTIVE)
+                .type(DeRecStatusNotification.Type.HELPER_INACTIVE)
                 .build());
         return this;
     }

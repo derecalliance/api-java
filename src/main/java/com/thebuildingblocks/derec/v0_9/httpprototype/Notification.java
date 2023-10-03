@@ -5,7 +5,7 @@ import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecVersion;
 
 public class Notification implements DeRecStatusNotification {
-    DeRecNotificationType type;
+    Type type;
     String message;
     DeRecVersion version;
     DeRecSecret secret;
@@ -13,7 +13,7 @@ public class Notification implements DeRecStatusNotification {
     private Notification() {}
 
     @Override
-    public DeRecNotificationType getType() {
+    public Type getType() {
         return type;
     }
 
@@ -40,7 +40,7 @@ public class Notification implements DeRecStatusNotification {
             return this;
         }
 
-        public Builder type(DeRecNotificationType type) {
+        public Builder type(Type type) {
             notification.type = type;
             return this;
         }

@@ -8,7 +8,7 @@ public interface DeRecStatusNotification {
     /**
      * The type of the notification
      */
-    DeRecNotificationType getType();
+    Type getType();
 
     /**
      * A message describing the nature of the notification
@@ -25,7 +25,7 @@ public interface DeRecStatusNotification {
      */
     DeRecSecret getSecret();
 
-    enum DeRecNotificationType {
+    enum Type {
         UPDATE_AVAILABLE, // a sufficient number of acknowledgements have been received for an update to consider it recoverable
         UPDATE_FINISHED, // all update requests have been replied to, or failed
         HELPER_INACTIVE, // a previously active helper has become inactive
