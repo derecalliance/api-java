@@ -11,41 +11,7 @@ import java.util.concurrent.Future;
  * helpers assigned to it, and carries out updates of the secret.
  */
 public interface DeRecSecret extends Closeable {
-    /**
-     * A status notification may be emitted by a secret asynchronously to alert
-     * an API user of changes to the status of the Secret
-     */
-    interface StatusNotification {
-        /**
-         * The type of the notification
-         */
-        NotificationType getType();
 
-        /**
-         * A message describing the nature of the notification
-         */
-        String getMessage();
-
-        /**
-         * The version, if any, that the update refers to
-         */
-        DeRecVersion getVersion();
-
-        /**
-         * The secret this update refers to
-         */
-        DeRecSecret getSecret();
-    }
-
-    enum NotificationType {
-        UPDATE_AVAILABLE, // a sufficient number of acknowledgements have been received for an update to consider it recoverable
-        UPDATE_FINISHED, // all update requests have been replied to, or failed
-        HELPER_INACTIVE, // a previously inactive helper has become active
-        HELPER_READY, // a helper has become active
-        SECRET_UNAVAILABLE, // a secret that had previously been usable is now nopt usable
-        SECRET_AVAILABLE; // a secret is now available for use, i.e. a sufficient number of helpers can
-        // receive updates and support recovery
-    }
     /**
      * Add helpers to this secret and block till the outcome of adding them is known
      * @param helperIds a list of helper IDs to add

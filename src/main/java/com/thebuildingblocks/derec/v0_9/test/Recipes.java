@@ -35,10 +35,11 @@ public class Recipes {
      * Get a list of all helper ids and the secrets they protect
      */
     public static Map<DeRecId, List<DeRecSecret>> listHelpers(DeRecSharer sharer) {
+        // todo: this could possibly be done more elegantly
         // create a map of DeRecId and List<Secret>
         final Map<DeRecId, List<DeRecSecret>> secretMap = new HashMap<>();
         // populate the map
-        sharer.getSecrets().forEach( s -> s.getHelpers()
+        sharer.getSecrets().forEach(s -> s.getHelpers()
                 .forEach(h -> {
                     if (!secretMap.containsKey(h.getId())) secretMap.put(h.getId(), new ArrayList<>());
                     secretMap.get(h.getId()).add(s);

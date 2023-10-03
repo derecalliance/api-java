@@ -1,8 +1,8 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSecret;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSharer;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 
 import java.security.KeyPair;
 import java.security.cert.X509Certificate;
@@ -21,7 +21,7 @@ public class Sharer implements DeRecSharer{
     public KeyPair keyPair; // public/private key pair
     // before deleting an old share
     public X509Certificate certificate; // certificate to use
-    private Consumer<DeRecSecret.StatusNotification> listener = n -> {}; // do nothing
+    private Consumer<DeRecStatusNotification> listener = n -> {}; // do nothing
 
     /**
      * Hidden constructor
@@ -102,7 +102,7 @@ public class Sharer implements DeRecSharer{
             return this;
         }
 
-        public Builder notificationListener(Consumer<DeRecSecret.StatusNotification> listener) {
+        public Builder notificationListener(Consumer<DeRecStatusNotification> listener) {
             sharer.listener = listener;
             return this;
         }

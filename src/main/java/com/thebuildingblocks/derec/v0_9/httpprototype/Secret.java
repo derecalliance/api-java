@@ -1,9 +1,6 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSecret;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecVersion;
+import com.thebuildingblocks.derec.v0_9.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +26,7 @@ public class Secret implements Closeable, DeRecSecret {
      DeRecId sharerId;
      UUID secretId; // the ID of the secret
      String description; // human-readable description of the secret
-     Consumer<StatusNotification> notificationListener; // listener for events
+     Consumer<DeRecStatusNotification> notificationListener; // listener for events
 
     /* -- interoperability for the secret -- */
     int storageRequired; // bytes required to store shares of this secret
@@ -117,7 +114,6 @@ public class Secret implements Closeable, DeRecSecret {
     @Override
     public Version update(byte[] bytesToProtect) {
         try {
-            logger.info("Updating secret");
             return updateAsync(bytesToProtect).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -131,6 +127,7 @@ public class Secret implements Closeable, DeRecSecret {
      */
     @Override
     public Future<Version> updateAsync(byte[] bytesToProtect) {
+        logger.trace("Updating secret {}", secretId);
         if (isClosed()) {
             throw new IllegalStateException("Cannot update closed secret");
         }
@@ -239,7 +236,7 @@ public class Secret implements Closeable, DeRecSecret {
             return this;
         }
 
-        public Builder notificationListener(Consumer<StatusNotification> listener) {
+        public Builder notificationListener(Consumer<DeRecStatusNotification> listener) {
             secret.notificationListener = listener;
             return this;
         }
@@ -250,6 +247,5 @@ public class Secret implements Closeable, DeRecSecret {
             secret = null;
             return copy;
         }
-
     }
 }

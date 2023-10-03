@@ -16,7 +16,7 @@ public interface DeRecPairable {
         GONE // disconnected at Helper Request
     }
 
-    <I extends DeRecId> I getId();
+    DeRecId getId();
 
     PairingStatus getStatus();
 }

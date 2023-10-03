@@ -2,6 +2,7 @@ package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,6 +84,11 @@ public class HelperClient implements DeRecPairable, Closeable {
 
     private HelperClient processPairingResponseBody(byte[] bytes) {
         // todo: process the returned message
+        secret.notificationListener.accept(new Notification.Builder()
+                .secret(secret)
+                .message(this.helperId.getName())
+                .type(DeRecStatusNotification.DeRecNotificationType.HELPER_READY)
+                .build());
         return this;
     }
 
@@ -145,6 +151,12 @@ public class HelperClient implements DeRecPairable, Closeable {
                         share.confirmed = ZonedDateTime.now();
                         version.success = true;
                         version.future.complete(version);
+                        secret.notificationListener.accept(new Notification.Builder().
+                                message(share.version.secret.getSecretId().toString()).
+                                type(DeRecStatusNotification.DeRecNotificationType.UPDATE_AVAILABLE).
+                                version(version).
+                                secret(secret).
+                                build());
                     }
                 }
             } else {
@@ -153,6 +165,14 @@ public class HelperClient implements DeRecPairable, Closeable {
                 if (version.shares.size() - version.failedUpdateReplyReceived < secret.thresholdForDeletion) {
                     version.future.complete(version);
                 }
+            }
+            if (version.successfulUpdateRepliesReceived + version.failedUpdateReplyReceived == version.shares.size()) {
+                secret.notificationListener.accept(new Notification.Builder().
+                        message(share.version.secret.getSecretId().toString()).
+                        type(DeRecStatusNotification.DeRecNotificationType.UPDATE_FINISHED).
+                        version(version).
+                        secret(secret).
+                        build());
             }
         }
         return httpResponse;
@@ -194,6 +214,11 @@ public class HelperClient implements DeRecPairable, Closeable {
 
     private HelperClient processUnPairingResponseBody(byte[] bytes) {
         // todo: process the returned message
+        secret.notificationListener.accept(new Notification.Builder()
+                .secret(secret)
+                .message(this.helperId.getName())
+                .type(DeRecStatusNotification.DeRecNotificationType.HELPER_INACTIVE)
+                .build());
         return this;
     }
 
