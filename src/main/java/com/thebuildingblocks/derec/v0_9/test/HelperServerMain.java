@@ -54,8 +54,7 @@ public class HelperServerMain {
             try (OutputStreamWriter ow = new OutputStreamWriter(exchange.getResponseBody())) {
                 ow.append("I am ")
                         .append(id.getName())
-                        .append("\n")
-                        .append("Hello World!");
+                        .append(" I'll be your helper today!");
             }
         }
     }

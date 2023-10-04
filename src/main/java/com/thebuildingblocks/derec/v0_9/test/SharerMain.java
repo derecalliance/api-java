@@ -1,5 +1,6 @@
 package com.thebuildingblocks.derec.v0_9.test;
 
+import com.thebuildingblocks.derec.v0_9.httpprototype.Secret;
 import com.thebuildingblocks.derec.v0_9.httpprototype.Sharer;
 import com.thebuildingblocks.derec.v0_9.interfaces.*;
 import org.slf4j.Logger;
@@ -60,10 +61,17 @@ public class SharerMain {
         System.out.println("Helpers and Secrets");
         Recipes.listHelpers(me).forEach((key, value) -> {
             System.out.println(key.getName());
-            value.forEach(s -> System.out.printf("Secret id: %s, \"%s\", Closed: %b, Available: %b\n",
+            value.forEach(s -> System.out.printf("   Secret id: %s, \"%s\", Closed: %b, Available: %b\n",
                     s.getSecretId(), s.getDescription(), s.isClosed(), s.isAvailable()));
         });
 
+        System.out.println("Secrets and Helpers");
+        for (DeRecSecret s: me.getSecrets()) {
+            System.out.println("Secret Id: " + s.getSecretId().toString());
+            for (DeRecPairable p: s.getHelpers()) {
+                System.out.println("   " + p.getId().getName() + ": " + p.getStatus());
+            }
+        }
     }
 
     private void logNotification(DeRecStatusNotification t) {

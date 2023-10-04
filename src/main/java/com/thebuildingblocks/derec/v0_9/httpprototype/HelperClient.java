@@ -11,7 +11,6 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.time.ZonedDateTime;
@@ -24,9 +23,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.PAIRED;
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.REFUSED;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.*;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Sharer's view of a helper for a single secret, there will be multiple entries for the
@@ -74,14 +73,14 @@ public class HelperClient implements DeRecPairable, Closeable {
      */
     public void pair() {
         synchronized (this) {
-            if (!status.equals(PairingStatus.NONE) && !status.equals(PairingStatus.FAILED)) {
+            if (!status.equals(PairingStatus.NONE) && !status.equals(FAILED)) {
                 throw new IllegalStateException(String.format("Cannot pair a helper with status %s", status));
             }
             status = PairingStatus.INVITED;
         }
 
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofString("Pair Request: " + secret.sharerId.getName(), StandardCharsets.UTF_8))
+                .POST(BodyPublishers.ofString("Pair Request: " + secret.sharerId.getName(), UTF_8))
                 .build();
 
         pairingFuture = secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
@@ -89,10 +88,10 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .thenApply(HttpResponse::body)
                 .thenApply(this::processPairingResponseBody)
                 .exceptionally(t -> {
-                    this.status = PairingStatus.FAILED;
+                    this.status = FAILED;
                     secret.notifyStatus(buildNotification()
                             .message(t.getCause().getMessage())
-                            .build(DeRecStatusNotification.Type.HELPER_NOT_PAIRED));
+                            .build(HELPER_NOT_PAIRED));
                     return this;
                 });
     }
@@ -100,14 +99,16 @@ public class HelperClient implements DeRecPairable, Closeable {
     private HttpResponse<byte[]> processPairingResponseStatus(HttpResponse<byte[]> response) {
         this.status = response.statusCode() == 200 ? PAIRED : REFUSED;
         this.message = "HTTP Status " + response.statusCode();
+        logger.trace("Status {} Body {}", response.statusCode(), new String(response.body(), UTF_8));
+        secret.notifyStatus(buildNotification()
+                .message(this.message)
+                .build(this.status == PAIRED ? HELPER_READY : HELPER_NOT_PAIRED));
         return response;
     }
 
     private HelperClient processPairingResponseBody(byte[] bytes) {
         // todo: process the returned message
-        secret.notifyStatus(buildNotification()
-                .message(this.message)
-                .build(this.status == PAIRED ? HELPER_READY : HELPER_NOT_PAIRED));
+
         return this;
     }
 
@@ -204,7 +205,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         }
 
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofByteArray(("UnPair Request: " + secret.sharerId.getName()).getBytes(StandardCharsets.UTF_8)))
+                .POST(BodyPublishers.ofByteArray(("UnPair Request: " + secret.sharerId.getName()).getBytes(UTF_8)))
                 .build();
 
 
@@ -213,13 +214,13 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .thenApply(HttpResponse::body)
                 .thenApply(this::processUnPairingResponseBody)
                 .exceptionally(t -> {
-                    this.status = PairingStatus.FAILED;
+                    this.status = FAILED;
                     return this;
                 });
     }
 
     private HttpResponse<byte[]> processUnPairingResponseStatus(HttpResponse<byte[]> response) {
-        this.status = response.statusCode() == 200 ? PairingStatus.REMOVED : PairingStatus.FAILED;
+        this.status = response.statusCode() == 200 ? PairingStatus.REMOVED : FAILED;
         this.message = "HTTP Status " + response.statusCode();
         return response;
     }
@@ -237,8 +238,7 @@ public class HelperClient implements DeRecPairable, Closeable {
             unPair();
         }
         try {
-            // todo: actual timeout
-            pairingFuture.get(1, TimeUnit.SECONDS);
+            pairingFuture.get(secret.retryParameters.pairingWaitSecs, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             logger.error("Error unpairing from {}", helperId.getName(), e);
         }

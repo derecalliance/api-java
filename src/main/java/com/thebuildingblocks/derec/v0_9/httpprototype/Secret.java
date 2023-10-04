@@ -61,10 +61,16 @@ public class Secret implements Closeable, DeRecSecret {
         // block for completion
         List<CompletableFuture<? extends DeRecPairable>> futures = addHelpersAsync(helperIds);
         try {
-            CompletableFuture.allOf(futures.toArray(new CompletableFuture[helperIds.size()])).get(5, TimeUnit.SECONDS);
+            logger.info("Awaiting result of pairing");
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[helperIds.size()])).get(retryParameters.pairingWaitSecs, TimeUnit.SECONDS);
         } catch (InterruptedException | TimeoutException | ExecutionException e) {
+            logger.error("Error while waiting for pairing completion");
             for (CompletableFuture<? extends DeRecPairable> f: futures) {
-                logger.info("{} {}", f.isDone(), f.isCompletedExceptionally());
+                try {
+                    logger.info("{} {} {}", f.isDone(), f.isDone() ? f.get().getId().getName():"?", f.isCompletedExceptionally());
+                } catch (InterruptedException | ExecutionException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         }
     }
