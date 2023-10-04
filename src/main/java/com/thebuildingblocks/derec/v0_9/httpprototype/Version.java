@@ -70,7 +70,7 @@ public class Version implements DeRecVersion {
      */
     public static class Share {
         final Version version;
-        public CompletableFuture<Share> future;
+        CompletableFuture<Share> future;
         byte[] shareContent; // contents of the share
         Util.RetryStatus retryStatus = new Util.RetryStatus();
         HelperClient helper; // the helper who was sent this share

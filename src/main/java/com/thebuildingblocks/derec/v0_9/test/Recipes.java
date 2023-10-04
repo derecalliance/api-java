@@ -1,6 +1,8 @@
 package com.thebuildingblocks.derec.v0_9.test;
 
+import com.thebuildingblocks.derec.v0_9.httpprototype.Secret;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSecret;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSharer;
 
@@ -41,7 +43,9 @@ public class Recipes {
         // populate the map
         sharer.getSecrets().forEach(s -> s.getHelpers()
                 .forEach(h -> {
-                    if (!secretMap.containsKey(h.getId())) secretMap.put(h.getId(), new ArrayList<>());
+                    if (!secretMap.containsKey(h.getId())) {
+                        secretMap.put(h.getId(), new ArrayList<>());
+                    }
                     secretMap.get(h.getId()).add(s);
                 }));
         return secretMap;

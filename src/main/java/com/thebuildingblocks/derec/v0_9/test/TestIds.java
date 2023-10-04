@@ -8,8 +8,10 @@ public class TestIds {
             new DeRecId("rohit", "mailto:rohit@swirldslabs.com", "http://localhost:8080/rohit"),
             new DeRecId("dipti", "mailto:dipti@swirldslabs.com", "http://localhost:8080/dipti"),
             new DeRecId("cate", "mailto:cate@swirldslabs.com", "http://localhost:8080/cate"),
-            new DeRecId("jo", "mailto:jorabin@thebuildingblocks.com", "http://localhost:8080/jo"),
+            new DeRecId("jo", "mailto:jo@thebuildingblocks.com", "http://localhost:8080/jo"),
             new DeRecId("niall", "mailto:niall@thebuildingblocks.com", "http://localhost:8080/niall"),
-            new DeRecId("daniel", "mailto:daniel@thebuildingblocks.com", "http://localhost:8080/daniel")
+            new DeRecId("daniel", "mailto:daniel@thebuildingblocks.com", "http://localhost:8080/daniel"),
+            new DeRecId("noone", "mailto:noone@thebuildingblocks.com", "http://localhost:8080/noone"),
+            new DeRecId("nowhere", "mailto:nowhere@thebuildingblocks.com", "http://192.168.1.40/nowhere"),
     };
 }

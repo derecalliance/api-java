@@ -54,7 +54,7 @@ public class Sharer implements DeRecSharer{
         if (secrets.containsKey(secretId)) {
             throw new IllegalStateException("Secret with that Id already exists");
         }
-        Secret secret = new Secret.Builder()
+        Secret secret = Secret.newBuilder()
                 .sharerId(this.id)
                 .secretId(secretId)
                 .description(description)
@@ -79,6 +79,10 @@ public class Sharer implements DeRecSharer{
     @Override
     public List<Secret> getSecrets() {
         return secrets.values().stream().toList();
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
     }
 
     /**

@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 /**
@@ -24,7 +25,7 @@ public interface DeRecSecret extends Closeable {
      *
      * @param helperIds a list of futures for each of the helpers
      */
-    List<Future<? extends DeRecPairable>> addHelpersAsync(List<? extends DeRecId> helperIds);
+    List<CompletableFuture<? extends DeRecPairable>> addHelpersAsync(List<? extends DeRecId> helperIds);
 
     /**
      * List the helpers

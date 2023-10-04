@@ -7,8 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Closeable;
 import java.net.http.HttpClient;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -43,14 +42,15 @@ public class Secret implements Closeable, DeRecSecret {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     Secret() {
-        this(new Util.RetryParameters());
+        this(Util.RetryParameters.DEFAULT);
     }
 
     Secret(Util.RetryParameters retryParameters) {
         this.retryParameters = retryParameters;
-        httpClient = HttpClient.newBuilder().connectTimeout(retryParameters.timeout).build();
+        httpClient = HttpClient.newBuilder()
+                .connectTimeout(retryParameters.getConnectTimeout())
+                .build();
     }
-
 
     /**
      * Add helpers to the secret, pair and block for outcome.
@@ -59,27 +59,28 @@ public class Secret implements Closeable, DeRecSecret {
     @Override
     public void addHelpers(List<? extends DeRecId> helperIds) {
         // block for completion
-        for (Future<? extends DeRecPairable> future: addHelpersAsync(helperIds)){
-            try {
-                DeRecPairable helper = future.get();
-                logger.trace("Pair {} {}", helper.getId().getName(), helper.getStatus());
-            } catch (InterruptedException | ExecutionException e) {
-                logger.trace("Pairing exception:", e);
+        List<CompletableFuture<? extends DeRecPairable>> futures = addHelpersAsync(helperIds);
+        try {
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[helperIds.size()])).get(5, TimeUnit.SECONDS);
+        } catch (InterruptedException | TimeoutException | ExecutionException e) {
+            for (CompletableFuture<? extends DeRecPairable> f: futures) {
+                logger.info("{} {}", f.isDone(), f.isCompletedExceptionally());
             }
         }
     }
 
     /**
      * Add helpers to the secret and initiate pairing. The returned list of futures can be examined for success.
+     *
      * @param helperIds the ids of the helpers to add
      * @return a list of {@link Future<HelperClient>} for helpers created and added
      */
     @Override
-    public List<Future<? extends DeRecPairable>> addHelpersAsync(List<? extends DeRecId> helperIds) {
+    public List<CompletableFuture<? extends DeRecPairable>> addHelpersAsync(List<? extends DeRecId> helperIds) {
         if (isClosed()) {
             throw new IllegalStateException("Cannot add helpers to closed secret");
         }
-        List<Future<? extends DeRecPairable>> addedHelpers = new ArrayList<>();
+        List<CompletableFuture<? extends DeRecPairable>> addedHelpers = new ArrayList<>();
         for (DeRecId helperId: helperIds) {
             HelperClient helper = new HelperClient(this, helperId);
             // todo other helper configuration, timeouts, etc.
@@ -114,6 +115,7 @@ public class Secret implements Closeable, DeRecSecret {
     @Override
     public Version update(byte[] bytesToProtect) {
         try {
+            logger.trace("Waiting for update future");
             return updateAsync(bytesToProtect).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -139,17 +141,17 @@ public class Secret implements Closeable, DeRecSecret {
         }
 
         // get a list of helpers thought to be active
-        List<HelperClient> activeHelpers = helpers.stream().filter(h -> h.status.equals(DeRecPairable.PairingStatus.PAIRED)).toList();
-        if (activeHelpers.size() < thresholdSecretRecovery) {
-            throw new IllegalStateException(String.format("Not enough helpers %d", activeHelpers.size()));
+        List<HelperClient> pairedHelpers = helpers.stream().filter(h -> h.status.equals(DeRecPairable.PairingStatus.PAIRED)).toList();
+        if (pairedHelpers.size() < thresholdSecretRecovery) {
+            throw new IllegalStateException(String.format("Not enough helpers %d", pairedHelpers.size()));
         }
 
         // go to next version number
         int version = latestShareVersion.incrementAndGet();
-        this.versions.put(version, new Version(this, bytesToProtect, version, activeHelpers.size()));
+        this.versions.put(version, new Version(this, bytesToProtect, version, pairedHelpers.size()));
         // add the shares to the list
         int shareNumber = 0;
-        for (HelperClient helper: helpers) {
+        for (HelperClient helper: pairedHelpers) {
             Version.Share share = versions.get(version).shares.get(shareNumber++);
             helper.send(share);
         }
@@ -203,8 +205,16 @@ public class Secret implements Closeable, DeRecSecret {
         return description;
     }
 
+    public void notifyStatus(DeRecStatusNotification notification) {
+        this.notificationListener.accept(notification);
+    }
+
+    public static Builder newBuilder() {
+        return new Secret.Builder();
+    }
+
     public static class Builder {
-        Secret secret = new Secret(defaultRetryParameters.clone());
+        Secret secret = new Secret(defaultRetryParameters);
 
         public Builder sharerId(DeRecId id) {
             secret.sharerId = id;

@@ -24,6 +24,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.PAIRED;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.REFUSED;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
+
 /**
  * Sharer's view of a helper for a single secret, there will be multiple entries for the
  * same helper - one for each secret shared to that helper
@@ -37,11 +41,27 @@ public class HelperClient implements DeRecPairable, Closeable {
     X509Certificate certificate; // The helper's certificate
     String protocolVersion; // accepted protocol version
     PairingStatus status = PairingStatus.NONE; // pairing not yet attempted
+    String message = "";
 
     // a list of the shares sent to this helper - this is basically
     // a filtered view of secret.versions for this helper
     NavigableMap<Integer, Version.Share> shares = Collections.synchronizedNavigableMap(new TreeMap<>());
     CompletableFuture<HelperClient> pairingFuture; // awaits completion of pairing or unpairing
+
+    // convenience function to build requests consistently
+    HttpRequest.Builder buildRequest (){
+        return HttpRequest.newBuilder()
+                .uri(helperId.getAddress())
+                .timeout(secret.retryParameters.getResponseTimeout());
+    }
+
+    // convenience function to avoid duplication
+    Notification.Builder buildNotification() {
+        return Notification.newBuilder()
+                .secret(secret)
+                .pairable(this);
+    }
+
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     HelperClient(Secret secret, DeRecId helperId) {
@@ -60,12 +80,9 @@ public class HelperClient implements DeRecPairable, Closeable {
             status = PairingStatus.INVITED;
         }
 
-        HttpRequest request = HttpRequest
-                .newBuilder()
-                .uri(helperId.getAddress())
+        HttpRequest request = buildRequest()
                 .POST(BodyPublishers.ofString("Pair Request: " + secret.sharerId.getName(), StandardCharsets.UTF_8))
                 .build();
-
 
         pairingFuture = secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
                 .thenApply(this::processPairingResponseStatus)
@@ -73,28 +90,30 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .thenApply(this::processPairingResponseBody)
                 .exceptionally(t -> {
                     this.status = PairingStatus.FAILED;
+                    secret.notifyStatus(buildNotification()
+                            .message(t.getCause().getMessage())
+                            .build(DeRecStatusNotification.Type.HELPER_NOT_PAIRED));
                     return this;
                 });
     }
 
     private HttpResponse<byte[]> processPairingResponseStatus(HttpResponse<byte[]> response) {
-        this.status = response.statusCode() == 200 ? PairingStatus.PAIRED : PairingStatus.REFUSED;
+        this.status = response.statusCode() == 200 ? PAIRED : REFUSED;
+        this.message = "HTTP Status " + response.statusCode();
         return response;
     }
 
     private HelperClient processPairingResponseBody(byte[] bytes) {
         // todo: process the returned message
-        secret.notificationListener.accept(new Notification.Builder()
-                .secret(secret)
-                .message(this.helperId.getName())
-                .type(DeRecStatusNotification.Type.HELPER_READY)
-                .build());
+        secret.notifyStatus(buildNotification()
+                .message(this.message)
+                .build(this.status == PAIRED ? HELPER_READY : HELPER_NOT_PAIRED));
         return this;
     }
 
     public void send(Version.Share share) {
         synchronized (this) {
-            if (!status.equals(PairingStatus.PAIRED)) {
+            if (!status.equals(PAIRED)) {
                 throw new IllegalStateException("Helper must be paired to share");
             }
             shares.put(share.version.versionNumber, share);
@@ -103,7 +122,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         share.helper = this;
 
         /*
-         * In-line functions following serve only to capture the share
+         * In-line functions following serve to capture the share
          */
         Function<HttpResponse<byte[]>, HttpResponse<byte[]>> processSharResponseStatusFn = httpResponse ->
                 processShareResponseStatus(share, httpResponse);
@@ -122,8 +141,7 @@ public class HelperClient implements DeRecPairable, Closeable {
             return share;
         };
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(helperId.getAddress())
+        HttpRequest request = buildRequest()
                 .POST(BodyPublishers.ofByteArray(share.shareContent))
                 .build();
 
@@ -151,12 +169,9 @@ public class HelperClient implements DeRecPairable, Closeable {
                         share.confirmed = ZonedDateTime.now();
                         version.success = true;
                         version.future.complete(version);
-                        secret.notificationListener.accept(new Notification.Builder().
-                                message(share.version.secret.getSecretId().toString()).
-                                type(DeRecStatusNotification.Type.UPDATE_AVAILABLE).
+                        secret.notifyStatus(buildNotification().
                                 version(version).
-                                secret(secret).
-                                build());
+                                build(UPDATE_AVAILABLE));
                     }
                 }
             } else {
@@ -167,12 +182,10 @@ public class HelperClient implements DeRecPairable, Closeable {
                 }
             }
             if (version.successfulUpdateRepliesReceived + version.failedUpdateReplyReceived == version.shares.size()) {
-                secret.notificationListener.accept(new Notification.Builder().
-                        message(share.version.secret.getSecretId().toString()).
-                        type(DeRecStatusNotification.Type.UPDATE_FINISHED).
-                        version(version).
-                        secret(secret).
-                        build());
+                secret.notifyStatus(buildNotification()
+                        .message(version.success ? "Update succeeded" : "Update failed")
+                        .version(version)
+                        .build(UPDATE_FINISHED));
             }
         }
         return httpResponse;
@@ -183,16 +196,14 @@ public class HelperClient implements DeRecPairable, Closeable {
      */
     public void unPair() {
         synchronized (this) {
-            if (!status.equals(PairingStatus.PAIRED)) {
+            if (!status.equals(PAIRED)) {
                 // todo need to cancel an in progress pairing
                 throw new IllegalStateException("Cannot unpair an unpaired helper");
             }
             status = PairingStatus.PENDING_REMOVAL;
         }
 
-        HttpRequest request = HttpRequest
-                .newBuilder()
-                .uri(helperId.getAddress())
+        HttpRequest request = buildRequest()
                 .POST(BodyPublishers.ofByteArray(("UnPair Request: " + secret.sharerId.getName()).getBytes(StandardCharsets.UTF_8)))
                 .build();
 
@@ -209,21 +220,20 @@ public class HelperClient implements DeRecPairable, Closeable {
 
     private HttpResponse<byte[]> processUnPairingResponseStatus(HttpResponse<byte[]> response) {
         this.status = response.statusCode() == 200 ? PairingStatus.REMOVED : PairingStatus.FAILED;
+        this.message = "HTTP Status " + response.statusCode();
         return response;
     }
 
     private HelperClient processUnPairingResponseBody(byte[] bytes) {
         // todo: process the returned message
-        secret.notificationListener.accept(new Notification.Builder()
-                .secret(secret)
+        secret.notifyStatus(buildNotification()
                 .message(this.helperId.getName())
-                .type(DeRecStatusNotification.Type.HELPER_INACTIVE)
-                .build());
+                .build(HELPER_INACTIVE));
         return this;
     }
 
     public void close() {
-        if (status.equals(PairingStatus.PAIRED)) {
+        if (status.equals(PAIRED)) {
             unPair();
         }
         try {

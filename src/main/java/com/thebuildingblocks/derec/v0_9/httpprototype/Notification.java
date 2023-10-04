@@ -1,13 +1,17 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSecret;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecVersion;
 
+import java.util.Optional;
+
 public class Notification implements DeRecStatusNotification {
     Type type;
-    String message;
+    String message = "";
     DeRecVersion version;
+    DeRecPairable pairable;
     DeRecSecret secret;
 
     private Notification() {}
@@ -23,8 +27,13 @@ public class Notification implements DeRecStatusNotification {
     }
 
     @Override
-    public DeRecVersion getVersion() {
-        return version;
+    public Optional<DeRecVersion> getVersion() {
+        return Optional.ofNullable(version);
+    }
+
+    @Override
+    public DeRecPairable getPairable() {
+        return pairable;
     }
 
     @Override
@@ -32,8 +41,16 @@ public class Notification implements DeRecStatusNotification {
         return secret;
     }
 
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     public static class Builder {
-        Notification notification = new Notification();
+        private final Notification notification;
+
+        protected Builder(){
+            notification = new Notification();
+        }
 
         public Builder message(String message) {
             notification.message = message;
@@ -50,6 +67,11 @@ public class Notification implements DeRecStatusNotification {
             return this;
         }
 
+        public Builder pairable(DeRecPairable pairable) {
+            notification.pairable = pairable;
+            return this;
+        }
+
         public Builder secret(DeRecSecret secret) {
             notification.secret = secret;
             return this;
@@ -57,6 +79,10 @@ public class Notification implements DeRecStatusNotification {
 
         public Notification build(){
             return notification;
+        }
+
+        public Notification build(Type type){
+            return this.type(type).build();
         }
     }
 }
