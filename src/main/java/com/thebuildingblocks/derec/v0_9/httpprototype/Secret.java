@@ -25,14 +25,14 @@ public class Secret implements Closeable, DeRecSecret {
      DeRecId sharerId;
      UUID secretId; // the ID of the secret
      String description; // human-readable description of the secret
-     Consumer<DeRecStatusNotification> notificationListener; // listener for events
+     List<Consumer<DeRecStatusNotification>> notificationListeners = new ArrayList<>(); // listeners for events
 
     /* -- interoperability for the secret -- */
     int storageRequired; // bytes required to store shares of this secret
     int thresholdSecretRecovery; // how many helpers needed to recover the secret
     int thresholdForDeletion; // how many confirmations of new secret needed to be confirmed to delete old one
     final Util.RetryParameters retryParameters; // Retry parameters needed for this secret
-    final HttpClient httpClient;
+    private final HttpClient httpClient;
 
     /* -- working variables -- these need to be thread safe */
     AtomicInteger latestShareVersion = new AtomicInteger();
@@ -88,14 +88,14 @@ public class Secret implements Closeable, DeRecSecret {
         }
         List<CompletableFuture<? extends DeRecPairable>> addedHelpers = new ArrayList<>();
         for (DeRecId helperId: helperIds) {
-            HelperClient helper = new HelperClient(this, helperId);
+            HelperClient helper = new HelperClient(this, helperId, httpClient, this.retryParameters);
             // todo other helper configuration, timeouts, etc.
             if (helpers.contains(helper)) {
                 // todo is this true?
                 throw new IllegalStateException("Cannot have the same helper more than once for a secret");
             }
             helpers.add(helper);
-            logger.trace("Pairing {}", helper.helperId.getName());
+            logger.trace("Pairing {}",helperId.getName());
             helper.pair();
             addedHelpers.add(helper.pairingFuture);
         }
@@ -153,15 +153,11 @@ public class Secret implements Closeable, DeRecSecret {
         }
 
         // go to next version number
-        int version = latestShareVersion.incrementAndGet();
-        this.versions.put(version, new Version(this, bytesToProtect, version, pairedHelpers.size()));
-        // add the shares to the list
-        int shareNumber = 0;
-        for (HelperClient helper: pairedHelpers) {
-            Version.Share share = versions.get(version).shares.get(shareNumber++);
-            helper.send(share);
-        }
-        return this.versions.get(version).future;
+        int versionNumber = latestShareVersion.incrementAndGet();
+        Version version = new Version(this, versionNumber);
+        this.versions.put(versionNumber, version);
+        version.share(bytesToProtect, pairedHelpers);
+        return version.future;
     }
 
     @Override
@@ -170,14 +166,18 @@ public class Secret implements Closeable, DeRecSecret {
     }
 
     /**
-     * Unpair with all helpers and deactivate
+     * Cancel all outstanding requests, unpair with all helpers and deactivate
      */
     @Override
     public void close() {
         closed = true;
+        for (Version version: versions.values()) {
+            version.close();
+        }
         for (HelperClient helper: helpers) {
             helper.close();
         }
+        // todo: how do you shut down httpclient?
     }
 
     /**
@@ -212,10 +212,13 @@ public class Secret implements Closeable, DeRecSecret {
     }
 
     public void notifyStatus(DeRecStatusNotification notification) {
-        this.notificationListener.accept(notification);
+        for (Consumer<DeRecStatusNotification> listener: notificationListeners) {
+            listener.accept(notification);
+        }
     }
 
     public static Builder newBuilder() {
+
         return new Secret.Builder();
     }
 
@@ -253,7 +256,7 @@ public class Secret implements Closeable, DeRecSecret {
         }
 
         public Builder notificationListener(Consumer<DeRecStatusNotification> listener) {
-            secret.notificationListener = listener;
+            secret.notificationListeners.add(listener);
             return this;
         }
 

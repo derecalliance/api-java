@@ -1,6 +1,5 @@
 package com.thebuildingblocks.derec.v0_9.test;
 
-import com.thebuildingblocks.derec.v0_9.httpprototype.Secret;
 import com.thebuildingblocks.derec.v0_9.httpprototype.Sharer;
 import com.thebuildingblocks.derec.v0_9.interfaces.*;
 import org.slf4j.Logger;
@@ -8,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Scanner;
 
 import static com.thebuildingblocks.derec.v0_9.test.TestIds.DEFAULT_IDS;
 
@@ -24,7 +23,7 @@ public class SharerMain {
 
     public void run() {
         // build a sharer
-        DeRecSharer me = Sharer.newBuilder()
+        Sharer me = Sharer.newBuilder()
                 .id(new DeRecId("Secret Sammy", "mailto:test@example.org", null))
                 .notificationListener(this::logNotification)
                 .build();
@@ -72,11 +71,16 @@ public class SharerMain {
                 System.out.println("   " + p.getId().getName() + ": " + p.getStatus());
             }
         }
+        System.out.println("Hit enter to exit");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+        me.close();
     }
 
     private void logNotification(DeRecStatusNotification t) {
-        String v =t.getVersion().isEmpty() ? "" : "/" + String.valueOf(t.getVersion().get().getVersionNumber());
-        logger.info("\u001B[34m{} {} {}{} {}\u001B[0m", t.getType(), t.getPairable().getId().getName(),
+        String v =t.getVersion().isEmpty() ? "" : "/" + t.getVersion().get().getVersionNumber();
+        String p = t.getPairable().isEmpty() ? "" : "/" + t.getPairable().get().getId().getName();
+        logger.info("\u001B[34m{} {} {}{} {}\u001B[0m", t.getType(), p,
                 t.getSecret().getSecretId(), v, t.getMessage());
     }
 }

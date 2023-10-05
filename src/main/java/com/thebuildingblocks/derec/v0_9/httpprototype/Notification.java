@@ -32,8 +32,8 @@ public class Notification implements DeRecStatusNotification {
     }
 
     @Override
-    public DeRecPairable getPairable() {
-        return pairable;
+    public Optional<DeRecPairable> getPairable() {
+        return Optional.ofNullable(pairable);
     }
 
     @Override

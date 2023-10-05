@@ -2,12 +2,12 @@ package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
+import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
+import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.*;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -33,14 +35,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class HelperClient implements DeRecPairable, Closeable {
     private final Secret secret; // the secret this helper is a helper for
-    DeRecId helperId; // unique Id for helper
+    private final Util.RetryParameters retryParameters;
+    private final HttpClient httpClient;
+    private final DeRecId helperId; // unique Id for helper
     URI tsAndCs;    // link to legal conditions regarding what the helper is to do about
     // authentication for recovery and substitution of sharer
     PublicKey publicKey; // public key for the helper (for this secret)
     X509Certificate certificate; // The helper's certificate
     String protocolVersion; // accepted protocol version
     PairingStatus status = PairingStatus.NONE; // pairing not yet attempted
-    String message = "";
 
     // a list of the shares sent to this helper - this is basically
     // a filtered view of secret.versions for this helper
@@ -63,9 +66,11 @@ public class HelperClient implements DeRecPairable, Closeable {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    HelperClient(Secret secret, DeRecId helperId) {
+    HelperClient(Secret secret, DeRecId helperId, HttpClient httpClient, Util.RetryParameters retryParameters) {
         this.secret = secret;
         this.helperId = helperId;
+        this.httpClient = httpClient;
+        this.retryParameters = retryParameters;
     }
 
     /**
@@ -83,10 +88,8 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .POST(BodyPublishers.ofString("Pair Request: " + secret.sharerId.getName(), UTF_8))
                 .build();
 
-        pairingFuture = secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
+        pairingFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
                 .thenApply(this::processPairingResponseStatus)
-                .thenApply(HttpResponse::body)
-                .thenApply(this::processPairingResponseBody)
                 .exceptionally(t -> {
                     this.status = FAILED;
                     secret.notifyStatus(buildNotification()
@@ -96,19 +99,12 @@ public class HelperClient implements DeRecPairable, Closeable {
                 });
     }
 
-    private HttpResponse<byte[]> processPairingResponseStatus(HttpResponse<byte[]> response) {
+    private HelperClient processPairingResponseStatus(HttpResponse<byte[]> response) {
         this.status = response.statusCode() == 200 ? PAIRED : REFUSED;
-        this.message = "HTTP Status " + response.statusCode();
         logger.trace("Status {} Body {}", response.statusCode(), new String(response.body(), UTF_8));
         secret.notifyStatus(buildNotification()
-                .message(this.message)
+                .message("HTTP Status " + response.statusCode())
                 .build(this.status == PAIRED ? HELPER_READY : HELPER_NOT_PAIRED));
-        return response;
-    }
-
-    private HelperClient processPairingResponseBody(byte[] bytes) {
-        // todo: process the returned message
-
         return this;
     }
 
@@ -125,13 +121,9 @@ public class HelperClient implements DeRecPairable, Closeable {
         /*
          * In-line functions following serve to capture the share
          */
-        Function<HttpResponse<byte[]>, HttpResponse<byte[]>> processSharResponseStatusFn = httpResponse ->
+        Function<HttpResponse<byte[]>, Version.Share> processSharResponseStatusFn = httpResponse ->
                 processShareResponseStatus(share, httpResponse);
 
-        Function<byte[], Version.Share> processShareResponseBody = bytes -> {
-            // todo: do something with the ShareResponse message
-            return share;
-        };
 
         Function<Throwable, Version.Share> shareRequestFailedHandler = throwable -> {
             // todo: do something with exception
@@ -146,50 +138,53 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .POST(BodyPublishers.ofByteArray(share.shareContent))
                 .build();
 
-        share.future = share.version.secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
+        share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
                 .thenApply(processSharResponseStatusFn)
-                .thenApply(HttpResponse::body)
-                .thenApply(processShareResponseBody)
                 .exceptionally(shareRequestFailedHandler);
-
-        // todo: move code and synchronize
-        share.version.updateRequestSent++;
     }
 
-    HttpResponse<byte[]> processShareResponseStatus(Version.Share share, HttpResponse<byte[]> httpResponse) {
-        Version version = share.version;
-        //todo move code to share
-        synchronized (version) {
-            if (httpResponse.statusCode() == 200) {
-                version.successfulUpdateRepliesReceived++;
-                logger.trace("Version {} Success from {} helpers", version.versionNumber,
-                        version.successfulUpdateRepliesReceived);
-                if (version.successfulUpdateRepliesReceived >= secret.thresholdForDeletion) {
-                    // if it hasn't already been set as successful
-                    if (!version.success) {
-                        share.confirmed = ZonedDateTime.now();
-                        version.success = true;
-                        version.future.complete(version);
-                        secret.notifyStatus(buildNotification().
-                                version(version).
-                                build(UPDATE_AVAILABLE));
-                    }
-                }
-            } else {
-                version.failedUpdateReplyReceived++;
-                // too many failed??
-                if (version.shares.size() - version.failedUpdateReplyReceived < secret.thresholdForDeletion) {
-                    version.future.complete(version);
-                }
+    Version.Share processShareResponseStatus(Version.Share share, HttpResponse<byte[]> httpResponse) {
+        share.isShared = true;
+        // TODO: process the message
+        share.processResult(SHARE, httpResponse.statusCode() == 200, "HTTP Status " + httpResponse.statusCode());
+        return share;
+    }
+
+    public void verify(Version.Share share) {
+        synchronized (this) {
+            if (!status.equals(PAIRED)) {
+                throw new IllegalStateException("Helper must be paired to share");
             }
-            if (version.successfulUpdateRepliesReceived + version.failedUpdateReplyReceived == version.shares.size()) {
-                secret.notifyStatus(buildNotification()
-                        .message(version.success ? "Update succeeded" : "Update failed")
-                        .version(version)
-                        .build(UPDATE_FINISHED));
+            if (!share.isShared) {
+                throw new IllegalStateException("Share must have been shared to verify");
             }
         }
-        return httpResponse;
+
+        /*
+         * In-line functions following serve to capture the share
+         */
+        Function<HttpResponse<byte[]>, Version.Share> processVerifyResponseStatusFn = httpResponse ->
+                processVerifyResponseStatus(share, httpResponse);
+
+
+        Function<Throwable, Version.Share> verifyRequestFailedHandler = throwable -> {
+            share.processResult(VERIFY, false, throwable.getCause().getMessage());
+            return share;
+        };
+
+        HttpRequest request = buildRequest()
+                .POST(BodyPublishers.ofByteArray(share.shareContent))
+                .build();
+
+        share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
+                .thenApply(processVerifyResponseStatusFn)
+                .exceptionally(verifyRequestFailedHandler);
+    }
+
+    private Version.Share processVerifyResponseStatus(Version.Share share, HttpResponse<byte[]> httpResponse) {
+        // todo process message
+        share.processResult(VERIFY, httpResponse.statusCode() == 200, "HTTP Status " + httpResponse.statusCode());
+        return share;
     }
 
     /**
@@ -209,26 +204,19 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .build();
 
 
-        pairingFuture = secret.httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
+        pairingFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
                 .thenApply(this::processUnPairingResponseStatus)
-                .thenApply(HttpResponse::body)
-                .thenApply(this::processUnPairingResponseBody)
                 .exceptionally(t -> {
                     this.status = FAILED;
                     return this;
                 });
     }
 
-    private HttpResponse<byte[]> processUnPairingResponseStatus(HttpResponse<byte[]> response) {
+    private HelperClient processUnPairingResponseStatus(HttpResponse<byte[]> response) {
         this.status = response.statusCode() == 200 ? PairingStatus.REMOVED : FAILED;
-        this.message = "HTTP Status " + response.statusCode();
-        return response;
-    }
-
-    private HelperClient processUnPairingResponseBody(byte[] bytes) {
         // todo: process the returned message
         secret.notifyStatus(buildNotification()
-                .message(this.helperId.getName())
+                .message("HTTP Status " + response.statusCode())
                 .build(HELPER_INACTIVE));
         return this;
     }

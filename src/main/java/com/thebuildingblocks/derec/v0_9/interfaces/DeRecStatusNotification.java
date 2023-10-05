@@ -22,7 +22,10 @@ public interface DeRecStatusNotification {
      */
     Optional<DeRecVersion> getVersion();
 
-    DeRecPairable getPairable();
+    /**
+     * The pairable, if any, that the udpdate refers to
+     */
+    Optional<DeRecPairable> getPairable();
 
     /**
      * The secret this update refers to
@@ -30,8 +33,14 @@ public interface DeRecStatusNotification {
     DeRecSecret getSecret();
 
     enum Type {
+        UPDATE_PROGRESS,
         UPDATE_AVAILABLE, // a sufficient number of acknowledgements have been received for an update to consider it recoverable
-        UPDATE_FINISHED, // all update requests have been replied to, or failed
+        UPDATE_FAILED,
+        UPDATE_COMPLETE, // all update requests have been replied to, or failed
+        VERIFY_PROGRESS,
+        VERIFY_AVAILABLE, // a sufficient number of acknowledgements have been received for verify
+        VERIFY_FAILED,
+        VERIFY_COMPLETE, // all update requests have been replied to, or failed
         HELPER_NOT_PAIRED, // pairing failed
         HELPER_INACTIVE, // a previously active helper has become inactive
         HELPER_READY, // a helper has become active

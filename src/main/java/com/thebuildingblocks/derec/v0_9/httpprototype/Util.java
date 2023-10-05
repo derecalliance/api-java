@@ -18,7 +18,7 @@ public class Util {
         int maxRetries = 0; // don't retry on failure
         Duration timeout = Duration.ofSeconds(5); // timeout if no response received
         Duration connectTimeout = Duration.ofSeconds(5);
-        Duration reverification = Duration.ofMinutes(30); // re-verify every
+        Duration reverification = Duration.ofSeconds(20); // re-verify every
         Duration updateDelay = Duration.ofSeconds(30); // max update frequency
 
         public Duration getConnectTimeout() {

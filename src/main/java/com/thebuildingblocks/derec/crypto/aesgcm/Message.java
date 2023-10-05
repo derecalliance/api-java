@@ -28,7 +28,7 @@ public class Message {
         short protocolVersion = bb.getShort();
         short messageId = bb.getShort();
         if (protocolVersion != 1 || messageId != messageIdRequired) {
-            throw new AssertionError("Wrong protocol version or message type");
+            throw new AssertionError("Wrong protocol version or message resultType");
         }
     }
 

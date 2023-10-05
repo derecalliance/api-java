@@ -81,6 +81,11 @@ public class Sharer implements DeRecSharer{
         return secrets.values().stream().toList();
     }
 
+    public void close() {
+        for (Secret secret: secrets.values()) {
+            secret.close();
+        }
+    }
     public static Builder newBuilder() {
         return new Builder();
     }
