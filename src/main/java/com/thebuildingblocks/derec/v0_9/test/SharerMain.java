@@ -74,6 +74,7 @@ public class SharerMain {
         System.out.println("Hit enter to exit");
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
+        logger.info("Shutting down");
         me.close();
     }
 

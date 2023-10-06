@@ -95,7 +95,7 @@ public class Secret implements Closeable, DeRecSecret {
                 throw new IllegalStateException("Cannot have the same helper more than once for a secret");
             }
             helpers.add(helper);
-            logger.trace("Pairing {}",helperId.getName());
+            logger.trace("Pairing {}", helperId.getName());
             helper.pair();
             addedHelpers.add(helper.pairingFuture);
         }
@@ -156,7 +156,7 @@ public class Secret implements Closeable, DeRecSecret {
         int versionNumber = latestShareVersion.incrementAndGet();
         Version version = new Version(this, versionNumber);
         this.versions.put(versionNumber, version);
-        version.share(bytesToProtect, pairedHelpers);
+        version.share(bytesToProtect, this.thresholdSecretRecovery, pairedHelpers);
         return version.future;
     }
 

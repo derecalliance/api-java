@@ -1,18 +1,18 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSecret;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZonedDateTime;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
+import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
 
 
@@ -24,33 +24,30 @@ public class Version implements DeRecVersion {
     final Secret secret;
     // version numbers to be allocated so that they are always larger than the last shared
     final int versionNumber;
-    public ScheduledFuture<?> verificationFuture;
     // the bytes of this secret
     byte[] protectedValue;
     // share threshold
-    int threshold;
+    int recombinationThreshold;
     // the shares created for this version
     List<Share> shares;
     // a future to complete when the sharing is complete successfully or is known to have failed
     CompletableFuture<Version> future = new CompletableFuture<>();
+    // place to hold the future for the verification process, this never completes
+    private ScheduledFuture<?> verificationTimer;
+    // executor for repeated verification
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
-    // whether it succeeded or failed
-    boolean success;
-    // count of update requests sent
-    int updateRequestSent;
-    // count of update replies received
-    int successfulUpdateRepliesReceived;
-    int failedUpdateReplyReceived;
+    // result of the original version sharing and the latest verification
+    Map<ResultType, ResultCount> resultCounts = new HashMap<>();
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     Version(Secret secret, int versionNumber) {
         this.versionNumber = versionNumber;
         this.secret = secret;
-    }
-
-    private List<Share> createShares(byte[] bytesToProtect, int numShares) {
-        return IntStream.range(0, numShares).mapToObj(i -> new Share(bytesToProtect, this)).toList();
+        for (ResultType r: ResultType.values()) {
+            resultCounts.put(r, new ResultCount());
+        }
     }
 
     @Override
@@ -68,95 +65,116 @@ public class Version implements DeRecVersion {
         return protectedValue;
     }
 
+    void notifyStatus (DeRecStatusNotification.Type notificationType, HelperClient helper, String message) {
+        secret.notifyStatus(Notification.newBuilder()
+                .secret(secret)
+                .version(this)
+                .pairable(helper)
+                .message(message)
+                .build(notificationType));
+    }
+
+    void notifyStatus (DeRecStatusNotification.Type notificationType) {
+        secret.notifyStatus(Notification.newBuilder()
+                .secret(secret)
+                .version(this)
+                .build(notificationType));
+    }
+
     @Override
     public boolean isProtected() {
-        return success;
+        return resultCounts.get(SHARE).success;
     }
 
-    public void verify() {
-        logger.info("Starting verification {}/{}", this.secret.secretId, versionNumber);
-        for (Share share : shares) {
-            if (share.isShared) {
-                share.helper.verify(share);
-            }
-        }
+    private List<Share> createShares(byte[] bytesToProtect, int recombinationThreshold, int numShares) {
+        // todo actually do a secret share
+        return IntStream.range(0, numShares).mapToObj(i -> new Share(bytesToProtect, this)).toList();
     }
 
-    public void share(byte[] bytesToProtect, List<HelperClient> pairedHelpers) {
+    public void share(byte[] bytesToProtect, int recombinationThreshold, List<HelperClient> pairedHelpers) {
         if (Objects.isNull(bytesToProtect)) {
             throw new IllegalArgumentException("Bytes to protect is null");
         }
         if (Objects.nonNull(protectedValue)) {
-            throw new IllegalStateException("A version may only be shared once");
+            throw new IllegalStateException("A version must only be shared once");
         }
         this.protectedValue = bytesToProtect;
-        this.shares = createShares(bytesToProtect, pairedHelpers.size());
+        this.recombinationThreshold = recombinationThreshold;
+        this.shares = createShares(bytesToProtect, recombinationThreshold, pairedHelpers.size());
         Iterator<Share> shareIterator = this.shares.iterator();
         Iterator<HelperClient> helperIterator = pairedHelpers.iterator();
         while (shareIterator.hasNext()) {
             Version.Share share = shareIterator.next();
             share.helper = helperIterator.next();
             share.helper.send(share);
-            updateRequestSent++;
+            resultCounts.get(SHARE).requestsSent++;
         }
 
-        verificationFuture = scheduledExecutorService.scheduleAtFixedRate(
+        verificationTimer = scheduledExecutorService.scheduleAtFixedRate(
                 this::verify,
                 // TODO get the configured reverification stuff
                 Util.RetryParameters.DEFAULT.reverification.getSeconds(),
                 Util.RetryParameters.DEFAULT.reverification.getSeconds(), TimeUnit.SECONDS);
     }
 
-    synchronized private void processResult(Result latestUpdate) {
-        secret.notifyStatus(Notification.newBuilder()
-                .secret(secret)
-                .version(this)
-                .pairable(latestUpdate.share.helper)
-                .message(latestUpdate.message)
-                .build(latestUpdate.resultType.equals(SHARE) ? UPDATE_PROGRESS : VERIFY_PROGRESS));
+    synchronized public void verify() {
+        logger.info("Starting verification {}/{}", this.secret.secretId, versionNumber);
+        resultCounts.put(VERIFY, new ResultCount());
+        for (Share share : shares) {
+            if (share.isShared) {
+                // todo need unique id for this verification, we can use the nonce
+                // of the request/reply to do this
+                resultCounts.get(VERIFY).requestsSent++;
+                share.helper.verify(share);
+            }
+        }
+    }
 
-        if (latestUpdate.resultType.equals(SHARE)) {
+    synchronized private void processResult(Result latestUpdate) {
+        notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_PROGRESS : VERIFY_PROGRESS,
+                latestUpdate.share.helper, latestUpdate.message);
+
+        ResultCount resultCounter = resultCounts.get(latestUpdate.resultType);
+
             if (latestUpdate.success) {
-                successfulUpdateRepliesReceived++;
-                if (successfulUpdateRepliesReceived >= secret.thresholdSecretRecovery) {
+                resultCounter.successfulRepliesReceived++;
+                if (resultCounter.successfulRepliesReceived >= recombinationThreshold) {
                     // if it hasn't already been set as successful
-                    if (!success) {
-                        success = true;
-                        future.complete(this);
-                        secret.notifyStatus(Notification.newBuilder()
-                                .secret(secret)
-                                .version(this)
-                                .build(UPDATE_AVAILABLE));
+                    if (!resultCounter.success) {
+                        resultCounter.success = true;
+                        if (latestUpdate.resultType.equals(SHARE)) {
+                            future.complete(this);
+                        }
+                        notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_AVAILABLE : VERIFY_AVAILABLE);
                     }
                 }
             } else {
-                failedUpdateReplyReceived++;
+                resultCounter.failedRepliesReceived++;
                 // note that this is only paired helpers not all invited helpers
-                if (shares.size() - failedUpdateReplyReceived < secret.thresholdForDeletion) {
-                    future.complete(this);
+                if (resultCounter.requestsSent - resultCounter.failedRepliesReceived < recombinationThreshold) {
+                    if (!resultCounter.reported) {
+                        if (latestUpdate.resultType.equals(SHARE)) {
+                            future.complete(this);
+                        }
+                        resultCounter.reported = true;
+                        notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_FAILED : VERIFY_FAILED);
+                    }
                 }
                 // we'd want to do a retry or mark a helper as failed if we were doing that kind of thing
             }
-        }
-        if (successfulUpdateRepliesReceived + failedUpdateReplyReceived == updateRequestSent) {
-            secret.notifyStatus(Notification.newBuilder()
-                    .secret(secret)
-                    .version(this)
-                    .build(latestUpdate.resultType.equals(SHARE) ? UPDATE_COMPLETE : VERIFY_COMPLETE));
-        }
+            if (resultCounter.successfulRepliesReceived + resultCounter.failedRepliesReceived == resultCounter.requestsSent) {
+                notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_COMPLETE : VERIFY_COMPLETE);
+            }
     }
 
     public void close() {
         future.cancel(true);
-        verificationFuture.cancel(true);
+        verificationTimer.cancel(true);
         for (Share share : shares) {
             share.close();
         }
         scheduledExecutorService.shutdownNow();
     }
-
-
-    public enum ResultType {SHARE, VERIFY}
 
     /**
      * A share of a secret for a helper
@@ -187,12 +205,23 @@ public class Version implements DeRecVersion {
         }
     }
 
+    public enum ResultType {SHARE, VERIFY}
+
+    /**
+     * The result of an update or verification
+     * @param resultType
+     * @param success
+     * @param share
+     * @param message
+     * @param timestamp
+     */
     public record Result(
             ResultType resultType,
             boolean success, // update or verify succeeded
             Share share,
             String message, // any additional data
             ZonedDateTime timestamp) {
+
         public Result(
                 ResultType type,
                 boolean success, // update or verify succeeded
@@ -207,5 +236,16 @@ public class Version implements DeRecVersion {
                 Share share) {
             this(type, success, share, "");
         }
+    }
+
+    static class ResultCount {
+        // have we reported the outcome
+        public boolean reported;
+        // was it successful
+        boolean success;
+        // number of requests sent (shares)
+        int requestsSent;
+        int successfulRepliesReceived;
+        int failedRepliesReceived;
     }
 }

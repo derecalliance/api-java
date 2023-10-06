@@ -13,7 +13,6 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -54,7 +53,7 @@ public class HelperClient implements DeRecPairable, Closeable {
     HttpRequest.Builder buildRequest (){
         return HttpRequest.newBuilder()
                 .uri(helperId.getAddress())
-                .timeout(secret.retryParameters.getResponseTimeout());
+                .timeout(retryParameters.getResponseTimeout());
     }
 
     // convenience function to avoid duplication
@@ -125,12 +124,9 @@ public class HelperClient implements DeRecPairable, Closeable {
                 processShareResponseStatus(share, httpResponse);
 
 
+        //noinspection DuplicatedCode
         Function<Throwable, Version.Share> shareRequestFailedHandler = throwable -> {
-            // todo: do something with exception
-            // todo move code to share
-            synchronized (share.version) {
-                share.version.failedUpdateReplyReceived++;
-            }
+            share.processResult(SHARE, false, throwable.getCause().getMessage());
             return share;
         };
 
@@ -167,6 +163,7 @@ public class HelperClient implements DeRecPairable, Closeable {
                 processVerifyResponseStatus(share, httpResponse);
 
 
+        //noinspection DuplicatedCode
         Function<Throwable, Version.Share> verifyRequestFailedHandler = throwable -> {
             share.processResult(VERIFY, false, throwable.getCause().getMessage());
             return share;
