@@ -32,20 +32,19 @@ public class Version implements DeRecVersion {
     List<Share> shares;
     // a future to complete when the sharing is complete successfully or is known to have failed
     CompletableFuture<Version> future = new CompletableFuture<>();
-    // place to hold the future for the verification process, this never completes
-    private ScheduledFuture<?> verificationTimer;
     // executor for repeated verification
     ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     // result of the original version sharing and the latest verification
     Map<ResultType, ResultCount> resultCounts = new HashMap<>();
-
     Logger logger = LoggerFactory.getLogger(this.getClass());
+    // place to hold the future for the verification process, this never completes
+    private ScheduledFuture<?> verificationTimer;
 
 
     Version(Secret secret, int versionNumber) {
         this.versionNumber = versionNumber;
         this.secret = secret;
-        for (ResultType r: ResultType.values()) {
+        for (ResultType r : ResultType.values()) {
             resultCounts.put(r, new ResultCount());
         }
     }
@@ -65,7 +64,7 @@ public class Version implements DeRecVersion {
         return protectedValue;
     }
 
-    void notifyStatus (DeRecStatusNotification.Type notificationType, HelperClient helper, String message) {
+    void notifyStatus(DeRecStatusNotification.Type notificationType, HelperClient helper, String message) {
         secret.notifyStatus(Notification.newBuilder()
                 .secret(secret)
                 .version(this)
@@ -74,7 +73,7 @@ public class Version implements DeRecVersion {
                 .build(notificationType));
     }
 
-    void notifyStatus (DeRecStatusNotification.Type notificationType) {
+    void notifyStatus(DeRecStatusNotification.Type notificationType) {
         secret.notifyStatus(Notification.newBuilder()
                 .secret(secret)
                 .version(this)
@@ -136,35 +135,35 @@ public class Version implements DeRecVersion {
 
         ResultCount resultCounter = resultCounts.get(latestUpdate.resultType);
 
-            if (latestUpdate.success) {
-                resultCounter.successfulRepliesReceived++;
-                if (resultCounter.successfulRepliesReceived >= recombinationThreshold) {
-                    // if it hasn't already been set as successful
-                    if (!resultCounter.success) {
-                        resultCounter.success = true;
-                        if (latestUpdate.resultType.equals(SHARE)) {
-                            future.complete(this);
-                        }
-                        notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_AVAILABLE : VERIFY_AVAILABLE);
+        if (latestUpdate.success) {
+            resultCounter.successfulRepliesReceived++;
+            if (resultCounter.successfulRepliesReceived >= recombinationThreshold) {
+                // if it hasn't already been set as successful
+                if (!resultCounter.success) {
+                    resultCounter.success = true;
+                    if (latestUpdate.resultType.equals(SHARE)) {
+                        future.complete(this);
                     }
+                    notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_AVAILABLE : VERIFY_AVAILABLE);
                 }
-            } else {
-                resultCounter.failedRepliesReceived++;
-                // note that this is only paired helpers not all invited helpers
-                if (resultCounter.requestsSent - resultCounter.failedRepliesReceived < recombinationThreshold) {
-                    if (!resultCounter.reported) {
-                        if (latestUpdate.resultType.equals(SHARE)) {
-                            future.complete(this);
-                        }
-                        resultCounter.reported = true;
-                        notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_FAILED : VERIFY_FAILED);
+            }
+        } else {
+            resultCounter.failedRepliesReceived++;
+            // note that this is only paired helpers not all invited helpers
+            if (resultCounter.requestsSent - resultCounter.failedRepliesReceived < recombinationThreshold) {
+                if (!resultCounter.reported) {
+                    if (latestUpdate.resultType.equals(SHARE)) {
+                        future.complete(this);
                     }
+                    resultCounter.reported = true;
+                    notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_FAILED : VERIFY_FAILED);
                 }
-                // we'd want to do a retry or mark a helper as failed if we were doing that kind of thing
             }
-            if (resultCounter.successfulRepliesReceived + resultCounter.failedRepliesReceived == resultCounter.requestsSent) {
-                notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_COMPLETE : VERIFY_COMPLETE);
-            }
+            // we'd want to do a retry or mark a helper as failed if we were doing that kind of thing
+        }
+        if (resultCounter.successfulRepliesReceived + resultCounter.failedRepliesReceived == resultCounter.requestsSent) {
+            notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_COMPLETE : VERIFY_COMPLETE);
+        }
     }
 
     public void close() {
@@ -176,16 +175,24 @@ public class Version implements DeRecVersion {
         scheduledExecutorService.shutdownNow();
     }
 
+    public enum ResultType {SHARE, VERIFY}
+
     /**
      * A share of a secret for a helper
      */
     public static class Share {
+        // the Version this share belongs to
         final Version version;
+        // the result of the last Share or Verify operation on this share
         public Result latestUpdate;
+        // A future for the last operation
         CompletableFuture<Share> future;
-        byte[] shareContent; // contents of the share
-        HelperClient helper; // the helper who was sent this share
-        boolean isShared; // the Share was shared successfully
+        // the share of the secret
+        byte[] shareContent;
+        // the helper who was sent this share - and who will deal with future verifications
+        HelperClient helper;
+        // the Share was shared successfully
+        boolean isShared;
 
         public Share(byte[] shareContent, Version version) {
             this.version = version;
@@ -205,10 +212,9 @@ public class Version implements DeRecVersion {
         }
     }
 
-    public enum ResultType {SHARE, VERIFY}
-
     /**
      * The result of an update or verification
+     *
      * @param resultType
      * @param success
      * @param share

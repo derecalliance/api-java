@@ -15,6 +15,7 @@ import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.NavigableMap;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -114,19 +115,22 @@ public class HelperClient implements DeRecPairable, Closeable {
             }
             shares.put(share.version.versionNumber, share);
         }
-        // todo: check already allocated
-        share.helper = this;
 
         /*
          * In-line functions following serve to capture the share
          */
-        Function<HttpResponse<byte[]>, Version.Share> processSharResponseStatusFn = httpResponse ->
-                processShareResponseStatus(share, httpResponse);
-
+        //noinspection DuplicatedCode
+        Function<HttpResponse<byte[]>, Version.Share> processSharResponseStatusFn = httpResponse -> {
+            // TODO: process the message
+            share.processResult(SHARE, httpResponse.statusCode() == 200, "HTTP Status " + httpResponse.statusCode());
+            share.future.complete(share);
+            return share;
+        };
 
         //noinspection DuplicatedCode
         Function<Throwable, Version.Share> shareRequestFailedHandler = throwable -> {
             share.processResult(SHARE, false, throwable.getCause().getMessage());
+            share.future.complete(share);
             return share;
         };
 
@@ -134,16 +138,14 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .POST(BodyPublishers.ofByteArray(share.shareContent))
                 .build();
 
+        if (Objects.nonNull(share.helper)) {
+            throw new IllegalStateException("Share helper must be null");
+        }
+        share.helper = this;
+        share.future.cancel(true);
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
                 .thenApply(processSharResponseStatusFn)
                 .exceptionally(shareRequestFailedHandler);
-    }
-
-    Version.Share processShareResponseStatus(Version.Share share, HttpResponse<byte[]> httpResponse) {
-        share.isShared = true;
-        // TODO: process the message
-        share.processResult(SHARE, httpResponse.statusCode() == 200, "HTTP Status " + httpResponse.statusCode());
-        return share;
     }
 
     public void verify(Version.Share share) {
@@ -154,18 +156,26 @@ public class HelperClient implements DeRecPairable, Closeable {
             if (!share.isShared) {
                 throw new IllegalStateException("Share must have been shared to verify");
             }
+            if (!shares.containsKey(share.version.versionNumber)) {
+                throw new IllegalStateException("Share must have been shared to verify");
+            }
         }
 
         /*
          * In-line functions following serve to capture the share
          */
-        Function<HttpResponse<byte[]>, Version.Share> processVerifyResponseStatusFn = httpResponse ->
-                processVerifyResponseStatus(share, httpResponse);
-
+        //noinspection DuplicatedCode
+        Function<HttpResponse<byte[]>, Version.Share> verifyResponseHandler = httpResponse -> {
+            // todo process message
+            share.processResult(VERIFY, httpResponse.statusCode() == 200, "HTTP Status " + httpResponse.statusCode());
+            share.future.complete(share);
+            return share;
+        };
 
         //noinspection DuplicatedCode
-        Function<Throwable, Version.Share> verifyRequestFailedHandler = throwable -> {
+        Function<Throwable, Version.Share> verifyFailedHandler = throwable -> {
             share.processResult(VERIFY, false, throwable.getCause().getMessage());
+            share.future.complete(share);
             return share;
         };
 
@@ -174,14 +184,8 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .build();
 
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
-                .thenApply(processVerifyResponseStatusFn)
-                .exceptionally(verifyRequestFailedHandler);
-    }
-
-    private Version.Share processVerifyResponseStatus(Version.Share share, HttpResponse<byte[]> httpResponse) {
-        // todo process message
-        share.processResult(VERIFY, httpResponse.statusCode() == 200, "HTTP Status " + httpResponse.statusCode());
-        return share;
+                .thenApply(verifyResponseHandler)
+                .exceptionally(verifyFailedHandler);
     }
 
     /**
