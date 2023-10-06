@@ -6,6 +6,7 @@ import com.thebuildingblocks.derec.v0_9.interfaces.DeRecVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.security.SecureRandom;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.*;
@@ -39,6 +40,7 @@ public class Version implements DeRecVersion {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     // place to hold the future for the verification process, this never completes
     private ScheduledFuture<?> verificationTimer;
+    SecureRandom random = new SecureRandom();
 
 
     Version(Secret secret, int versionNumber) {
@@ -117,14 +119,19 @@ public class Version implements DeRecVersion {
     }
 
     synchronized public void verify() {
-        logger.info("Starting verification {}/{}", this.secret.secretId, versionNumber);
+        logger.trace("Starting verification {}/{}", this.secret.secretId, versionNumber);
         resultCounts.put(VERIFY, new ResultCount());
         for (Share share : shares) {
             if (share.isShared) {
                 // todo need unique id for this verification, we can use the nonce
                 // of the request/reply to do this
                 resultCounts.get(VERIFY).requestsSent++;
-                share.helper.verify(share);
+                try {
+                    random.nextBytes(share.nonce);
+                    share.helper.verify(share);
+                } catch (Throwable t) {
+                    logger.warn("Exception on verify", t);
+                }
             }
         }
     }
@@ -185,6 +192,8 @@ public class Version implements DeRecVersion {
         final Version version;
         // the result of the last Share or Verify operation on this share
         public Result latestUpdate;
+        // rendom 256 byte value serves as an id also for crypto hash
+        public byte[] nonce = new byte[32];
         // A future for the last operation
         CompletableFuture<Share> future;
         // the share of the secret

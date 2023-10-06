@@ -33,19 +33,31 @@ public interface DeRecStatusNotification {
     DeRecSecret getSecret();
 
     enum Type {
-        UPDATE_PROGRESS,
-        UPDATE_AVAILABLE, // a sufficient number of acknowledgements have been received for an update to consider it recoverable
-        UPDATE_FAILED,
-        UPDATE_COMPLETE, // all update requests have been replied to, or failed
-        VERIFY_PROGRESS,
-        VERIFY_AVAILABLE, // a sufficient number of acknowledgements have been received for verify
-        VERIFY_FAILED,
-        VERIFY_COMPLETE, // all update requests have been replied to, or failed
-        HELPER_NOT_PAIRED, // pairing failed
-        HELPER_INACTIVE, // a previously active helper has become inactive
-        HELPER_READY, // a helper has become active
-        SECRET_UNAVAILABLE, // a secret that had previously been usable is now not usable
-        SECRET_AVAILABLE; // a secret is now available for use, i.e. a sufficient number of helpers can
+        UPDATE_PROGRESS(false),
+        UPDATE_AVAILABLE(false), // a sufficient number of acknowledgements have been received for an update to consider it recoverable
+        UPDATE_FAILED(true),
+        UPDATE_COMPLETE(false), // all update requests have been replied to, or failed
+        VERIFY_PROGRESS(false),
+        VERIFY_AVAILABLE(false), // a sufficient number of acknowledgements have been received for verify
+        VERIFY_FAILED(true),
+        VERIFY_COMPLETE(false), // all update requests have been replied to, or failed
+        HELPER_NOT_PAIRED(true), // pairing failed
+        HELPER_INACTIVE(true), // a previously active helper has become inactive
+        HELPER_READY(false), // a helper has become active
+        HELPER_UNPAIRED(false), // an unpair action successfully completed for this helper
+        SECRET_UNAVAILABLE(true), // a secret that had previously been usable is now not usable
+        SECRET_AVAILABLE(false); // a secret is now available for use, i.e. a sufficient number of helpers can
         // receive updates and support recovery
+
+        public boolean isError() {
+            return error;
+        }
+
+        final boolean error;
+
+        Type(boolean error){
+            this.error = error;
+        }
+
     }
 }

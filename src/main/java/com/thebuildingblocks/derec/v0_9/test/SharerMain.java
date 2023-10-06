@@ -78,10 +78,20 @@ public class SharerMain {
         me.close();
     }
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
     private void logNotification(DeRecStatusNotification t) {
         String v =t.getVersion().isEmpty() ? "" : "/" + t.getVersion().get().getVersionNumber();
         String p = t.getPairable().isEmpty() ? "" : "/" + t.getPairable().get().getId().getName();
-        logger.info("\u001B[34m{} {} {}{} {}\u001B[0m", t.getType(), p,
+        String color = t.getType().isError() ? ANSI_RED : ANSI_BLUE;
+        logger.info("{}{} {} {}{} {}\u001B[0m", color, t.getType(), p,
                 t.getSecret().getSecretId(), v, t.getMessage());
     }
 }

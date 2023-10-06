@@ -3,6 +3,9 @@ import "google/protobuf/timestamp.proto";
 import "pair.proto";
 import "unpair.proto";
 import "storeshare.proto";
+import "verify.proto";
+import "getshare.proto";
+import "secretidsversions.proto";
 
 package derec.message;
 
@@ -74,11 +77,9 @@ message DeRecMessage {
       PairRequestMessage pairRequestMessage = 1;
       UnpairRequestMessage unpairRequestMessage = 2;
       StoreShareRequestMessage storeShareRequestMessage = 3;
-/*
       VerifyShareRequestMessage verifyShareRequestMessage = 4;
       GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
       GetShareRequestMessage getShareRequestMessage = 6;
-*/
   }
 }
   message HelperMessageBodies {
@@ -90,11 +91,9 @@ message DeRecMessage {
       PairResponseMessage pairResponseMessage = 1;
       UnpairResponseMessage unpairResponseMessage = 2;
       StoreShareResponseMessage storeShareResponseMessage = 3;
-/*
       VerifyShareResponseMessage verifyShareResponseMessage = 4;
       GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
       GetShareResponseMessage getShareResponseMessage = 6;
-*/
     }
   }
 }

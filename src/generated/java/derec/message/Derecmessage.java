@@ -1933,40 +1933,64 @@ public final class Derecmessage {
       derec.message.Unpair.UnpairRequestMessageOrBuilder getUnpairRequestMessageOrBuilder();
 
       /**
-       * <pre>
-       *
-       *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-       *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-       *GetShareRequestMessage getShareRequestMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
        * @return Whether the storeShareRequestMessage field is set.
        */
       boolean hasStoreShareRequestMessage();
       /**
-       * <pre>
-       *
-       *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-       *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-       *GetShareRequestMessage getShareRequestMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
        * @return The storeShareRequestMessage.
        */
       derec.message.Storeshare.StoreShareRequestMessage getStoreShareRequestMessage();
       /**
-       * <pre>
-       *
-       *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-       *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-       *GetShareRequestMessage getShareRequestMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
        */
       derec.message.Storeshare.StoreShareRequestMessageOrBuilder getStoreShareRequestMessageOrBuilder();
+
+      /**
+       * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+       * @return Whether the verifyShareRequestMessage field is set.
+       */
+      boolean hasVerifyShareRequestMessage();
+      /**
+       * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+       * @return The verifyShareRequestMessage.
+       */
+      derec.message.Verify.VerifyShareRequestMessage getVerifyShareRequestMessage();
+      /**
+       * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+       */
+      derec.message.Verify.VerifyShareRequestMessageOrBuilder getVerifyShareRequestMessageOrBuilder();
+
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+       * @return Whether the getSecretIdsVersionsRequestMessage field is set.
+       */
+      boolean hasGetSecretIdsVersionsRequestMessage();
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+       * @return The getSecretIdsVersionsRequestMessage.
+       */
+      derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage getGetSecretIdsVersionsRequestMessage();
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+       */
+      derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessageOrBuilder getGetSecretIdsVersionsRequestMessageOrBuilder();
+
+      /**
+       * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+       * @return Whether the getShareRequestMessage field is set.
+       */
+      boolean hasGetShareRequestMessage();
+      /**
+       * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+       * @return The getShareRequestMessage.
+       */
+      derec.message.Getshare.GetShareRequestMessage getGetShareRequestMessage();
+      /**
+       * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+       */
+      derec.message.Getshare.GetShareRequestMessageOrBuilder getGetShareRequestMessageOrBuilder();
 
       derec.message.Derecmessage.DeRecMessage.SharerMessageBody.BodyCase getBodyCase();
     }
@@ -2014,6 +2038,9 @@ public final class Derecmessage {
         PAIRREQUESTMESSAGE(1),
         UNPAIRREQUESTMESSAGE(2),
         STORESHAREREQUESTMESSAGE(3),
+        VERIFYSHAREREQUESTMESSAGE(4),
+        GETSECRETIDSVERSIONSREQUESTMESSAGE(5),
+        GETSHAREREQUESTMESSAGE(6),
         BODY_NOT_SET(0);
         private final int value;
         private BodyCase(int value) {
@@ -2034,6 +2061,9 @@ public final class Derecmessage {
             case 1: return PAIRREQUESTMESSAGE;
             case 2: return UNPAIRREQUESTMESSAGE;
             case 3: return STORESHAREREQUESTMESSAGE;
+            case 4: return VERIFYSHAREREQUESTMESSAGE;
+            case 5: return GETSECRETIDSVERSIONSREQUESTMESSAGE;
+            case 6: return GETSHAREREQUESTMESSAGE;
             case 0: return BODY_NOT_SET;
             default: return null;
           }
@@ -2113,13 +2143,6 @@ public final class Derecmessage {
 
       public static final int STORESHAREREQUESTMESSAGE_FIELD_NUMBER = 3;
       /**
-       * <pre>
-       *
-       *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-       *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-       *GetShareRequestMessage getShareRequestMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
        * @return Whether the storeShareRequestMessage field is set.
        */
@@ -2128,13 +2151,6 @@ public final class Derecmessage {
         return bodyCase_ == 3;
       }
       /**
-       * <pre>
-       *
-       *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-       *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-       *GetShareRequestMessage getShareRequestMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
        * @return The storeShareRequestMessage.
        */
@@ -2146,13 +2162,6 @@ public final class Derecmessage {
         return derec.message.Storeshare.StoreShareRequestMessage.getDefaultInstance();
       }
       /**
-       * <pre>
-       *
-       *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-       *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-       *GetShareRequestMessage getShareRequestMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
        */
       @java.lang.Override
@@ -2161,6 +2170,99 @@ public final class Derecmessage {
            return (derec.message.Storeshare.StoreShareRequestMessage) body_;
         }
         return derec.message.Storeshare.StoreShareRequestMessage.getDefaultInstance();
+      }
+
+      public static final int VERIFYSHAREREQUESTMESSAGE_FIELD_NUMBER = 4;
+      /**
+       * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+       * @return Whether the verifyShareRequestMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasVerifyShareRequestMessage() {
+        return bodyCase_ == 4;
+      }
+      /**
+       * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+       * @return The verifyShareRequestMessage.
+       */
+      @java.lang.Override
+      public derec.message.Verify.VerifyShareRequestMessage getVerifyShareRequestMessage() {
+        if (bodyCase_ == 4) {
+           return (derec.message.Verify.VerifyShareRequestMessage) body_;
+        }
+        return derec.message.Verify.VerifyShareRequestMessage.getDefaultInstance();
+      }
+      /**
+       * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+       */
+      @java.lang.Override
+      public derec.message.Verify.VerifyShareRequestMessageOrBuilder getVerifyShareRequestMessageOrBuilder() {
+        if (bodyCase_ == 4) {
+           return (derec.message.Verify.VerifyShareRequestMessage) body_;
+        }
+        return derec.message.Verify.VerifyShareRequestMessage.getDefaultInstance();
+      }
+
+      public static final int GETSECRETIDSVERSIONSREQUESTMESSAGE_FIELD_NUMBER = 5;
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+       * @return Whether the getSecretIdsVersionsRequestMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasGetSecretIdsVersionsRequestMessage() {
+        return bodyCase_ == 5;
+      }
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+       * @return The getSecretIdsVersionsRequestMessage.
+       */
+      @java.lang.Override
+      public derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage getGetSecretIdsVersionsRequestMessage() {
+        if (bodyCase_ == 5) {
+           return (derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_;
+        }
+        return derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.getDefaultInstance();
+      }
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+       */
+      @java.lang.Override
+      public derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessageOrBuilder getGetSecretIdsVersionsRequestMessageOrBuilder() {
+        if (bodyCase_ == 5) {
+           return (derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_;
+        }
+        return derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.getDefaultInstance();
+      }
+
+      public static final int GETSHAREREQUESTMESSAGE_FIELD_NUMBER = 6;
+      /**
+       * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+       * @return Whether the getShareRequestMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasGetShareRequestMessage() {
+        return bodyCase_ == 6;
+      }
+      /**
+       * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+       * @return The getShareRequestMessage.
+       */
+      @java.lang.Override
+      public derec.message.Getshare.GetShareRequestMessage getGetShareRequestMessage() {
+        if (bodyCase_ == 6) {
+           return (derec.message.Getshare.GetShareRequestMessage) body_;
+        }
+        return derec.message.Getshare.GetShareRequestMessage.getDefaultInstance();
+      }
+      /**
+       * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+       */
+      @java.lang.Override
+      public derec.message.Getshare.GetShareRequestMessageOrBuilder getGetShareRequestMessageOrBuilder() {
+        if (bodyCase_ == 6) {
+           return (derec.message.Getshare.GetShareRequestMessage) body_;
+        }
+        return derec.message.Getshare.GetShareRequestMessage.getDefaultInstance();
       }
 
       private byte memoizedIsInitialized = -1;
@@ -2186,6 +2288,15 @@ public final class Derecmessage {
         if (bodyCase_ == 3) {
           output.writeMessage(3, (derec.message.Storeshare.StoreShareRequestMessage) body_);
         }
+        if (bodyCase_ == 4) {
+          output.writeMessage(4, (derec.message.Verify.VerifyShareRequestMessage) body_);
+        }
+        if (bodyCase_ == 5) {
+          output.writeMessage(5, (derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_);
+        }
+        if (bodyCase_ == 6) {
+          output.writeMessage(6, (derec.message.Getshare.GetShareRequestMessage) body_);
+        }
         getUnknownFields().writeTo(output);
       }
 
@@ -2206,6 +2317,18 @@ public final class Derecmessage {
         if (bodyCase_ == 3) {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(3, (derec.message.Storeshare.StoreShareRequestMessage) body_);
+        }
+        if (bodyCase_ == 4) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(4, (derec.message.Verify.VerifyShareRequestMessage) body_);
+        }
+        if (bodyCase_ == 5) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(5, (derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_);
+        }
+        if (bodyCase_ == 6) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(6, (derec.message.Getshare.GetShareRequestMessage) body_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -2236,6 +2359,18 @@ public final class Derecmessage {
             if (!getStoreShareRequestMessage()
                 .equals(other.getStoreShareRequestMessage())) return false;
             break;
+          case 4:
+            if (!getVerifyShareRequestMessage()
+                .equals(other.getVerifyShareRequestMessage())) return false;
+            break;
+          case 5:
+            if (!getGetSecretIdsVersionsRequestMessage()
+                .equals(other.getGetSecretIdsVersionsRequestMessage())) return false;
+            break;
+          case 6:
+            if (!getGetShareRequestMessage()
+                .equals(other.getGetShareRequestMessage())) return false;
+            break;
           case 0:
           default:
         }
@@ -2262,6 +2397,18 @@ public final class Derecmessage {
           case 3:
             hash = (37 * hash) + STORESHAREREQUESTMESSAGE_FIELD_NUMBER;
             hash = (53 * hash) + getStoreShareRequestMessage().hashCode();
+            break;
+          case 4:
+            hash = (37 * hash) + VERIFYSHAREREQUESTMESSAGE_FIELD_NUMBER;
+            hash = (53 * hash) + getVerifyShareRequestMessage().hashCode();
+            break;
+          case 5:
+            hash = (37 * hash) + GETSECRETIDSVERSIONSREQUESTMESSAGE_FIELD_NUMBER;
+            hash = (53 * hash) + getGetSecretIdsVersionsRequestMessage().hashCode();
+            break;
+          case 6:
+            hash = (37 * hash) + GETSHAREREQUESTMESSAGE_FIELD_NUMBER;
+            hash = (53 * hash) + getGetShareRequestMessage().hashCode();
             break;
           case 0:
           default:
@@ -2406,6 +2553,15 @@ public final class Derecmessage {
           if (storeShareRequestMessageBuilder_ != null) {
             storeShareRequestMessageBuilder_.clear();
           }
+          if (verifyShareRequestMessageBuilder_ != null) {
+            verifyShareRequestMessageBuilder_.clear();
+          }
+          if (getSecretIdsVersionsRequestMessageBuilder_ != null) {
+            getSecretIdsVersionsRequestMessageBuilder_.clear();
+          }
+          if (getShareRequestMessageBuilder_ != null) {
+            getShareRequestMessageBuilder_.clear();
+          }
           bodyCase_ = 0;
           body_ = null;
           return this;
@@ -2458,6 +2614,18 @@ public final class Derecmessage {
           if (bodyCase_ == 3 &&
               storeShareRequestMessageBuilder_ != null) {
             result.body_ = storeShareRequestMessageBuilder_.build();
+          }
+          if (bodyCase_ == 4 &&
+              verifyShareRequestMessageBuilder_ != null) {
+            result.body_ = verifyShareRequestMessageBuilder_.build();
+          }
+          if (bodyCase_ == 5 &&
+              getSecretIdsVersionsRequestMessageBuilder_ != null) {
+            result.body_ = getSecretIdsVersionsRequestMessageBuilder_.build();
+          }
+          if (bodyCase_ == 6 &&
+              getShareRequestMessageBuilder_ != null) {
+            result.body_ = getShareRequestMessageBuilder_.build();
           }
         }
 
@@ -2518,6 +2686,18 @@ public final class Derecmessage {
               mergeStoreShareRequestMessage(other.getStoreShareRequestMessage());
               break;
             }
+            case VERIFYSHAREREQUESTMESSAGE: {
+              mergeVerifyShareRequestMessage(other.getVerifyShareRequestMessage());
+              break;
+            }
+            case GETSECRETIDSVERSIONSREQUESTMESSAGE: {
+              mergeGetSecretIdsVersionsRequestMessage(other.getGetSecretIdsVersionsRequestMessage());
+              break;
+            }
+            case GETSHAREREQUESTMESSAGE: {
+              mergeGetShareRequestMessage(other.getGetShareRequestMessage());
+              break;
+            }
             case BODY_NOT_SET: {
               break;
             }
@@ -2569,6 +2749,27 @@ public final class Derecmessage {
                   bodyCase_ = 3;
                   break;
                 } // case 26
+                case 34: {
+                  input.readMessage(
+                      getVerifyShareRequestMessageFieldBuilder().getBuilder(),
+                      extensionRegistry);
+                  bodyCase_ = 4;
+                  break;
+                } // case 34
+                case 42: {
+                  input.readMessage(
+                      getGetSecretIdsVersionsRequestMessageFieldBuilder().getBuilder(),
+                      extensionRegistry);
+                  bodyCase_ = 5;
+                  break;
+                } // case 42
+                case 50: {
+                  input.readMessage(
+                      getGetShareRequestMessageFieldBuilder().getBuilder(),
+                      extensionRegistry);
+                  bodyCase_ = 6;
+                  break;
+                } // case 50
                 default: {
                   if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                     done = true; // was an endgroup tag
@@ -2888,13 +3089,6 @@ public final class Derecmessage {
         private com.google.protobuf.SingleFieldBuilderV3<
             derec.message.Storeshare.StoreShareRequestMessage, derec.message.Storeshare.StoreShareRequestMessage.Builder, derec.message.Storeshare.StoreShareRequestMessageOrBuilder> storeShareRequestMessageBuilder_;
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          * @return Whether the storeShareRequestMessage field is set.
          */
@@ -2903,13 +3097,6 @@ public final class Derecmessage {
           return bodyCase_ == 3;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          * @return The storeShareRequestMessage.
          */
@@ -2928,13 +3115,6 @@ public final class Derecmessage {
           }
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          */
         public Builder setStoreShareRequestMessage(derec.message.Storeshare.StoreShareRequestMessage value) {
@@ -2951,13 +3131,6 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          */
         public Builder setStoreShareRequestMessage(
@@ -2972,13 +3145,6 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          */
         public Builder mergeStoreShareRequestMessage(derec.message.Storeshare.StoreShareRequestMessage value) {
@@ -3002,13 +3168,6 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          */
         public Builder clearStoreShareRequestMessage() {
@@ -3028,26 +3187,12 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          */
         public derec.message.Storeshare.StoreShareRequestMessage.Builder getStoreShareRequestMessageBuilder() {
           return getStoreShareRequestMessageFieldBuilder().getBuilder();
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          */
         @java.lang.Override
@@ -3062,13 +3207,6 @@ public final class Derecmessage {
           }
         }
         /**
-         * <pre>
-         *
-         *VerifyShareRequestMessage verifyShareRequestMessage = 4;
-         *GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;
-         *GetShareRequestMessage getShareRequestMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareRequestMessage storeShareRequestMessage = 3;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<
@@ -3088,6 +3226,432 @@ public final class Derecmessage {
           bodyCase_ = 3;
           onChanged();
           return storeShareRequestMessageBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Verify.VerifyShareRequestMessage, derec.message.Verify.VerifyShareRequestMessage.Builder, derec.message.Verify.VerifyShareRequestMessageOrBuilder> verifyShareRequestMessageBuilder_;
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         * @return Whether the verifyShareRequestMessage field is set.
+         */
+        @java.lang.Override
+        public boolean hasVerifyShareRequestMessage() {
+          return bodyCase_ == 4;
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         * @return The verifyShareRequestMessage.
+         */
+        @java.lang.Override
+        public derec.message.Verify.VerifyShareRequestMessage getVerifyShareRequestMessage() {
+          if (verifyShareRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 4) {
+              return (derec.message.Verify.VerifyShareRequestMessage) body_;
+            }
+            return derec.message.Verify.VerifyShareRequestMessage.getDefaultInstance();
+          } else {
+            if (bodyCase_ == 4) {
+              return verifyShareRequestMessageBuilder_.getMessage();
+            }
+            return derec.message.Verify.VerifyShareRequestMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         */
+        public Builder setVerifyShareRequestMessage(derec.message.Verify.VerifyShareRequestMessage value) {
+          if (verifyShareRequestMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            body_ = value;
+            onChanged();
+          } else {
+            verifyShareRequestMessageBuilder_.setMessage(value);
+          }
+          bodyCase_ = 4;
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         */
+        public Builder setVerifyShareRequestMessage(
+            derec.message.Verify.VerifyShareRequestMessage.Builder builderForValue) {
+          if (verifyShareRequestMessageBuilder_ == null) {
+            body_ = builderForValue.build();
+            onChanged();
+          } else {
+            verifyShareRequestMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bodyCase_ = 4;
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         */
+        public Builder mergeVerifyShareRequestMessage(derec.message.Verify.VerifyShareRequestMessage value) {
+          if (verifyShareRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 4 &&
+                body_ != derec.message.Verify.VerifyShareRequestMessage.getDefaultInstance()) {
+              body_ = derec.message.Verify.VerifyShareRequestMessage.newBuilder((derec.message.Verify.VerifyShareRequestMessage) body_)
+                  .mergeFrom(value).buildPartial();
+            } else {
+              body_ = value;
+            }
+            onChanged();
+          } else {
+            if (bodyCase_ == 4) {
+              verifyShareRequestMessageBuilder_.mergeFrom(value);
+            } else {
+              verifyShareRequestMessageBuilder_.setMessage(value);
+            }
+          }
+          bodyCase_ = 4;
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         */
+        public Builder clearVerifyShareRequestMessage() {
+          if (verifyShareRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 4) {
+              bodyCase_ = 0;
+              body_ = null;
+              onChanged();
+            }
+          } else {
+            if (bodyCase_ == 4) {
+              bodyCase_ = 0;
+              body_ = null;
+            }
+            verifyShareRequestMessageBuilder_.clear();
+          }
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         */
+        public derec.message.Verify.VerifyShareRequestMessage.Builder getVerifyShareRequestMessageBuilder() {
+          return getVerifyShareRequestMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         */
+        @java.lang.Override
+        public derec.message.Verify.VerifyShareRequestMessageOrBuilder getVerifyShareRequestMessageOrBuilder() {
+          if ((bodyCase_ == 4) && (verifyShareRequestMessageBuilder_ != null)) {
+            return verifyShareRequestMessageBuilder_.getMessageOrBuilder();
+          } else {
+            if (bodyCase_ == 4) {
+              return (derec.message.Verify.VerifyShareRequestMessage) body_;
+            }
+            return derec.message.Verify.VerifyShareRequestMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.VerifyShareRequestMessage verifyShareRequestMessage = 4;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Verify.VerifyShareRequestMessage, derec.message.Verify.VerifyShareRequestMessage.Builder, derec.message.Verify.VerifyShareRequestMessageOrBuilder> 
+            getVerifyShareRequestMessageFieldBuilder() {
+          if (verifyShareRequestMessageBuilder_ == null) {
+            if (!(bodyCase_ == 4)) {
+              body_ = derec.message.Verify.VerifyShareRequestMessage.getDefaultInstance();
+            }
+            verifyShareRequestMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                derec.message.Verify.VerifyShareRequestMessage, derec.message.Verify.VerifyShareRequestMessage.Builder, derec.message.Verify.VerifyShareRequestMessageOrBuilder>(
+                    (derec.message.Verify.VerifyShareRequestMessage) body_,
+                    getParentForChildren(),
+                    isClean());
+            body_ = null;
+          }
+          bodyCase_ = 4;
+          onChanged();
+          return verifyShareRequestMessageBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage, derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.Builder, derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessageOrBuilder> getSecretIdsVersionsRequestMessageBuilder_;
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         * @return Whether the getSecretIdsVersionsRequestMessage field is set.
+         */
+        @java.lang.Override
+        public boolean hasGetSecretIdsVersionsRequestMessage() {
+          return bodyCase_ == 5;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         * @return The getSecretIdsVersionsRequestMessage.
+         */
+        @java.lang.Override
+        public derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage getGetSecretIdsVersionsRequestMessage() {
+          if (getSecretIdsVersionsRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 5) {
+              return (derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_;
+            }
+            return derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.getDefaultInstance();
+          } else {
+            if (bodyCase_ == 5) {
+              return getSecretIdsVersionsRequestMessageBuilder_.getMessage();
+            }
+            return derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         */
+        public Builder setGetSecretIdsVersionsRequestMessage(derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage value) {
+          if (getSecretIdsVersionsRequestMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            body_ = value;
+            onChanged();
+          } else {
+            getSecretIdsVersionsRequestMessageBuilder_.setMessage(value);
+          }
+          bodyCase_ = 5;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         */
+        public Builder setGetSecretIdsVersionsRequestMessage(
+            derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.Builder builderForValue) {
+          if (getSecretIdsVersionsRequestMessageBuilder_ == null) {
+            body_ = builderForValue.build();
+            onChanged();
+          } else {
+            getSecretIdsVersionsRequestMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bodyCase_ = 5;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         */
+        public Builder mergeGetSecretIdsVersionsRequestMessage(derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage value) {
+          if (getSecretIdsVersionsRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 5 &&
+                body_ != derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.getDefaultInstance()) {
+              body_ = derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.newBuilder((derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_)
+                  .mergeFrom(value).buildPartial();
+            } else {
+              body_ = value;
+            }
+            onChanged();
+          } else {
+            if (bodyCase_ == 5) {
+              getSecretIdsVersionsRequestMessageBuilder_.mergeFrom(value);
+            } else {
+              getSecretIdsVersionsRequestMessageBuilder_.setMessage(value);
+            }
+          }
+          bodyCase_ = 5;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         */
+        public Builder clearGetSecretIdsVersionsRequestMessage() {
+          if (getSecretIdsVersionsRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 5) {
+              bodyCase_ = 0;
+              body_ = null;
+              onChanged();
+            }
+          } else {
+            if (bodyCase_ == 5) {
+              bodyCase_ = 0;
+              body_ = null;
+            }
+            getSecretIdsVersionsRequestMessageBuilder_.clear();
+          }
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         */
+        public derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.Builder getGetSecretIdsVersionsRequestMessageBuilder() {
+          return getGetSecretIdsVersionsRequestMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         */
+        @java.lang.Override
+        public derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessageOrBuilder getGetSecretIdsVersionsRequestMessageOrBuilder() {
+          if ((bodyCase_ == 5) && (getSecretIdsVersionsRequestMessageBuilder_ != null)) {
+            return getSecretIdsVersionsRequestMessageBuilder_.getMessageOrBuilder();
+          } else {
+            if (bodyCase_ == 5) {
+              return (derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_;
+            }
+            return derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsRequestMessage getSecretIdsVersionsRequestMessage = 5;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage, derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.Builder, derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessageOrBuilder> 
+            getGetSecretIdsVersionsRequestMessageFieldBuilder() {
+          if (getSecretIdsVersionsRequestMessageBuilder_ == null) {
+            if (!(bodyCase_ == 5)) {
+              body_ = derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.getDefaultInstance();
+            }
+            getSecretIdsVersionsRequestMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage, derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage.Builder, derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessageOrBuilder>(
+                    (derec.message.Secretidsversions.GetSecretIdsVersionsRequestMessage) body_,
+                    getParentForChildren(),
+                    isClean());
+            body_ = null;
+          }
+          bodyCase_ = 5;
+          onChanged();
+          return getSecretIdsVersionsRequestMessageBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Getshare.GetShareRequestMessage, derec.message.Getshare.GetShareRequestMessage.Builder, derec.message.Getshare.GetShareRequestMessageOrBuilder> getShareRequestMessageBuilder_;
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         * @return Whether the getShareRequestMessage field is set.
+         */
+        @java.lang.Override
+        public boolean hasGetShareRequestMessage() {
+          return bodyCase_ == 6;
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         * @return The getShareRequestMessage.
+         */
+        @java.lang.Override
+        public derec.message.Getshare.GetShareRequestMessage getGetShareRequestMessage() {
+          if (getShareRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 6) {
+              return (derec.message.Getshare.GetShareRequestMessage) body_;
+            }
+            return derec.message.Getshare.GetShareRequestMessage.getDefaultInstance();
+          } else {
+            if (bodyCase_ == 6) {
+              return getShareRequestMessageBuilder_.getMessage();
+            }
+            return derec.message.Getshare.GetShareRequestMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         */
+        public Builder setGetShareRequestMessage(derec.message.Getshare.GetShareRequestMessage value) {
+          if (getShareRequestMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            body_ = value;
+            onChanged();
+          } else {
+            getShareRequestMessageBuilder_.setMessage(value);
+          }
+          bodyCase_ = 6;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         */
+        public Builder setGetShareRequestMessage(
+            derec.message.Getshare.GetShareRequestMessage.Builder builderForValue) {
+          if (getShareRequestMessageBuilder_ == null) {
+            body_ = builderForValue.build();
+            onChanged();
+          } else {
+            getShareRequestMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bodyCase_ = 6;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         */
+        public Builder mergeGetShareRequestMessage(derec.message.Getshare.GetShareRequestMessage value) {
+          if (getShareRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 6 &&
+                body_ != derec.message.Getshare.GetShareRequestMessage.getDefaultInstance()) {
+              body_ = derec.message.Getshare.GetShareRequestMessage.newBuilder((derec.message.Getshare.GetShareRequestMessage) body_)
+                  .mergeFrom(value).buildPartial();
+            } else {
+              body_ = value;
+            }
+            onChanged();
+          } else {
+            if (bodyCase_ == 6) {
+              getShareRequestMessageBuilder_.mergeFrom(value);
+            } else {
+              getShareRequestMessageBuilder_.setMessage(value);
+            }
+          }
+          bodyCase_ = 6;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         */
+        public Builder clearGetShareRequestMessage() {
+          if (getShareRequestMessageBuilder_ == null) {
+            if (bodyCase_ == 6) {
+              bodyCase_ = 0;
+              body_ = null;
+              onChanged();
+            }
+          } else {
+            if (bodyCase_ == 6) {
+              bodyCase_ = 0;
+              body_ = null;
+            }
+            getShareRequestMessageBuilder_.clear();
+          }
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         */
+        public derec.message.Getshare.GetShareRequestMessage.Builder getGetShareRequestMessageBuilder() {
+          return getGetShareRequestMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         */
+        @java.lang.Override
+        public derec.message.Getshare.GetShareRequestMessageOrBuilder getGetShareRequestMessageOrBuilder() {
+          if ((bodyCase_ == 6) && (getShareRequestMessageBuilder_ != null)) {
+            return getShareRequestMessageBuilder_.getMessageOrBuilder();
+          } else {
+            if (bodyCase_ == 6) {
+              return (derec.message.Getshare.GetShareRequestMessage) body_;
+            }
+            return derec.message.Getshare.GetShareRequestMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetShareRequestMessage getShareRequestMessage = 6;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Getshare.GetShareRequestMessage, derec.message.Getshare.GetShareRequestMessage.Builder, derec.message.Getshare.GetShareRequestMessageOrBuilder> 
+            getGetShareRequestMessageFieldBuilder() {
+          if (getShareRequestMessageBuilder_ == null) {
+            if (!(bodyCase_ == 6)) {
+              body_ = derec.message.Getshare.GetShareRequestMessage.getDefaultInstance();
+            }
+            getShareRequestMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                derec.message.Getshare.GetShareRequestMessage, derec.message.Getshare.GetShareRequestMessage.Builder, derec.message.Getshare.GetShareRequestMessageOrBuilder>(
+                    (derec.message.Getshare.GetShareRequestMessage) body_,
+                    getParentForChildren(),
+                    isClean());
+            body_ = null;
+          }
+          bodyCase_ = 6;
+          onChanged();
+          return getShareRequestMessageBuilder_;
         }
         @java.lang.Override
         public final Builder setUnknownFields(
@@ -3970,40 +4534,64 @@ public final class Derecmessage {
       derec.message.Unpair.UnpairResponseMessageOrBuilder getUnpairResponseMessageOrBuilder();
 
       /**
-       * <pre>
-       *
-       *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-       *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-       *GetShareResponseMessage getShareResponseMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
        * @return Whether the storeShareResponseMessage field is set.
        */
       boolean hasStoreShareResponseMessage();
       /**
-       * <pre>
-       *
-       *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-       *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-       *GetShareResponseMessage getShareResponseMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
        * @return The storeShareResponseMessage.
        */
       derec.message.Storeshare.StoreShareResponseMessage getStoreShareResponseMessage();
       /**
-       * <pre>
-       *
-       *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-       *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-       *GetShareResponseMessage getShareResponseMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
        */
       derec.message.Storeshare.StoreShareResponseMessageOrBuilder getStoreShareResponseMessageOrBuilder();
+
+      /**
+       * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+       * @return Whether the verifyShareResponseMessage field is set.
+       */
+      boolean hasVerifyShareResponseMessage();
+      /**
+       * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+       * @return The verifyShareResponseMessage.
+       */
+      derec.message.Verify.VerifyShareResponseMessage getVerifyShareResponseMessage();
+      /**
+       * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+       */
+      derec.message.Verify.VerifyShareResponseMessageOrBuilder getVerifyShareResponseMessageOrBuilder();
+
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+       * @return Whether the getSecretIdsVersionsResponseMessage field is set.
+       */
+      boolean hasGetSecretIdsVersionsResponseMessage();
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+       * @return The getSecretIdsVersionsResponseMessage.
+       */
+      derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage getGetSecretIdsVersionsResponseMessage();
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+       */
+      derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessageOrBuilder getGetSecretIdsVersionsResponseMessageOrBuilder();
+
+      /**
+       * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+       * @return Whether the getShareResponseMessage field is set.
+       */
+      boolean hasGetShareResponseMessage();
+      /**
+       * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+       * @return The getShareResponseMessage.
+       */
+      derec.message.Getshare.GetShareResponseMessage getGetShareResponseMessage();
+      /**
+       * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+       */
+      derec.message.Getshare.GetShareResponseMessageOrBuilder getGetShareResponseMessageOrBuilder();
 
       derec.message.Derecmessage.DeRecMessage.HelperMessageBody.BodyCase getBodyCase();
     }
@@ -4051,6 +4639,9 @@ public final class Derecmessage {
         PAIRRESPONSEMESSAGE(1),
         UNPAIRRESPONSEMESSAGE(2),
         STORESHARERESPONSEMESSAGE(3),
+        VERIFYSHARERESPONSEMESSAGE(4),
+        GETSECRETIDSVERSIONSRESPONSEMESSAGE(5),
+        GETSHARERESPONSEMESSAGE(6),
         BODY_NOT_SET(0);
         private final int value;
         private BodyCase(int value) {
@@ -4071,6 +4662,9 @@ public final class Derecmessage {
             case 1: return PAIRRESPONSEMESSAGE;
             case 2: return UNPAIRRESPONSEMESSAGE;
             case 3: return STORESHARERESPONSEMESSAGE;
+            case 4: return VERIFYSHARERESPONSEMESSAGE;
+            case 5: return GETSECRETIDSVERSIONSRESPONSEMESSAGE;
+            case 6: return GETSHARERESPONSEMESSAGE;
             case 0: return BODY_NOT_SET;
             default: return null;
           }
@@ -4150,13 +4744,6 @@ public final class Derecmessage {
 
       public static final int STORESHARERESPONSEMESSAGE_FIELD_NUMBER = 3;
       /**
-       * <pre>
-       *
-       *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-       *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-       *GetShareResponseMessage getShareResponseMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
        * @return Whether the storeShareResponseMessage field is set.
        */
@@ -4165,13 +4752,6 @@ public final class Derecmessage {
         return bodyCase_ == 3;
       }
       /**
-       * <pre>
-       *
-       *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-       *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-       *GetShareResponseMessage getShareResponseMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
        * @return The storeShareResponseMessage.
        */
@@ -4183,13 +4763,6 @@ public final class Derecmessage {
         return derec.message.Storeshare.StoreShareResponseMessage.getDefaultInstance();
       }
       /**
-       * <pre>
-       *
-       *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-       *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-       *GetShareResponseMessage getShareResponseMessage = 6;
-       * </pre>
-       *
        * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
        */
       @java.lang.Override
@@ -4198,6 +4771,99 @@ public final class Derecmessage {
            return (derec.message.Storeshare.StoreShareResponseMessage) body_;
         }
         return derec.message.Storeshare.StoreShareResponseMessage.getDefaultInstance();
+      }
+
+      public static final int VERIFYSHARERESPONSEMESSAGE_FIELD_NUMBER = 4;
+      /**
+       * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+       * @return Whether the verifyShareResponseMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasVerifyShareResponseMessage() {
+        return bodyCase_ == 4;
+      }
+      /**
+       * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+       * @return The verifyShareResponseMessage.
+       */
+      @java.lang.Override
+      public derec.message.Verify.VerifyShareResponseMessage getVerifyShareResponseMessage() {
+        if (bodyCase_ == 4) {
+           return (derec.message.Verify.VerifyShareResponseMessage) body_;
+        }
+        return derec.message.Verify.VerifyShareResponseMessage.getDefaultInstance();
+      }
+      /**
+       * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+       */
+      @java.lang.Override
+      public derec.message.Verify.VerifyShareResponseMessageOrBuilder getVerifyShareResponseMessageOrBuilder() {
+        if (bodyCase_ == 4) {
+           return (derec.message.Verify.VerifyShareResponseMessage) body_;
+        }
+        return derec.message.Verify.VerifyShareResponseMessage.getDefaultInstance();
+      }
+
+      public static final int GETSECRETIDSVERSIONSRESPONSEMESSAGE_FIELD_NUMBER = 5;
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+       * @return Whether the getSecretIdsVersionsResponseMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasGetSecretIdsVersionsResponseMessage() {
+        return bodyCase_ == 5;
+      }
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+       * @return The getSecretIdsVersionsResponseMessage.
+       */
+      @java.lang.Override
+      public derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage getGetSecretIdsVersionsResponseMessage() {
+        if (bodyCase_ == 5) {
+           return (derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_;
+        }
+        return derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.getDefaultInstance();
+      }
+      /**
+       * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+       */
+      @java.lang.Override
+      public derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessageOrBuilder getGetSecretIdsVersionsResponseMessageOrBuilder() {
+        if (bodyCase_ == 5) {
+           return (derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_;
+        }
+        return derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.getDefaultInstance();
+      }
+
+      public static final int GETSHARERESPONSEMESSAGE_FIELD_NUMBER = 6;
+      /**
+       * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+       * @return Whether the getShareResponseMessage field is set.
+       */
+      @java.lang.Override
+      public boolean hasGetShareResponseMessage() {
+        return bodyCase_ == 6;
+      }
+      /**
+       * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+       * @return The getShareResponseMessage.
+       */
+      @java.lang.Override
+      public derec.message.Getshare.GetShareResponseMessage getGetShareResponseMessage() {
+        if (bodyCase_ == 6) {
+           return (derec.message.Getshare.GetShareResponseMessage) body_;
+        }
+        return derec.message.Getshare.GetShareResponseMessage.getDefaultInstance();
+      }
+      /**
+       * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+       */
+      @java.lang.Override
+      public derec.message.Getshare.GetShareResponseMessageOrBuilder getGetShareResponseMessageOrBuilder() {
+        if (bodyCase_ == 6) {
+           return (derec.message.Getshare.GetShareResponseMessage) body_;
+        }
+        return derec.message.Getshare.GetShareResponseMessage.getDefaultInstance();
       }
 
       private byte memoizedIsInitialized = -1;
@@ -4223,6 +4889,15 @@ public final class Derecmessage {
         if (bodyCase_ == 3) {
           output.writeMessage(3, (derec.message.Storeshare.StoreShareResponseMessage) body_);
         }
+        if (bodyCase_ == 4) {
+          output.writeMessage(4, (derec.message.Verify.VerifyShareResponseMessage) body_);
+        }
+        if (bodyCase_ == 5) {
+          output.writeMessage(5, (derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_);
+        }
+        if (bodyCase_ == 6) {
+          output.writeMessage(6, (derec.message.Getshare.GetShareResponseMessage) body_);
+        }
         getUnknownFields().writeTo(output);
       }
 
@@ -4243,6 +4918,18 @@ public final class Derecmessage {
         if (bodyCase_ == 3) {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(3, (derec.message.Storeshare.StoreShareResponseMessage) body_);
+        }
+        if (bodyCase_ == 4) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(4, (derec.message.Verify.VerifyShareResponseMessage) body_);
+        }
+        if (bodyCase_ == 5) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(5, (derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_);
+        }
+        if (bodyCase_ == 6) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(6, (derec.message.Getshare.GetShareResponseMessage) body_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSize = size;
@@ -4273,6 +4960,18 @@ public final class Derecmessage {
             if (!getStoreShareResponseMessage()
                 .equals(other.getStoreShareResponseMessage())) return false;
             break;
+          case 4:
+            if (!getVerifyShareResponseMessage()
+                .equals(other.getVerifyShareResponseMessage())) return false;
+            break;
+          case 5:
+            if (!getGetSecretIdsVersionsResponseMessage()
+                .equals(other.getGetSecretIdsVersionsResponseMessage())) return false;
+            break;
+          case 6:
+            if (!getGetShareResponseMessage()
+                .equals(other.getGetShareResponseMessage())) return false;
+            break;
           case 0:
           default:
         }
@@ -4299,6 +4998,18 @@ public final class Derecmessage {
           case 3:
             hash = (37 * hash) + STORESHARERESPONSEMESSAGE_FIELD_NUMBER;
             hash = (53 * hash) + getStoreShareResponseMessage().hashCode();
+            break;
+          case 4:
+            hash = (37 * hash) + VERIFYSHARERESPONSEMESSAGE_FIELD_NUMBER;
+            hash = (53 * hash) + getVerifyShareResponseMessage().hashCode();
+            break;
+          case 5:
+            hash = (37 * hash) + GETSECRETIDSVERSIONSRESPONSEMESSAGE_FIELD_NUMBER;
+            hash = (53 * hash) + getGetSecretIdsVersionsResponseMessage().hashCode();
+            break;
+          case 6:
+            hash = (37 * hash) + GETSHARERESPONSEMESSAGE_FIELD_NUMBER;
+            hash = (53 * hash) + getGetShareResponseMessage().hashCode();
             break;
           case 0:
           default:
@@ -4443,6 +5154,15 @@ public final class Derecmessage {
           if (storeShareResponseMessageBuilder_ != null) {
             storeShareResponseMessageBuilder_.clear();
           }
+          if (verifyShareResponseMessageBuilder_ != null) {
+            verifyShareResponseMessageBuilder_.clear();
+          }
+          if (getSecretIdsVersionsResponseMessageBuilder_ != null) {
+            getSecretIdsVersionsResponseMessageBuilder_.clear();
+          }
+          if (getShareResponseMessageBuilder_ != null) {
+            getShareResponseMessageBuilder_.clear();
+          }
           bodyCase_ = 0;
           body_ = null;
           return this;
@@ -4495,6 +5215,18 @@ public final class Derecmessage {
           if (bodyCase_ == 3 &&
               storeShareResponseMessageBuilder_ != null) {
             result.body_ = storeShareResponseMessageBuilder_.build();
+          }
+          if (bodyCase_ == 4 &&
+              verifyShareResponseMessageBuilder_ != null) {
+            result.body_ = verifyShareResponseMessageBuilder_.build();
+          }
+          if (bodyCase_ == 5 &&
+              getSecretIdsVersionsResponseMessageBuilder_ != null) {
+            result.body_ = getSecretIdsVersionsResponseMessageBuilder_.build();
+          }
+          if (bodyCase_ == 6 &&
+              getShareResponseMessageBuilder_ != null) {
+            result.body_ = getShareResponseMessageBuilder_.build();
           }
         }
 
@@ -4555,6 +5287,18 @@ public final class Derecmessage {
               mergeStoreShareResponseMessage(other.getStoreShareResponseMessage());
               break;
             }
+            case VERIFYSHARERESPONSEMESSAGE: {
+              mergeVerifyShareResponseMessage(other.getVerifyShareResponseMessage());
+              break;
+            }
+            case GETSECRETIDSVERSIONSRESPONSEMESSAGE: {
+              mergeGetSecretIdsVersionsResponseMessage(other.getGetSecretIdsVersionsResponseMessage());
+              break;
+            }
+            case GETSHARERESPONSEMESSAGE: {
+              mergeGetShareResponseMessage(other.getGetShareResponseMessage());
+              break;
+            }
             case BODY_NOT_SET: {
               break;
             }
@@ -4606,6 +5350,27 @@ public final class Derecmessage {
                   bodyCase_ = 3;
                   break;
                 } // case 26
+                case 34: {
+                  input.readMessage(
+                      getVerifyShareResponseMessageFieldBuilder().getBuilder(),
+                      extensionRegistry);
+                  bodyCase_ = 4;
+                  break;
+                } // case 34
+                case 42: {
+                  input.readMessage(
+                      getGetSecretIdsVersionsResponseMessageFieldBuilder().getBuilder(),
+                      extensionRegistry);
+                  bodyCase_ = 5;
+                  break;
+                } // case 42
+                case 50: {
+                  input.readMessage(
+                      getGetShareResponseMessageFieldBuilder().getBuilder(),
+                      extensionRegistry);
+                  bodyCase_ = 6;
+                  break;
+                } // case 50
                 default: {
                   if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                     done = true; // was an endgroup tag
@@ -4925,13 +5690,6 @@ public final class Derecmessage {
         private com.google.protobuf.SingleFieldBuilderV3<
             derec.message.Storeshare.StoreShareResponseMessage, derec.message.Storeshare.StoreShareResponseMessage.Builder, derec.message.Storeshare.StoreShareResponseMessageOrBuilder> storeShareResponseMessageBuilder_;
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          * @return Whether the storeShareResponseMessage field is set.
          */
@@ -4940,13 +5698,6 @@ public final class Derecmessage {
           return bodyCase_ == 3;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          * @return The storeShareResponseMessage.
          */
@@ -4965,13 +5716,6 @@ public final class Derecmessage {
           }
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          */
         public Builder setStoreShareResponseMessage(derec.message.Storeshare.StoreShareResponseMessage value) {
@@ -4988,13 +5732,6 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          */
         public Builder setStoreShareResponseMessage(
@@ -5009,13 +5746,6 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          */
         public Builder mergeStoreShareResponseMessage(derec.message.Storeshare.StoreShareResponseMessage value) {
@@ -5039,13 +5769,6 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          */
         public Builder clearStoreShareResponseMessage() {
@@ -5065,26 +5788,12 @@ public final class Derecmessage {
           return this;
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          */
         public derec.message.Storeshare.StoreShareResponseMessage.Builder getStoreShareResponseMessageBuilder() {
           return getStoreShareResponseMessageFieldBuilder().getBuilder();
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          */
         @java.lang.Override
@@ -5099,13 +5808,6 @@ public final class Derecmessage {
           }
         }
         /**
-         * <pre>
-         *
-         *VerifyShareResponseMessage verifyShareResponseMessage = 4;
-         *GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;
-         *GetShareResponseMessage getShareResponseMessage = 6;
-         * </pre>
-         *
          * <code>.derec.message.StoreShareResponseMessage storeShareResponseMessage = 3;</code>
          */
         private com.google.protobuf.SingleFieldBuilderV3<
@@ -5125,6 +5827,432 @@ public final class Derecmessage {
           bodyCase_ = 3;
           onChanged();
           return storeShareResponseMessageBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Verify.VerifyShareResponseMessage, derec.message.Verify.VerifyShareResponseMessage.Builder, derec.message.Verify.VerifyShareResponseMessageOrBuilder> verifyShareResponseMessageBuilder_;
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         * @return Whether the verifyShareResponseMessage field is set.
+         */
+        @java.lang.Override
+        public boolean hasVerifyShareResponseMessage() {
+          return bodyCase_ == 4;
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         * @return The verifyShareResponseMessage.
+         */
+        @java.lang.Override
+        public derec.message.Verify.VerifyShareResponseMessage getVerifyShareResponseMessage() {
+          if (verifyShareResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 4) {
+              return (derec.message.Verify.VerifyShareResponseMessage) body_;
+            }
+            return derec.message.Verify.VerifyShareResponseMessage.getDefaultInstance();
+          } else {
+            if (bodyCase_ == 4) {
+              return verifyShareResponseMessageBuilder_.getMessage();
+            }
+            return derec.message.Verify.VerifyShareResponseMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         */
+        public Builder setVerifyShareResponseMessage(derec.message.Verify.VerifyShareResponseMessage value) {
+          if (verifyShareResponseMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            body_ = value;
+            onChanged();
+          } else {
+            verifyShareResponseMessageBuilder_.setMessage(value);
+          }
+          bodyCase_ = 4;
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         */
+        public Builder setVerifyShareResponseMessage(
+            derec.message.Verify.VerifyShareResponseMessage.Builder builderForValue) {
+          if (verifyShareResponseMessageBuilder_ == null) {
+            body_ = builderForValue.build();
+            onChanged();
+          } else {
+            verifyShareResponseMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bodyCase_ = 4;
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         */
+        public Builder mergeVerifyShareResponseMessage(derec.message.Verify.VerifyShareResponseMessage value) {
+          if (verifyShareResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 4 &&
+                body_ != derec.message.Verify.VerifyShareResponseMessage.getDefaultInstance()) {
+              body_ = derec.message.Verify.VerifyShareResponseMessage.newBuilder((derec.message.Verify.VerifyShareResponseMessage) body_)
+                  .mergeFrom(value).buildPartial();
+            } else {
+              body_ = value;
+            }
+            onChanged();
+          } else {
+            if (bodyCase_ == 4) {
+              verifyShareResponseMessageBuilder_.mergeFrom(value);
+            } else {
+              verifyShareResponseMessageBuilder_.setMessage(value);
+            }
+          }
+          bodyCase_ = 4;
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         */
+        public Builder clearVerifyShareResponseMessage() {
+          if (verifyShareResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 4) {
+              bodyCase_ = 0;
+              body_ = null;
+              onChanged();
+            }
+          } else {
+            if (bodyCase_ == 4) {
+              bodyCase_ = 0;
+              body_ = null;
+            }
+            verifyShareResponseMessageBuilder_.clear();
+          }
+          return this;
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         */
+        public derec.message.Verify.VerifyShareResponseMessage.Builder getVerifyShareResponseMessageBuilder() {
+          return getVerifyShareResponseMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         */
+        @java.lang.Override
+        public derec.message.Verify.VerifyShareResponseMessageOrBuilder getVerifyShareResponseMessageOrBuilder() {
+          if ((bodyCase_ == 4) && (verifyShareResponseMessageBuilder_ != null)) {
+            return verifyShareResponseMessageBuilder_.getMessageOrBuilder();
+          } else {
+            if (bodyCase_ == 4) {
+              return (derec.message.Verify.VerifyShareResponseMessage) body_;
+            }
+            return derec.message.Verify.VerifyShareResponseMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.VerifyShareResponseMessage verifyShareResponseMessage = 4;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Verify.VerifyShareResponseMessage, derec.message.Verify.VerifyShareResponseMessage.Builder, derec.message.Verify.VerifyShareResponseMessageOrBuilder> 
+            getVerifyShareResponseMessageFieldBuilder() {
+          if (verifyShareResponseMessageBuilder_ == null) {
+            if (!(bodyCase_ == 4)) {
+              body_ = derec.message.Verify.VerifyShareResponseMessage.getDefaultInstance();
+            }
+            verifyShareResponseMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                derec.message.Verify.VerifyShareResponseMessage, derec.message.Verify.VerifyShareResponseMessage.Builder, derec.message.Verify.VerifyShareResponseMessageOrBuilder>(
+                    (derec.message.Verify.VerifyShareResponseMessage) body_,
+                    getParentForChildren(),
+                    isClean());
+            body_ = null;
+          }
+          bodyCase_ = 4;
+          onChanged();
+          return verifyShareResponseMessageBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage, derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.Builder, derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessageOrBuilder> getSecretIdsVersionsResponseMessageBuilder_;
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         * @return Whether the getSecretIdsVersionsResponseMessage field is set.
+         */
+        @java.lang.Override
+        public boolean hasGetSecretIdsVersionsResponseMessage() {
+          return bodyCase_ == 5;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         * @return The getSecretIdsVersionsResponseMessage.
+         */
+        @java.lang.Override
+        public derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage getGetSecretIdsVersionsResponseMessage() {
+          if (getSecretIdsVersionsResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 5) {
+              return (derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_;
+            }
+            return derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.getDefaultInstance();
+          } else {
+            if (bodyCase_ == 5) {
+              return getSecretIdsVersionsResponseMessageBuilder_.getMessage();
+            }
+            return derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         */
+        public Builder setGetSecretIdsVersionsResponseMessage(derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage value) {
+          if (getSecretIdsVersionsResponseMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            body_ = value;
+            onChanged();
+          } else {
+            getSecretIdsVersionsResponseMessageBuilder_.setMessage(value);
+          }
+          bodyCase_ = 5;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         */
+        public Builder setGetSecretIdsVersionsResponseMessage(
+            derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.Builder builderForValue) {
+          if (getSecretIdsVersionsResponseMessageBuilder_ == null) {
+            body_ = builderForValue.build();
+            onChanged();
+          } else {
+            getSecretIdsVersionsResponseMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bodyCase_ = 5;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         */
+        public Builder mergeGetSecretIdsVersionsResponseMessage(derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage value) {
+          if (getSecretIdsVersionsResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 5 &&
+                body_ != derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.getDefaultInstance()) {
+              body_ = derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.newBuilder((derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_)
+                  .mergeFrom(value).buildPartial();
+            } else {
+              body_ = value;
+            }
+            onChanged();
+          } else {
+            if (bodyCase_ == 5) {
+              getSecretIdsVersionsResponseMessageBuilder_.mergeFrom(value);
+            } else {
+              getSecretIdsVersionsResponseMessageBuilder_.setMessage(value);
+            }
+          }
+          bodyCase_ = 5;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         */
+        public Builder clearGetSecretIdsVersionsResponseMessage() {
+          if (getSecretIdsVersionsResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 5) {
+              bodyCase_ = 0;
+              body_ = null;
+              onChanged();
+            }
+          } else {
+            if (bodyCase_ == 5) {
+              bodyCase_ = 0;
+              body_ = null;
+            }
+            getSecretIdsVersionsResponseMessageBuilder_.clear();
+          }
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         */
+        public derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.Builder getGetSecretIdsVersionsResponseMessageBuilder() {
+          return getGetSecretIdsVersionsResponseMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         */
+        @java.lang.Override
+        public derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessageOrBuilder getGetSecretIdsVersionsResponseMessageOrBuilder() {
+          if ((bodyCase_ == 5) && (getSecretIdsVersionsResponseMessageBuilder_ != null)) {
+            return getSecretIdsVersionsResponseMessageBuilder_.getMessageOrBuilder();
+          } else {
+            if (bodyCase_ == 5) {
+              return (derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_;
+            }
+            return derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetSecretIdsVersionsResponseMessage getSecretIdsVersionsResponseMessage = 5;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage, derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.Builder, derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessageOrBuilder> 
+            getGetSecretIdsVersionsResponseMessageFieldBuilder() {
+          if (getSecretIdsVersionsResponseMessageBuilder_ == null) {
+            if (!(bodyCase_ == 5)) {
+              body_ = derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.getDefaultInstance();
+            }
+            getSecretIdsVersionsResponseMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage, derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage.Builder, derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessageOrBuilder>(
+                    (derec.message.Secretidsversions.GetSecretIdsVersionsResponseMessage) body_,
+                    getParentForChildren(),
+                    isClean());
+            body_ = null;
+          }
+          bodyCase_ = 5;
+          onChanged();
+          return getSecretIdsVersionsResponseMessageBuilder_;
+        }
+
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Getshare.GetShareResponseMessage, derec.message.Getshare.GetShareResponseMessage.Builder, derec.message.Getshare.GetShareResponseMessageOrBuilder> getShareResponseMessageBuilder_;
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         * @return Whether the getShareResponseMessage field is set.
+         */
+        @java.lang.Override
+        public boolean hasGetShareResponseMessage() {
+          return bodyCase_ == 6;
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         * @return The getShareResponseMessage.
+         */
+        @java.lang.Override
+        public derec.message.Getshare.GetShareResponseMessage getGetShareResponseMessage() {
+          if (getShareResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 6) {
+              return (derec.message.Getshare.GetShareResponseMessage) body_;
+            }
+            return derec.message.Getshare.GetShareResponseMessage.getDefaultInstance();
+          } else {
+            if (bodyCase_ == 6) {
+              return getShareResponseMessageBuilder_.getMessage();
+            }
+            return derec.message.Getshare.GetShareResponseMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         */
+        public Builder setGetShareResponseMessage(derec.message.Getshare.GetShareResponseMessage value) {
+          if (getShareResponseMessageBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            body_ = value;
+            onChanged();
+          } else {
+            getShareResponseMessageBuilder_.setMessage(value);
+          }
+          bodyCase_ = 6;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         */
+        public Builder setGetShareResponseMessage(
+            derec.message.Getshare.GetShareResponseMessage.Builder builderForValue) {
+          if (getShareResponseMessageBuilder_ == null) {
+            body_ = builderForValue.build();
+            onChanged();
+          } else {
+            getShareResponseMessageBuilder_.setMessage(builderForValue.build());
+          }
+          bodyCase_ = 6;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         */
+        public Builder mergeGetShareResponseMessage(derec.message.Getshare.GetShareResponseMessage value) {
+          if (getShareResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 6 &&
+                body_ != derec.message.Getshare.GetShareResponseMessage.getDefaultInstance()) {
+              body_ = derec.message.Getshare.GetShareResponseMessage.newBuilder((derec.message.Getshare.GetShareResponseMessage) body_)
+                  .mergeFrom(value).buildPartial();
+            } else {
+              body_ = value;
+            }
+            onChanged();
+          } else {
+            if (bodyCase_ == 6) {
+              getShareResponseMessageBuilder_.mergeFrom(value);
+            } else {
+              getShareResponseMessageBuilder_.setMessage(value);
+            }
+          }
+          bodyCase_ = 6;
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         */
+        public Builder clearGetShareResponseMessage() {
+          if (getShareResponseMessageBuilder_ == null) {
+            if (bodyCase_ == 6) {
+              bodyCase_ = 0;
+              body_ = null;
+              onChanged();
+            }
+          } else {
+            if (bodyCase_ == 6) {
+              bodyCase_ = 0;
+              body_ = null;
+            }
+            getShareResponseMessageBuilder_.clear();
+          }
+          return this;
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         */
+        public derec.message.Getshare.GetShareResponseMessage.Builder getGetShareResponseMessageBuilder() {
+          return getGetShareResponseMessageFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         */
+        @java.lang.Override
+        public derec.message.Getshare.GetShareResponseMessageOrBuilder getGetShareResponseMessageOrBuilder() {
+          if ((bodyCase_ == 6) && (getShareResponseMessageBuilder_ != null)) {
+            return getShareResponseMessageBuilder_.getMessageOrBuilder();
+          } else {
+            if (bodyCase_ == 6) {
+              return (derec.message.Getshare.GetShareResponseMessage) body_;
+            }
+            return derec.message.Getshare.GetShareResponseMessage.getDefaultInstance();
+          }
+        }
+        /**
+         * <code>.derec.message.GetShareResponseMessage getShareResponseMessage = 6;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            derec.message.Getshare.GetShareResponseMessage, derec.message.Getshare.GetShareResponseMessage.Builder, derec.message.Getshare.GetShareResponseMessageOrBuilder> 
+            getGetShareResponseMessageFieldBuilder() {
+          if (getShareResponseMessageBuilder_ == null) {
+            if (!(bodyCase_ == 6)) {
+              body_ = derec.message.Getshare.GetShareResponseMessage.getDefaultInstance();
+            }
+            getShareResponseMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                derec.message.Getshare.GetShareResponseMessage, derec.message.Getshare.GetShareResponseMessage.Builder, derec.message.Getshare.GetShareResponseMessageOrBuilder>(
+                    (derec.message.Getshare.GetShareResponseMessage) body_,
+                    getParentForChildren(),
+                    isClean());
+            body_ = null;
+          }
+          bodyCase_ = 6;
+          onChanged();
+          return getShareResponseMessageBuilder_;
         }
         @java.lang.Override
         public final Builder setUnknownFields(
@@ -6463,34 +7591,48 @@ public final class Derecmessage {
     java.lang.String[] descriptorData = {
       "\n\022derecmessage.proto\022\rderec.message\032\037goo" +
       "gle/protobuf/timestamp.proto\032\npair.proto" +
-      "\032\014unpair.proto\032\020storeshare.proto\"\264\010\n\014DeR" +
-      "ecMessage\022\027\n\017protocolVersion\030\001 \001(\003\022\016\n\006se" +
-      "nder\030\002 \001(\014\022\020\n\010receiver\030\003 \001(\014\022\020\n\010secretId" +
-      "\030\004 \001(\003\022-\n\ttimestamp\030\005 \001(\0132\032.google.proto" +
-      "buf.Timestamp\022@\n\rmessageBodies\030\006 \001(\0132).d" +
-      "erec.message.DeRecMessage.MessageBodies\032" +
-      "\273\001\n\rMessageBodies\022N\n\023helperMessageBodies" +
-      "\030\001 \001(\0132/.derec.message.DeRecMessage.Help" +
-      "erMessageBodiesH\000\022N\n\023sharerMessageBodies" +
-      "\030\002 \001(\0132/.derec.message.DeRecMessage.Shar" +
-      "erMessageBodiesH\000B\n\n\010messages\032_\n\023SharerM" +
-      "essageBodies\022H\n\021sharerMessageBody\030\001 \003(\0132" +
-      "-.derec.message.DeRecMessage.SharerMessa" +
-      "geBody\032\356\001\n\021SharerMessageBody\022?\n\022pairRequ" +
-      "estMessage\030\001 \001(\0132!.derec.message.PairReq" +
-      "uestMessageH\000\022C\n\024unpairRequestMessage\030\002 " +
-      "\001(\0132#.derec.message.UnpairRequestMessage" +
-      "H\000\022K\n\030storeShareRequestMessage\030\003 \001(\0132\'.d" +
-      "erec.message.StoreShareRequestMessageH\000B" +
-      "\006\n\004body\032_\n\023HelperMessageBodies\022H\n\021helper" +
-      "MessageBody\030\001 \003(\0132-.derec.message.DeRecM" +
-      "essage.HelperMessageBody\032\364\001\n\021HelperMessa" +
-      "geBody\022A\n\023pairResponseMessage\030\001 \001(\0132\".de" +
-      "rec.message.PairResponseMessageH\000\022E\n\025unp" +
-      "airResponseMessage\030\002 \001(\0132$.derec.message" +
-      ".UnpairResponseMessageH\000\022M\n\031storeShareRe" +
-      "sponseMessage\030\003 \001(\0132(.derec.message.Stor" +
-      "eShareResponseMessageH\000B\006\n\004bodyb\006proto3"
+      "\032\014unpair.proto\032\020storeshare.proto\032\014verify" +
+      ".proto\032\016getshare.proto\032\027secretidsversion" +
+      "s.proto\"\254\014\n\014DeRecMessage\022\027\n\017protocolVers" +
+      "ion\030\001 \001(\003\022\016\n\006sender\030\002 \001(\014\022\020\n\010receiver\030\003 " +
+      "\001(\014\022\020\n\010secretId\030\004 \001(\003\022-\n\ttimestamp\030\005 \001(\013" +
+      "2\032.google.protobuf.Timestamp\022@\n\rmessageB" +
+      "odies\030\006 \001(\0132).derec.message.DeRecMessage" +
+      ".MessageBodies\032\273\001\n\rMessageBodies\022N\n\023help" +
+      "erMessageBodies\030\001 \001(\0132/.derec.message.De" +
+      "RecMessage.HelperMessageBodiesH\000\022N\n\023shar" +
+      "erMessageBodies\030\002 \001(\0132/.derec.message.De" +
+      "RecMessage.SharerMessageBodiesH\000B\n\n\010mess" +
+      "ages\032_\n\023SharerMessageBodies\022H\n\021sharerMes" +
+      "sageBody\030\001 \003(\0132-.derec.message.DeRecMess" +
+      "age.SharerMessageBody\032\347\003\n\021SharerMessageB" +
+      "ody\022?\n\022pairRequestMessage\030\001 \001(\0132!.derec." +
+      "message.PairRequestMessageH\000\022C\n\024unpairRe" +
+      "questMessage\030\002 \001(\0132#.derec.message.Unpai" +
+      "rRequestMessageH\000\022K\n\030storeShareRequestMe" +
+      "ssage\030\003 \001(\0132\'.derec.message.StoreShareRe" +
+      "questMessageH\000\022M\n\031verifyShareRequestMess" +
+      "age\030\004 \001(\0132(.derec.message.VerifyShareReq" +
+      "uestMessageH\000\022_\n\"getSecretIdsVersionsReq" +
+      "uestMessage\030\005 \001(\01321.derec.message.GetSec" +
+      "retIdsVersionsRequestMessageH\000\022G\n\026getSha" +
+      "reRequestMessage\030\006 \001(\0132%.derec.message.G" +
+      "etShareRequestMessageH\000B\006\n\004body\032_\n\023Helpe" +
+      "rMessageBodies\022H\n\021helperMessageBody\030\001 \003(" +
+      "\0132-.derec.message.DeRecMessage.HelperMes" +
+      "sageBody\032\363\003\n\021HelperMessageBody\022A\n\023pairRe" +
+      "sponseMessage\030\001 \001(\0132\".derec.message.Pair" +
+      "ResponseMessageH\000\022E\n\025unpairResponseMessa" +
+      "ge\030\002 \001(\0132$.derec.message.UnpairResponseM" +
+      "essageH\000\022M\n\031storeShareResponseMessage\030\003 " +
+      "\001(\0132(.derec.message.StoreShareResponseMe" +
+      "ssageH\000\022O\n\032verifyShareResponseMessage\030\004 " +
+      "\001(\0132).derec.message.VerifyShareResponseM" +
+      "essageH\000\022a\n#getSecretIdsVersionsResponse" +
+      "Message\030\005 \001(\01322.derec.message.GetSecretI" +
+      "dsVersionsResponseMessageH\000\022I\n\027getShareR" +
+      "esponseMessage\030\006 \001(\0132&.derec.message.Get" +
+      "ShareResponseMessageH\000B\006\n\004bodyb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -6499,6 +7641,9 @@ public final class Derecmessage {
           derec.message.Pair.getDescriptor(),
           derec.message.Unpair.getDescriptor(),
           derec.message.Storeshare.getDescriptor(),
+          derec.message.Verify.getDescriptor(),
+          derec.message.Getshare.getDescriptor(),
+          derec.message.Secretidsversions.getDescriptor(),
         });
     internal_static_derec_message_DeRecMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -6523,7 +7668,7 @@ public final class Derecmessage {
     internal_static_derec_message_DeRecMessage_SharerMessageBody_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_derec_message_DeRecMessage_SharerMessageBody_descriptor,
-        new java.lang.String[] { "PairRequestMessage", "UnpairRequestMessage", "StoreShareRequestMessage", "Body", });
+        new java.lang.String[] { "PairRequestMessage", "UnpairRequestMessage", "StoreShareRequestMessage", "VerifyShareRequestMessage", "GetSecretIdsVersionsRequestMessage", "GetShareRequestMessage", "Body", });
     internal_static_derec_message_DeRecMessage_HelperMessageBodies_descriptor =
       internal_static_derec_message_DeRecMessage_descriptor.getNestedTypes().get(3);
     internal_static_derec_message_DeRecMessage_HelperMessageBodies_fieldAccessorTable = new
@@ -6535,11 +7680,14 @@ public final class Derecmessage {
     internal_static_derec_message_DeRecMessage_HelperMessageBody_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_derec_message_DeRecMessage_HelperMessageBody_descriptor,
-        new java.lang.String[] { "PairResponseMessage", "UnpairResponseMessage", "StoreShareResponseMessage", "Body", });
+        new java.lang.String[] { "PairResponseMessage", "UnpairResponseMessage", "StoreShareResponseMessage", "VerifyShareResponseMessage", "GetSecretIdsVersionsResponseMessage", "GetShareResponseMessage", "Body", });
     com.google.protobuf.TimestampProto.getDescriptor();
     derec.message.Pair.getDescriptor();
     derec.message.Unpair.getDescriptor();
     derec.message.Storeshare.getDescriptor();
+    derec.message.Verify.getDescriptor();
+    derec.message.Getshare.getDescriptor();
+    derec.message.Secretidsversions.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
