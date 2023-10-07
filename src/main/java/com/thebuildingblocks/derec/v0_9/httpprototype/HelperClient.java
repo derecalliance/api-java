@@ -2,16 +2,10 @@ package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
-import derec.message.Derecmessage.DeRecMessage.HelperMessageBody;
-import derec.message.ResultOuterClass;
-import derec.message.Storeshare;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -24,24 +18,20 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientMessageFactory.*;
-import static com.thebuildingblocks.derec.v0_9.httpprototype.ResponseProcessing.getResponseProcessingStatus;
+import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientResponseProcessing.*;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.*;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
-import static derec.message.Derecmessage.DeRecMessage.HelperMessageBody.BodyCase.*;
-import static derec.message.ResultOuterClass.StatusEnum.OK;
-import static derec.message.Storeshare.*;
 
 /**
  * Sharer's view of a helper for a single secret, there will be multiple entries for the
  * same helper - one for each secret shared to that helper
  */
 public class HelperClient implements DeRecPairable, Closeable {
-    private final Secret secret; // the secret this helper is a helper for
+    public final Secret secret; // the secret this helper is a helper for
     private final Util.RetryParameters retryParameters;
     private final HttpClient httpClient;
     private final DeRecId helperId; // unique Id for helper
@@ -96,7 +86,7 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .build();
 
         pairingFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .thenApply(r -> this.processResponse(r, PAIRRESPONSEMESSAGE))
+                .thenApply(r -> pairProcessResponse(r, this))
                 .exceptionally(t -> {
                     this.status = FAILED;
                     secret.notifyStatus(buildNotification()
@@ -114,40 +104,6 @@ public class HelperClient implements DeRecPairable, Closeable {
             shares.put(share.version.versionNumber, share);
         }
 
-        /*
-         * In-line functions following serve to capture the share
-         */
-        //noinspection DuplicatedCode
-        Function<HttpResponse<InputStream>, Version.Share> processSharResponseStatusFn = httpResponse -> {
-            if (httpResponse.statusCode() != 200) {
-                share.processResult(SHARE, false, "HTTP Status " + httpResponse.statusCode());
-            }
-            try {
-                HelperServerMessageDeserializer messageDeserializer =
-                        HelperServerMessageDeserializer.newInstance(httpResponse, STORESHARERESPONSEMESSAGE);
-                ResultOuterClass.Result result = messageDeserializer.getResult();
-                if (!result.getStatus().equals(OK)) {
-                    share.processResult(SHARE, false, result.getStatus() + " " + result.getMemo());
-                }
-                StoreShareResponseMessage message = messageDeserializer.getBodyMessage(STORESHARERESPONSEMESSAGE, StoreShareResponseMessage.class);
-                if (message.getVersion() != share.version.versionNumber) {
-                    share.processResult(SHARE, false, "message version mismatch");
-                }
-                share.processResult(SHARE, true, result.getMemo());
-            } catch (IOException e) {
-                share.processResult(SHARE, false, e.getCause().getMessage());
-            }
-            share.future.complete(share);
-            return share;
-        };
-
-        //noinspection DuplicatedCode
-        Function<Throwable, Version.Share> shareRequestFailedHandler = throwable -> {
-            share.processResult(SHARE, false, throwable.getCause().getMessage());
-            share.future.complete(share);
-            return share;
-        };
-
         HttpRequest request = buildRequest()
                 .POST(BodyPublishers.ofByteArray(getMessage(
                         getShareRequestMessageBody(share)).toByteArray()))
@@ -156,13 +112,17 @@ public class HelperClient implements DeRecPairable, Closeable {
         if (Objects.isNull(share.helper)) {
             throw new IllegalStateException("Share helper must not be null");
         }
-        share.helper = this;
         if (Objects.nonNull(share.future)) {
             share.future.cancel(true);
         }
+        //noinspection DuplicatedCode
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .thenApply(processSharResponseStatusFn)
-                .exceptionally(shareRequestFailedHandler);
+                .thenApply(httpResponse -> HelperClientResponseProcessing.storeShareResponseHandler(httpResponse, share))
+                .exceptionally(throwable -> {
+                    share.processResult(SHARE, false, throwable.getCause().getMessage());
+                    share.future.complete(share);
+                    return share;
+                });
     }
 
     public void verify(Version.Share share) {
@@ -178,32 +138,18 @@ public class HelperClient implements DeRecPairable, Closeable {
             }
         }
 
-        /*
-         * In-line functions following serve to capture the share
-         */
-        //noinspection DuplicatedCode
-        Function<HttpResponse<byte[]>, Version.Share> verifyResponseHandler = httpResponse -> {
-            // todo process message
-            share.processResult(VERIFY, httpResponse.statusCode() == 200, "HTTP Status " + httpResponse.statusCode());
-            share.future.complete(share);
-            return share;
-        };
-
-        //noinspection DuplicatedCode
-        Function<Throwable, Version.Share> verifyFailedHandler = throwable -> {
-            share.processResult(VERIFY, false, throwable.getCause().getMessage());
-            share.future.complete(share);
-            return share;
-        };
-
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofByteArray(getMessage(
-                        getVerifyRequestMessageBody(share)).toByteArray()))
+                .POST(BodyPublishers.ofByteArray(getMessage(getVerifyRequestMessageBody(share)).toByteArray()))
                 .build();
 
-        share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofByteArray())
-                .thenApply(verifyResponseHandler)
-                .exceptionally(verifyFailedHandler);
+        //noinspection DuplicatedCode
+        share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .thenApply(httpResponse -> HelperClientResponseProcessing.verifyResponseHandler(httpResponse, share))
+                .exceptionally(throwable -> {
+                    share.processResult(VERIFY, false, throwable.getCause().getMessage());
+                    share.future.complete(share);
+                    return share;
+                });
     }
 
     /**
@@ -219,13 +165,12 @@ public class HelperClient implements DeRecPairable, Closeable {
         }
 
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofByteArray(getMessage(
-                        getUnPairRequestMessageBody(reason)).toByteArray()))
+                .POST(BodyPublishers.ofByteArray(getMessage(getUnPairRequestMessageBody(reason)).toByteArray()))
                 .build();
 
 
         pairingFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .thenApply(r -> this.processResponse(r, UNPAIRRESPONSEMESSAGE))
+                .thenApply(r -> unPairProcessResponse(r, this))
                 .exceptionally(t -> {
                     this.status = FAILED;
                     secret.notifyStatus(buildNotification()
@@ -233,34 +178,6 @@ public class HelperClient implements DeRecPairable, Closeable {
                             .build(HELPER_INACTIVE));
                     return this;
                 });
-    }
-
-    private HelperClient processResponse(HttpResponse<InputStream> response, HelperMessageBody.BodyCase bodyCase) {
-        ResponseProcessing.ResponseProcessingStatus processingStatus = getResponseProcessingStatus(bodyCase);
-        this.status = response.statusCode() == 200 ? processingStatus.successStatus() : processingStatus.failStatus();
-        DeRecStatusNotification.Type type = processingStatus.failNotification();
-        String message = "HTTP Status " + response.statusCode();
-        if (response.statusCode() == 200) {
-            try {
-                HelperServerMessageDeserializer messageDeserializer = HelperServerMessageDeserializer.newInstance(response, bodyCase);
-                ResultOuterClass.Result result = messageDeserializer.getResult();
-                message = result.getMemo();
-                if (result.getStatus().equals(OK)) {
-                    type = processingStatus.successNotification();
-                }  else {
-                    logger.error("Error {} {} {}", bodyCase, result.getStatus(), message);
-                    this.status = processingStatus.failStatus();
-                }
-            } catch (Exception e) {
-                logger.error("Exception reading response", e);
-                message = "Exception reading response: " +  e.getMessage();
-                this.status = processingStatus.failStatus();
-            }
-        }
-        secret.notifyStatus(buildNotification()
-                .message(message)
-                .build(type));
-        return this;
     }
 
     public void close() {

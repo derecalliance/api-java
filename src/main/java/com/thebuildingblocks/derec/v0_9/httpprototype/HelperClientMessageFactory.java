@@ -2,7 +2,6 @@ package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.google.protobuf.ByteString;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
-import derec.message.*;
 import derec.message.Derecmessage.DeRecMessage.SharerMessageBody;
 
 import static derec.message.Communicationinfo.*;
@@ -13,6 +12,9 @@ import static derec.message.Storeshare.*;
 import static derec.message.Unpair.*;
 import static derec.message.Verify.*;
 
+/**
+ * Provides a binding between the world of Protobuf Messages and DeRec Classes for requests from client
+ */
 public class HelperClientMessageFactory {
 
     public static SharerMessageBody getPairRequestMessageBody (DeRecId deRecId) {
@@ -36,6 +38,7 @@ public class HelperClientMessageFactory {
     public static SharerMessageBody getShareRequestMessageBody (Version.Share share) {
         ByteString bytes = DeRecShare.newBuilder()
                 .setVersion(share.version.versionNumber)
+                .setSecretId(share.version.secret.secretId.getLeastSignificantBits())
                 .build()
                 .toByteString();
         return SharerMessageBody.newBuilder()
