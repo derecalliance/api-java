@@ -3,7 +3,6 @@ package com.thebuildingblocks.derec.v0_9.httpprototype;
 import derec.message.Derecmessage;
 import derec.message.Derecmessage.DeRecMessage.HelperMessageBody;
 import derec.message.ResultOuterClass;
-import derec.message.Storeshare;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,17 +10,22 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class HelperServerMessageDeserializer {
+public class HelperClientMessageDeserializer {
 
     private Map<HelperMessageBody.BodyCase, HelperMessageBody> bodyMessages = null;
     private final Derecmessage.DeRecMessage message;
     private ResultOuterClass.Result result;
 
-    private HelperServerMessageDeserializer(HttpResponse<InputStream> httpResponse) throws IOException {
+    private HelperClientMessageDeserializer(HttpResponse<InputStream> httpResponse) throws IOException {
         message = Derecmessage.DeRecMessage.parseFrom(httpResponse.body());
         bodyMessages = message.getMessageBodies()
                 .getHelperMessageBodies()
                 .getHelperMessageBodyList().stream().collect(Collectors.toMap(HelperMessageBody::getBodyCase, b -> b));
+
+    }
+
+    public <C> C getBodyMessage(HelperMessageBody.BodyCase bodyCase, Class<C> messageClass) {
+        return getMessageBody(bodyMessages.get(bodyCase), messageClass);
 
     }
 
@@ -49,9 +53,9 @@ public class HelperServerMessageDeserializer {
         };
     }
 
-    public static HelperServerMessageDeserializer newInstance(HttpResponse<InputStream> response,
+    public static HelperClientMessageDeserializer newInstance(HttpResponse<InputStream> response,
                                                               HelperMessageBody.BodyCase bodyCase) throws IOException {
-        HelperServerMessageDeserializer instance = new HelperServerMessageDeserializer(response);
+        HelperClientMessageDeserializer instance = new HelperClientMessageDeserializer(response);
         if (instance.bodyMessages.isEmpty()) {
             throw new IllegalArgumentException("There are no bodies in the message");
         }
@@ -75,10 +79,5 @@ public class HelperServerMessageDeserializer {
 
     public Map<HelperMessageBody.BodyCase, HelperMessageBody> getBodyMessages() {
         return bodyMessages;
-    }
-
-    public <C> C getBodyMessage(HelperMessageBody.BodyCase bodyCase, Class<C> messageClass) {
-        return getMessageBody(bodyMessages.get(bodyCase), messageClass);
-
     }
 }

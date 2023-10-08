@@ -2,6 +2,7 @@ package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.BiConsumer;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientMessageFactory.*;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientResponseProcessing.*;
@@ -46,6 +48,7 @@ public class HelperClient implements DeRecPairable, Closeable {
     // a filtered view of secret.versions for this helper
     NavigableMap<Integer, Version.Share> shares = Collections.synchronizedNavigableMap(new TreeMap<>());
     CompletableFuture<HelperClient> pairingFuture; // awaits completion of pairing or unpairing
+    BiConsumer<DeRecStatusNotification.Type, String> notifier;
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     HelperClient(Secret secret, DeRecId helperId, HttpClient httpClient, Util.RetryParameters retryParameters) {
@@ -53,6 +56,11 @@ public class HelperClient implements DeRecPairable, Closeable {
         this.helperId = helperId;
         this.httpClient = httpClient;
         this.retryParameters = retryParameters;
+        this.notifier = (t, s) -> this.secret.notifyStatus(Notification.newBuilder()
+                        .secret(secret)
+                        .pairable(this)
+                        .message(s)
+                        .build(t));
     }
 
     // convenience function to build requests consistently
@@ -60,13 +68,6 @@ public class HelperClient implements DeRecPairable, Closeable {
         return HttpRequest.newBuilder()
                 .uri(helperId.getAddress())
                 .timeout(retryParameters.getResponseTimeout());
-    }
-
-    // convenience function to avoid duplication
-    Notification.Builder buildNotification() {
-        return Notification.newBuilder()
-                .secret(secret)
-                .pairable(this);
     }
 
     /**
@@ -89,9 +90,7 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .thenApply(r -> pairProcessResponse(r, this))
                 .exceptionally(t -> {
                     this.status = FAILED;
-                    secret.notifyStatus(buildNotification()
-                            .message(t.getCause().getMessage())
-                            .build(HELPER_NOT_PAIRED));
+                    notifier.accept(HELPER_NOT_PAIRED, t.getCause().getMessage());
                     return this;
                 });
     }
@@ -115,7 +114,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         if (Objects.nonNull(share.future)) {
             share.future.cancel(true);
         }
-        //noinspection DuplicatedCode
+
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .thenApply(httpResponse -> HelperClientResponseProcessing.storeShareResponseHandler(httpResponse, share))
                 .exceptionally(throwable -> {
@@ -142,7 +141,6 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .POST(BodyPublishers.ofByteArray(getMessage(getVerifyRequestMessageBody(share)).toByteArray()))
                 .build();
 
-        //noinspection DuplicatedCode
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .thenApply(httpResponse -> HelperClientResponseProcessing.verifyResponseHandler(httpResponse, share))
                 .exceptionally(throwable -> {
@@ -173,9 +171,7 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .thenApply(r -> unPairProcessResponse(r, this))
                 .exceptionally(t -> {
                     this.status = FAILED;
-                    secret.notifyStatus(buildNotification()
-                            .message(t.getCause().getMessage())
-                            .build(HELPER_INACTIVE));
+                    notifier.accept(HELPER_NOT_PAIRED, t.getCause().getMessage());
                     return this;
                 });
     }
