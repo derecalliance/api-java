@@ -54,6 +54,12 @@ public class HelperClientMessageDeserializer {
         };
     }
 
+    /**
+     * Check for one and only one response of the type indicated and make available via {@link #getBody()}
+     * @param inputStream input stream containing the protobuf serialized messages
+     * @param bodyCase type of message needed
+     * @return a new instance containing the parsed message
+     */
     public static HelperClientMessageDeserializer newInstance(InputStream inputStream,
                                                               HelperMessageBody.BodyCase bodyCase) {
         HelperClientMessageDeserializer instance = null;

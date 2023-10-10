@@ -61,17 +61,15 @@ public class HelperClientResponseProcessing {
     public static HelperClient unPairProcessResponse(InputStream inputStream, HelperClient helperClient) {
         // get the right set of status and notification codes for this message type
         PairingResponseProcessingStatus processingStatus = responsesStatuses.get(UNPAIRRESPONSEMESSAGE);
-        // handy callable notification function
-        BiConsumer<Boolean, String> reporter = (b, s) -> helperClient.secret.notifyStatus(Notification.newBuilder()
-                .secret(helperClient.secret)
-                .pairable(helperClient)
-                .message(s)
-                .build(b ? processingStatus.successNotification() : processingStatus.failNotification()));
         HelperClientMessageDeserializer messageDeserializer = HelperClientMessageDeserializer.newInstance(inputStream, UNPAIRRESPONSEMESSAGE);
         Unpair.UnpairResponseMessage message = messageDeserializer.getBody().getUnpairResponseMessage();
         // server failed
         if (!message.getResult().getStatus().equals(OK)) {
-            reporter.accept(false, message.getResult().getStatus() + " " + message.getResult().getMemo());
+            helperClient.secret.notifyStatus(Notification.newBuilder()
+                    .secret(helperClient.secret)
+                    .pairable(helperClient)
+                    .message(message.getResult().getStatus() + " " + message.getResult().getMemo())
+                    .build(processingStatus.failNotification()));
             helperClient.status = processingStatus.failStatus();
             return helperClient;
         }
