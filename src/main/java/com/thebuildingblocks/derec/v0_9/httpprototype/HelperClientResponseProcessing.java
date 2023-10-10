@@ -55,6 +55,8 @@ public class HelperClientResponseProcessing {
             return helperClient;
         }
         // TODO: do things like figure out what the comms parameters are
+        reporter.accept(true, message.getResult().getStatus() + " " + message.getResult().getMemo());
+        helperClient.status = processingStatus.successStatus();
         return helperClient;
     }
 
@@ -73,6 +75,12 @@ public class HelperClientResponseProcessing {
             helperClient.status = processingStatus.failStatus();
             return helperClient;
         }
+        helperClient.secret.notifyStatus(Notification.newBuilder()
+                .secret(helperClient.secret)
+                .pairable(helperClient)
+                .message(message.getResult().getStatus() + " " + message.getResult().getMemo())
+                .build(processingStatus.successNotification()));
+        helperClient.status = processingStatus.successStatus();
         return helperClient;
     }
 
