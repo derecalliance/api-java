@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static com.thebuildingblocks.derec.v0_9.httpprototype.Cryptography.keyPairGenerator;
 import static com.thebuildingblocks.derec.v0_9.test.TestIds.DEFAULT_IDS;
 
 /**
@@ -25,6 +26,7 @@ public class SharerMain {
         // build a sharer
         Sharer me = Sharer.newBuilder()
                 .id(new DeRecId("Secret Sammy", "mailto:test@example.org", null))
+                .keyPair(keyPairGenerator.generateKeyPair())
                 .notificationListener(this::logNotification)
                 .build();
         // get a secret

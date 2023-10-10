@@ -55,7 +55,7 @@ public class Sharer implements DeRecSharer{
             throw new IllegalStateException("Secret with that Id already exists");
         }
         Secret secret = Secret.newBuilder()
-                .sharerId(this.id)
+                .sharer(this)
                 .secretId(secretId)
                 .description(description)
                 .storageRequired(bytesToProtect.length)// assume that secret does not grow in size

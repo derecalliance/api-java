@@ -2737,13 +2737,15 @@ public final class Storeshare {
      * <pre>
      *
      * sharer-assigned identifier for the secret;
-     * this is an opaque 64-bit value
+     * this is an opaque 128-bit value also
+     * present in message header. Size chosen to
+     * accommodate UUID if sharer chooses
      * </pre>
      *
-     * <code>int64 secretId = 4;</code>
+     * <code>bytes secretId = 4;</code>
      * @return The secretId.
      */
-    long getSecretId();
+    com.google.protobuf.ByteString getSecretId();
 
     /**
      * <pre>
@@ -2752,12 +2754,15 @@ public final class Storeshare {
      * note that helper is entitled to ignore any
      * StoreShareRequestMessage with a version less
      * than or equal to the last seen version
+     *
+     * TODO: helper SHOULD save any version number received
+     * and must compare the content if already received
      * </pre>
      *
-     * <code>int64 version = 5;</code>
+     * <code>int32 version = 5;</code>
      * @return The version.
      */
-    long getVersion();
+    int getVersion();
   }
   /**
    * <pre>
@@ -2790,6 +2795,7 @@ public final class Storeshare {
       encryptedSecret_ = com.google.protobuf.ByteString.EMPTY;
       x_ = com.google.protobuf.ByteString.EMPTY;
       y_ = com.google.protobuf.ByteString.EMPTY;
+      secretId_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -2862,24 +2868,26 @@ public final class Storeshare {
     }
 
     public static final int SECRETID_FIELD_NUMBER = 4;
-    private long secretId_ = 0L;
+    private com.google.protobuf.ByteString secretId_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
      *
      * sharer-assigned identifier for the secret;
-     * this is an opaque 64-bit value
+     * this is an opaque 128-bit value also
+     * present in message header. Size chosen to
+     * accommodate UUID if sharer chooses
      * </pre>
      *
-     * <code>int64 secretId = 4;</code>
+     * <code>bytes secretId = 4;</code>
      * @return The secretId.
      */
     @java.lang.Override
-    public long getSecretId() {
+    public com.google.protobuf.ByteString getSecretId() {
       return secretId_;
     }
 
     public static final int VERSION_FIELD_NUMBER = 5;
-    private long version_ = 0L;
+    private int version_ = 0;
     /**
      * <pre>
      *
@@ -2887,13 +2895,16 @@ public final class Storeshare {
      * note that helper is entitled to ignore any
      * StoreShareRequestMessage with a version less
      * than or equal to the last seen version
+     *
+     * TODO: helper SHOULD save any version number received
+     * and must compare the content if already received
      * </pre>
      *
-     * <code>int64 version = 5;</code>
+     * <code>int32 version = 5;</code>
      * @return The version.
      */
     @java.lang.Override
-    public long getVersion() {
+    public int getVersion() {
       return version_;
     }
 
@@ -2920,11 +2931,11 @@ public final class Storeshare {
       if (!y_.isEmpty()) {
         output.writeBytes(3, y_);
       }
-      if (secretId_ != 0L) {
-        output.writeInt64(4, secretId_);
+      if (!secretId_.isEmpty()) {
+        output.writeBytes(4, secretId_);
       }
-      if (version_ != 0L) {
-        output.writeInt64(5, version_);
+      if (version_ != 0) {
+        output.writeInt32(5, version_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2947,13 +2958,13 @@ public final class Storeshare {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, y_);
       }
-      if (secretId_ != 0L) {
+      if (!secretId_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(4, secretId_);
+          .computeBytesSize(4, secretId_);
       }
-      if (version_ != 0L) {
+      if (version_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(5, version_);
+          .computeInt32Size(5, version_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -2976,8 +2987,8 @@ public final class Storeshare {
           .equals(other.getX())) return false;
       if (!getY()
           .equals(other.getY())) return false;
-      if (getSecretId()
-          != other.getSecretId()) return false;
+      if (!getSecretId()
+          .equals(other.getSecretId())) return false;
       if (getVersion()
           != other.getVersion()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
@@ -2998,11 +3009,9 @@ public final class Storeshare {
       hash = (37 * hash) + Y_FIELD_NUMBER;
       hash = (53 * hash) + getY().hashCode();
       hash = (37 * hash) + SECRETID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getSecretId());
+      hash = (53 * hash) + getSecretId().hashCode();
       hash = (37 * hash) + VERSION_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getVersion());
+      hash = (53 * hash) + getVersion();
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -3152,8 +3161,8 @@ public final class Storeshare {
         encryptedSecret_ = com.google.protobuf.ByteString.EMPTY;
         x_ = com.google.protobuf.ByteString.EMPTY;
         y_ = com.google.protobuf.ByteString.EMPTY;
-        secretId_ = 0L;
-        version_ = 0L;
+        secretId_ = com.google.protobuf.ByteString.EMPTY;
+        version_ = 0;
         return this;
       }
 
@@ -3257,10 +3266,10 @@ public final class Storeshare {
         if (other.getY() != com.google.protobuf.ByteString.EMPTY) {
           setY(other.getY());
         }
-        if (other.getSecretId() != 0L) {
+        if (other.getSecretId() != com.google.protobuf.ByteString.EMPTY) {
           setSecretId(other.getSecretId());
         }
-        if (other.getVersion() != 0L) {
+        if (other.getVersion() != 0) {
           setVersion(other.getVersion());
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -3304,13 +3313,13 @@ public final class Storeshare {
                 bitField0_ |= 0x00000004;
                 break;
               } // case 26
-              case 32: {
-                secretId_ = input.readInt64();
+              case 34: {
+                secretId_ = input.readBytes();
                 bitField0_ |= 0x00000008;
                 break;
-              } // case 32
+              } // case 34
               case 40: {
-                version_ = input.readInt64();
+                version_ = input.readInt32();
                 bitField0_ |= 0x00000010;
                 break;
               } // case 40
@@ -3475,34 +3484,38 @@ public final class Storeshare {
         return this;
       }
 
-      private long secretId_ ;
+      private com.google.protobuf.ByteString secretId_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
        *
        * sharer-assigned identifier for the secret;
-       * this is an opaque 64-bit value
+       * this is an opaque 128-bit value also
+       * present in message header. Size chosen to
+       * accommodate UUID if sharer chooses
        * </pre>
        *
-       * <code>int64 secretId = 4;</code>
+       * <code>bytes secretId = 4;</code>
        * @return The secretId.
        */
       @java.lang.Override
-      public long getSecretId() {
+      public com.google.protobuf.ByteString getSecretId() {
         return secretId_;
       }
       /**
        * <pre>
        *
        * sharer-assigned identifier for the secret;
-       * this is an opaque 64-bit value
+       * this is an opaque 128-bit value also
+       * present in message header. Size chosen to
+       * accommodate UUID if sharer chooses
        * </pre>
        *
-       * <code>int64 secretId = 4;</code>
+       * <code>bytes secretId = 4;</code>
        * @param value The secretId to set.
        * @return This builder for chaining.
        */
-      public Builder setSecretId(long value) {
-
+      public Builder setSecretId(com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
         secretId_ = value;
         bitField0_ |= 0x00000008;
         onChanged();
@@ -3512,20 +3525,22 @@ public final class Storeshare {
        * <pre>
        *
        * sharer-assigned identifier for the secret;
-       * this is an opaque 64-bit value
+       * this is an opaque 128-bit value also
+       * present in message header. Size chosen to
+       * accommodate UUID if sharer chooses
        * </pre>
        *
-       * <code>int64 secretId = 4;</code>
+       * <code>bytes secretId = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearSecretId() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        secretId_ = 0L;
+        secretId_ = getDefaultInstance().getSecretId();
         onChanged();
         return this;
       }
 
-      private long version_ ;
+      private int version_ ;
       /**
        * <pre>
        *
@@ -3533,13 +3548,16 @@ public final class Storeshare {
        * note that helper is entitled to ignore any
        * StoreShareRequestMessage with a version less
        * than or equal to the last seen version
+       *
+       * TODO: helper SHOULD save any version number received
+       * and must compare the content if already received
        * </pre>
        *
-       * <code>int64 version = 5;</code>
+       * <code>int32 version = 5;</code>
        * @return The version.
        */
       @java.lang.Override
-      public long getVersion() {
+      public int getVersion() {
         return version_;
       }
       /**
@@ -3549,13 +3567,16 @@ public final class Storeshare {
        * note that helper is entitled to ignore any
        * StoreShareRequestMessage with a version less
        * than or equal to the last seen version
+       *
+       * TODO: helper SHOULD save any version number received
+       * and must compare the content if already received
        * </pre>
        *
-       * <code>int64 version = 5;</code>
+       * <code>int32 version = 5;</code>
        * @param value The version to set.
        * @return This builder for chaining.
        */
-      public Builder setVersion(long value) {
+      public Builder setVersion(int value) {
 
         version_ = value;
         bitField0_ |= 0x00000010;
@@ -3569,14 +3590,17 @@ public final class Storeshare {
        * note that helper is entitled to ignore any
        * StoreShareRequestMessage with a version less
        * than or equal to the last seen version
+       *
+       * TODO: helper SHOULD save any version number received
+       * and must compare the content if already received
        * </pre>
        *
-       * <code>int64 version = 5;</code>
+       * <code>int32 version = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearVersion() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        version_ = 0L;
+        version_ = 0;
         onChanged();
         return this;
       }
@@ -5855,7 +5879,7 @@ public final class Storeshare {
       "ash\032+\n\013SiblingHash\022\016\n\006isLeft\030\001 \001(\010\022\014\n\004ha" +
       "sh\030\002 \001(\014\"^\n\nDeRecShare\022\027\n\017encryptedSecre" +
       "t\030\001 \001(\014\022\t\n\001x\030\002 \001(\014\022\t\n\001y\030\003 \001(\014\022\020\n\010secretI" +
-      "d\030\004 \001(\003\022\017\n\007version\030\005 \001(\003\"\360\001\n\006Secret\022\022\n\ns" +
+      "d\030\004 \001(\014\022\017\n\007version\030\005 \001(\005\"\360\001\n\006Secret\022\022\n\ns" +
       "ecretData\030\001 \001(\014\022\034\n\024privateEncryptionKey\030" +
       "\002 \001(\014\022\033\n\023privateSignatureKey\030\003 \001(\014\0220\n\014cr" +
       "eationTime\030\004 \001(\0132\032.google.protobuf.Times" +

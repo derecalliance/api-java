@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
 import derec.message.Derecmessage.DeRecMessage.SharerMessageBody;
 
+import static com.thebuildingblocks.derec.v0_9.httpprototype.Cryptography.messageDigest;
 import static derec.message.Communicationinfo.*;
 import static derec.message.Derecmessage.*;
 import static derec.message.Derecmessage.DeRecMessage.*;
@@ -38,7 +39,7 @@ public class HelperClientMessageFactory {
     public static SharerMessageBody getShareRequestMessageBody (Version.Share share) {
         ByteString bytes = DeRecShare.newBuilder()
                 .setVersion(share.version.versionNumber)
-                .setSecretId(share.version.secret.secretId.getLeastSignificantBits())
+                .setSecretId(ByteString.copyFrom(Helpers.asBytes(share.version.secret.secretId)))
                 .build()
                 .toByteString();
         return SharerMessageBody.newBuilder()
@@ -68,8 +69,14 @@ public class HelperClientMessageFactory {
     }
 
 
-    public static DeRecMessage getMessage(SharerMessageBody body) {
+    public static DeRecMessage getMessage(HelperClient helperClient, SharerMessageBody body) {
         return newBuilder()
+/*
+                .setProtocolVersionMajor(0)
+                .setProtocolVersionMinor(9)
+                .setSecretId(ByteString.copyFrom(Helpers.asBytes(helperClient.secret.secretId)))
+                .setSender(ByteString.copyFrom(messageDigest.digest(helperClient.secret.sharer.keyPair.getPublic().getEncoded())))
+*/
                 .setMessageBodies(MessageBodies.newBuilder()
                         .setSharerMessageBodies(SharerMessageBodies.newBuilder()
                                 .addSharerMessageBody(body)

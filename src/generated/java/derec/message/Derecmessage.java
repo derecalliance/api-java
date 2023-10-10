@@ -24,10 +24,16 @@ public final class Derecmessage {
      * DeRec protocol version number
      * </pre>
      *
-     * <code>int64 protocolVersion = 1;</code>
-     * @return The protocolVersion.
+     * <code>int32 protocolVersionMinor = 1;</code>
+     * @return The protocolVersionMinor.
      */
-    long getProtocolVersion();
+    int getProtocolVersionMinor();
+
+    /**
+     * <code>int32 protocolVersionMajor = 7;</code>
+     * @return The protocolVersionMajor.
+     */
+    int getProtocolVersionMajor();
 
     /**
      * <pre>
@@ -55,13 +61,13 @@ public final class Derecmessage {
     /**
      * <pre>
      *
-     * secret ID (64-bit random number chosen by sharer at initial pairing)
+     * secret ID (128-bit random number chosen by sharer at initial pairing)
      * </pre>
      *
-     * <code>int64 secretId = 4;</code>
+     * <code>bytes secretId = 4;</code>
      * @return The secretId.
      */
-    long getSecretId();
+    com.google.protobuf.ByteString getSecretId();
 
     /**
      * <pre>
@@ -157,6 +163,7 @@ public final class Derecmessage {
     private DeRecMessage() {
       sender_ = com.google.protobuf.ByteString.EMPTY;
       receiver_ = com.google.protobuf.ByteString.EMPTY;
+      secretId_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -6319,20 +6326,31 @@ public final class Derecmessage {
     }
 
     private int bitField0_;
-    public static final int PROTOCOLVERSION_FIELD_NUMBER = 1;
-    private long protocolVersion_ = 0L;
+    public static final int PROTOCOLVERSIONMINOR_FIELD_NUMBER = 1;
+    private int protocolVersionMinor_ = 0;
     /**
      * <pre>
      *
      * DeRec protocol version number
      * </pre>
      *
-     * <code>int64 protocolVersion = 1;</code>
-     * @return The protocolVersion.
+     * <code>int32 protocolVersionMinor = 1;</code>
+     * @return The protocolVersionMinor.
      */
     @java.lang.Override
-    public long getProtocolVersion() {
-      return protocolVersion_;
+    public int getProtocolVersionMinor() {
+      return protocolVersionMinor_;
+    }
+
+    public static final int PROTOCOLVERSIONMAJOR_FIELD_NUMBER = 7;
+    private int protocolVersionMajor_ = 0;
+    /**
+     * <code>int32 protocolVersionMajor = 7;</code>
+     * @return The protocolVersionMajor.
+     */
+    @java.lang.Override
+    public int getProtocolVersionMajor() {
+      return protocolVersionMajor_;
     }
 
     public static final int SENDER_FIELD_NUMBER = 2;
@@ -6369,18 +6387,18 @@ public final class Derecmessage {
     }
 
     public static final int SECRETID_FIELD_NUMBER = 4;
-    private long secretId_ = 0L;
+    private com.google.protobuf.ByteString secretId_ = com.google.protobuf.ByteString.EMPTY;
     /**
      * <pre>
      *
-     * secret ID (64-bit random number chosen by sharer at initial pairing)
+     * secret ID (128-bit random number chosen by sharer at initial pairing)
      * </pre>
      *
-     * <code>int64 secretId = 4;</code>
+     * <code>bytes secretId = 4;</code>
      * @return The secretId.
      */
     @java.lang.Override
-    public long getSecretId() {
+    public com.google.protobuf.ByteString getSecretId() {
       return secretId_;
     }
 
@@ -6480,8 +6498,8 @@ public final class Derecmessage {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (protocolVersion_ != 0L) {
-        output.writeInt64(1, protocolVersion_);
+      if (protocolVersionMinor_ != 0) {
+        output.writeInt32(1, protocolVersionMinor_);
       }
       if (!sender_.isEmpty()) {
         output.writeBytes(2, sender_);
@@ -6489,14 +6507,17 @@ public final class Derecmessage {
       if (!receiver_.isEmpty()) {
         output.writeBytes(3, receiver_);
       }
-      if (secretId_ != 0L) {
-        output.writeInt64(4, secretId_);
+      if (!secretId_.isEmpty()) {
+        output.writeBytes(4, secretId_);
       }
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeMessage(5, getTimestamp());
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         output.writeMessage(6, getMessageBodies());
+      }
+      if (protocolVersionMajor_ != 0) {
+        output.writeInt32(7, protocolVersionMajor_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -6507,9 +6528,9 @@ public final class Derecmessage {
       if (size != -1) return size;
 
       size = 0;
-      if (protocolVersion_ != 0L) {
+      if (protocolVersionMinor_ != 0) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, protocolVersion_);
+          .computeInt32Size(1, protocolVersionMinor_);
       }
       if (!sender_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
@@ -6519,9 +6540,9 @@ public final class Derecmessage {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, receiver_);
       }
-      if (secretId_ != 0L) {
+      if (!secretId_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(4, secretId_);
+          .computeBytesSize(4, secretId_);
       }
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
@@ -6530,6 +6551,10 @@ public final class Derecmessage {
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(6, getMessageBodies());
+      }
+      if (protocolVersionMajor_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, protocolVersionMajor_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -6546,14 +6571,16 @@ public final class Derecmessage {
       }
       derec.message.Derecmessage.DeRecMessage other = (derec.message.Derecmessage.DeRecMessage) obj;
 
-      if (getProtocolVersion()
-          != other.getProtocolVersion()) return false;
+      if (getProtocolVersionMinor()
+          != other.getProtocolVersionMinor()) return false;
+      if (getProtocolVersionMajor()
+          != other.getProtocolVersionMajor()) return false;
       if (!getSender()
           .equals(other.getSender())) return false;
       if (!getReceiver()
           .equals(other.getReceiver())) return false;
-      if (getSecretId()
-          != other.getSecretId()) return false;
+      if (!getSecretId()
+          .equals(other.getSecretId())) return false;
       if (hasTimestamp() != other.hasTimestamp()) return false;
       if (hasTimestamp()) {
         if (!getTimestamp()
@@ -6575,16 +6602,16 @@ public final class Derecmessage {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + PROTOCOLVERSION_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getProtocolVersion());
+      hash = (37 * hash) + PROTOCOLVERSIONMINOR_FIELD_NUMBER;
+      hash = (53 * hash) + getProtocolVersionMinor();
+      hash = (37 * hash) + PROTOCOLVERSIONMAJOR_FIELD_NUMBER;
+      hash = (53 * hash) + getProtocolVersionMajor();
       hash = (37 * hash) + SENDER_FIELD_NUMBER;
       hash = (53 * hash) + getSender().hashCode();
       hash = (37 * hash) + RECEIVER_FIELD_NUMBER;
       hash = (53 * hash) + getReceiver().hashCode();
       hash = (37 * hash) + SECRETID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getSecretId());
+      hash = (53 * hash) + getSecretId().hashCode();
       if (hasTimestamp()) {
         hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
         hash = (53 * hash) + getTimestamp().hashCode();
@@ -6750,10 +6777,11 @@ public final class Derecmessage {
       public Builder clear() {
         super.clear();
         bitField0_ = 0;
-        protocolVersion_ = 0L;
+        protocolVersionMinor_ = 0;
+        protocolVersionMajor_ = 0;
         sender_ = com.google.protobuf.ByteString.EMPTY;
         receiver_ = com.google.protobuf.ByteString.EMPTY;
-        secretId_ = 0L;
+        secretId_ = com.google.protobuf.ByteString.EMPTY;
         timestamp_ = null;
         if (timestampBuilder_ != null) {
           timestampBuilder_.dispose();
@@ -6798,25 +6826,28 @@ public final class Derecmessage {
       private void buildPartial0(derec.message.Derecmessage.DeRecMessage result) {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
-          result.protocolVersion_ = protocolVersion_;
+          result.protocolVersionMinor_ = protocolVersionMinor_;
         }
         if (((from_bitField0_ & 0x00000002) != 0)) {
-          result.sender_ = sender_;
+          result.protocolVersionMajor_ = protocolVersionMajor_;
         }
         if (((from_bitField0_ & 0x00000004) != 0)) {
-          result.receiver_ = receiver_;
+          result.sender_ = sender_;
         }
         if (((from_bitField0_ & 0x00000008) != 0)) {
+          result.receiver_ = receiver_;
+        }
+        if (((from_bitField0_ & 0x00000010) != 0)) {
           result.secretId_ = secretId_;
         }
         int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000010) != 0)) {
+        if (((from_bitField0_ & 0x00000020) != 0)) {
           result.timestamp_ = timestampBuilder_ == null
               ? timestamp_
               : timestampBuilder_.build();
           to_bitField0_ |= 0x00000001;
         }
-        if (((from_bitField0_ & 0x00000020) != 0)) {
+        if (((from_bitField0_ & 0x00000040) != 0)) {
           result.messageBodies_ = messageBodiesBuilder_ == null
               ? messageBodies_
               : messageBodiesBuilder_.build();
@@ -6869,8 +6900,11 @@ public final class Derecmessage {
 
       public Builder mergeFrom(derec.message.Derecmessage.DeRecMessage other) {
         if (other == derec.message.Derecmessage.DeRecMessage.getDefaultInstance()) return this;
-        if (other.getProtocolVersion() != 0L) {
-          setProtocolVersion(other.getProtocolVersion());
+        if (other.getProtocolVersionMinor() != 0) {
+          setProtocolVersionMinor(other.getProtocolVersionMinor());
+        }
+        if (other.getProtocolVersionMajor() != 0) {
+          setProtocolVersionMajor(other.getProtocolVersionMajor());
         }
         if (other.getSender() != com.google.protobuf.ByteString.EMPTY) {
           setSender(other.getSender());
@@ -6878,7 +6912,7 @@ public final class Derecmessage {
         if (other.getReceiver() != com.google.protobuf.ByteString.EMPTY) {
           setReceiver(other.getReceiver());
         }
-        if (other.getSecretId() != 0L) {
+        if (other.getSecretId() != com.google.protobuf.ByteString.EMPTY) {
           setSecretId(other.getSecretId());
         }
         if (other.hasTimestamp()) {
@@ -6914,39 +6948,44 @@ public final class Derecmessage {
                 done = true;
                 break;
               case 8: {
-                protocolVersion_ = input.readInt64();
+                protocolVersionMinor_ = input.readInt32();
                 bitField0_ |= 0x00000001;
                 break;
               } // case 8
               case 18: {
                 sender_ = input.readBytes();
-                bitField0_ |= 0x00000002;
+                bitField0_ |= 0x00000004;
                 break;
               } // case 18
               case 26: {
                 receiver_ = input.readBytes();
-                bitField0_ |= 0x00000004;
-                break;
-              } // case 26
-              case 32: {
-                secretId_ = input.readInt64();
                 bitField0_ |= 0x00000008;
                 break;
-              } // case 32
+              } // case 26
+              case 34: {
+                secretId_ = input.readBytes();
+                bitField0_ |= 0x00000010;
+                break;
+              } // case 34
               case 42: {
                 input.readMessage(
                     getTimestampFieldBuilder().getBuilder(),
                     extensionRegistry);
-                bitField0_ |= 0x00000010;
+                bitField0_ |= 0x00000020;
                 break;
               } // case 42
               case 50: {
                 input.readMessage(
                     getMessageBodiesFieldBuilder().getBuilder(),
                     extensionRegistry);
-                bitField0_ |= 0x00000020;
+                bitField0_ |= 0x00000040;
                 break;
               } // case 50
+              case 56: {
+                protocolVersionMajor_ = input.readInt32();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 56
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -6964,19 +7003,19 @@ public final class Derecmessage {
       }
       private int bitField0_;
 
-      private long protocolVersion_ ;
+      private int protocolVersionMinor_ ;
       /**
        * <pre>
        *
        * DeRec protocol version number
        * </pre>
        *
-       * <code>int64 protocolVersion = 1;</code>
-       * @return The protocolVersion.
+       * <code>int32 protocolVersionMinor = 1;</code>
+       * @return The protocolVersionMinor.
        */
       @java.lang.Override
-      public long getProtocolVersion() {
-        return protocolVersion_;
+      public int getProtocolVersionMinor() {
+        return protocolVersionMinor_;
       }
       /**
        * <pre>
@@ -6984,13 +7023,13 @@ public final class Derecmessage {
        * DeRec protocol version number
        * </pre>
        *
-       * <code>int64 protocolVersion = 1;</code>
-       * @param value The protocolVersion to set.
+       * <code>int32 protocolVersionMinor = 1;</code>
+       * @param value The protocolVersionMinor to set.
        * @return This builder for chaining.
        */
-      public Builder setProtocolVersion(long value) {
+      public Builder setProtocolVersionMinor(int value) {
 
-        protocolVersion_ = value;
+        protocolVersionMinor_ = value;
         bitField0_ |= 0x00000001;
         onChanged();
         return this;
@@ -7001,12 +7040,44 @@ public final class Derecmessage {
        * DeRec protocol version number
        * </pre>
        *
-       * <code>int64 protocolVersion = 1;</code>
+       * <code>int32 protocolVersionMinor = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearProtocolVersion() {
+      public Builder clearProtocolVersionMinor() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        protocolVersion_ = 0L;
+        protocolVersionMinor_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int protocolVersionMajor_ ;
+      /**
+       * <code>int32 protocolVersionMajor = 7;</code>
+       * @return The protocolVersionMajor.
+       */
+      @java.lang.Override
+      public int getProtocolVersionMajor() {
+        return protocolVersionMajor_;
+      }
+      /**
+       * <code>int32 protocolVersionMajor = 7;</code>
+       * @param value The protocolVersionMajor to set.
+       * @return This builder for chaining.
+       */
+      public Builder setProtocolVersionMajor(int value) {
+
+        protocolVersionMajor_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 protocolVersionMajor = 7;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearProtocolVersionMajor() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        protocolVersionMajor_ = 0;
         onChanged();
         return this;
       }
@@ -7038,7 +7109,7 @@ public final class Derecmessage {
       public Builder setSender(com.google.protobuf.ByteString value) {
         if (value == null) { throw new NullPointerException(); }
         sender_ = value;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         onChanged();
         return this;
       }
@@ -7052,7 +7123,7 @@ public final class Derecmessage {
        * @return This builder for chaining.
        */
       public Builder clearSender() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         sender_ = getDefaultInstance().getSender();
         onChanged();
         return this;
@@ -7087,7 +7158,7 @@ public final class Derecmessage {
       public Builder setReceiver(com.google.protobuf.ByteString value) {
         if (value == null) { throw new NullPointerException(); }
         receiver_ = value;
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         onChanged();
         return this;
       }
@@ -7102,55 +7173,55 @@ public final class Derecmessage {
        * @return This builder for chaining.
        */
       public Builder clearReceiver() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000008);
         receiver_ = getDefaultInstance().getReceiver();
         onChanged();
         return this;
       }
 
-      private long secretId_ ;
+      private com.google.protobuf.ByteString secretId_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <pre>
        *
-       * secret ID (64-bit random number chosen by sharer at initial pairing)
+       * secret ID (128-bit random number chosen by sharer at initial pairing)
        * </pre>
        *
-       * <code>int64 secretId = 4;</code>
+       * <code>bytes secretId = 4;</code>
        * @return The secretId.
        */
       @java.lang.Override
-      public long getSecretId() {
+      public com.google.protobuf.ByteString getSecretId() {
         return secretId_;
       }
       /**
        * <pre>
        *
-       * secret ID (64-bit random number chosen by sharer at initial pairing)
+       * secret ID (128-bit random number chosen by sharer at initial pairing)
        * </pre>
        *
-       * <code>int64 secretId = 4;</code>
+       * <code>bytes secretId = 4;</code>
        * @param value The secretId to set.
        * @return This builder for chaining.
        */
-      public Builder setSecretId(long value) {
-
+      public Builder setSecretId(com.google.protobuf.ByteString value) {
+        if (value == null) { throw new NullPointerException(); }
         secretId_ = value;
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         onChanged();
         return this;
       }
       /**
        * <pre>
        *
-       * secret ID (64-bit random number chosen by sharer at initial pairing)
+       * secret ID (128-bit random number chosen by sharer at initial pairing)
        * </pre>
        *
-       * <code>int64 secretId = 4;</code>
+       * <code>bytes secretId = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearSecretId() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        secretId_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        secretId_ = getDefaultInstance().getSecretId();
         onChanged();
         return this;
       }
@@ -7168,7 +7239,7 @@ public final class Derecmessage {
        * @return Whether the timestamp field is set.
        */
       public boolean hasTimestamp() {
-        return ((bitField0_ & 0x00000010) != 0);
+        return ((bitField0_ & 0x00000020) != 0);
       }
       /**
        * <pre>
@@ -7203,7 +7274,7 @@ public final class Derecmessage {
         } else {
           timestampBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
@@ -7222,7 +7293,7 @@ public final class Derecmessage {
         } else {
           timestampBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         onChanged();
         return this;
       }
@@ -7236,7 +7307,7 @@ public final class Derecmessage {
        */
       public Builder mergeTimestamp(com.google.protobuf.Timestamp value) {
         if (timestampBuilder_ == null) {
-          if (((bitField0_ & 0x00000010) != 0) &&
+          if (((bitField0_ & 0x00000020) != 0) &&
             timestamp_ != null &&
             timestamp_ != com.google.protobuf.Timestamp.getDefaultInstance()) {
             getTimestampBuilder().mergeFrom(value);
@@ -7247,7 +7318,7 @@ public final class Derecmessage {
           timestampBuilder_.mergeFrom(value);
         }
         if (timestamp_ != null) {
-          bitField0_ |= 0x00000010;
+          bitField0_ |= 0x00000020;
           onChanged();
         }
         return this;
@@ -7261,7 +7332,7 @@ public final class Derecmessage {
        * <code>.google.protobuf.Timestamp timestamp = 5;</code>
        */
       public Builder clearTimestamp() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         timestamp_ = null;
         if (timestampBuilder_ != null) {
           timestampBuilder_.dispose();
@@ -7279,7 +7350,7 @@ public final class Derecmessage {
        * <code>.google.protobuf.Timestamp timestamp = 5;</code>
        */
       public com.google.protobuf.Timestamp.Builder getTimestampBuilder() {
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
         onChanged();
         return getTimestampFieldBuilder().getBuilder();
       }
@@ -7334,7 +7405,7 @@ public final class Derecmessage {
        * @return Whether the messageBodies field is set.
        */
       public boolean hasMessageBodies() {
-        return ((bitField0_ & 0x00000020) != 0);
+        return ((bitField0_ & 0x00000040) != 0);
       }
       /**
        * <pre>
@@ -7369,7 +7440,7 @@ public final class Derecmessage {
         } else {
           messageBodiesBuilder_.setMessage(value);
         }
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000040;
         onChanged();
         return this;
       }
@@ -7388,7 +7459,7 @@ public final class Derecmessage {
         } else {
           messageBodiesBuilder_.setMessage(builderForValue.build());
         }
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000040;
         onChanged();
         return this;
       }
@@ -7402,7 +7473,7 @@ public final class Derecmessage {
        */
       public Builder mergeMessageBodies(derec.message.Derecmessage.DeRecMessage.MessageBodies value) {
         if (messageBodiesBuilder_ == null) {
-          if (((bitField0_ & 0x00000020) != 0) &&
+          if (((bitField0_ & 0x00000040) != 0) &&
             messageBodies_ != null &&
             messageBodies_ != derec.message.Derecmessage.DeRecMessage.MessageBodies.getDefaultInstance()) {
             getMessageBodiesBuilder().mergeFrom(value);
@@ -7413,7 +7484,7 @@ public final class Derecmessage {
           messageBodiesBuilder_.mergeFrom(value);
         }
         if (messageBodies_ != null) {
-          bitField0_ |= 0x00000020;
+          bitField0_ |= 0x00000040;
           onChanged();
         }
         return this;
@@ -7427,7 +7498,7 @@ public final class Derecmessage {
        * <code>.derec.message.DeRecMessage.MessageBodies messageBodies = 6;</code>
        */
       public Builder clearMessageBodies() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000040);
         messageBodies_ = null;
         if (messageBodiesBuilder_ != null) {
           messageBodiesBuilder_.dispose();
@@ -7445,7 +7516,7 @@ public final class Derecmessage {
        * <code>.derec.message.DeRecMessage.MessageBodies messageBodies = 6;</code>
        */
       public derec.message.Derecmessage.DeRecMessage.MessageBodies.Builder getMessageBodiesBuilder() {
-        bitField0_ |= 0x00000020;
+        bitField0_ |= 0x00000040;
         onChanged();
         return getMessageBodiesFieldBuilder().getBuilder();
       }
@@ -7593,46 +7664,47 @@ public final class Derecmessage {
       "gle/protobuf/timestamp.proto\032\npair.proto" +
       "\032\014unpair.proto\032\020storeshare.proto\032\014verify" +
       ".proto\032\016getshare.proto\032\027secretidsversion" +
-      "s.proto\"\254\014\n\014DeRecMessage\022\027\n\017protocolVers" +
-      "ion\030\001 \001(\003\022\016\n\006sender\030\002 \001(\014\022\020\n\010receiver\030\003 " +
-      "\001(\014\022\020\n\010secretId\030\004 \001(\003\022-\n\ttimestamp\030\005 \001(\013" +
-      "2\032.google.protobuf.Timestamp\022@\n\rmessageB" +
-      "odies\030\006 \001(\0132).derec.message.DeRecMessage" +
-      ".MessageBodies\032\273\001\n\rMessageBodies\022N\n\023help" +
-      "erMessageBodies\030\001 \001(\0132/.derec.message.De" +
-      "RecMessage.HelperMessageBodiesH\000\022N\n\023shar" +
-      "erMessageBodies\030\002 \001(\0132/.derec.message.De" +
-      "RecMessage.SharerMessageBodiesH\000B\n\n\010mess" +
-      "ages\032_\n\023SharerMessageBodies\022H\n\021sharerMes" +
-      "sageBody\030\001 \003(\0132-.derec.message.DeRecMess" +
-      "age.SharerMessageBody\032\347\003\n\021SharerMessageB" +
-      "ody\022?\n\022pairRequestMessage\030\001 \001(\0132!.derec." +
-      "message.PairRequestMessageH\000\022C\n\024unpairRe" +
-      "questMessage\030\002 \001(\0132#.derec.message.Unpai" +
-      "rRequestMessageH\000\022K\n\030storeShareRequestMe" +
-      "ssage\030\003 \001(\0132\'.derec.message.StoreShareRe" +
-      "questMessageH\000\022M\n\031verifyShareRequestMess" +
-      "age\030\004 \001(\0132(.derec.message.VerifyShareReq" +
-      "uestMessageH\000\022_\n\"getSecretIdsVersionsReq" +
-      "uestMessage\030\005 \001(\01321.derec.message.GetSec" +
-      "retIdsVersionsRequestMessageH\000\022G\n\026getSha" +
-      "reRequestMessage\030\006 \001(\0132%.derec.message.G" +
-      "etShareRequestMessageH\000B\006\n\004body\032_\n\023Helpe" +
-      "rMessageBodies\022H\n\021helperMessageBody\030\001 \003(" +
-      "\0132-.derec.message.DeRecMessage.HelperMes" +
-      "sageBody\032\363\003\n\021HelperMessageBody\022A\n\023pairRe" +
-      "sponseMessage\030\001 \001(\0132\".derec.message.Pair" +
-      "ResponseMessageH\000\022E\n\025unpairResponseMessa" +
-      "ge\030\002 \001(\0132$.derec.message.UnpairResponseM" +
-      "essageH\000\022M\n\031storeShareResponseMessage\030\003 " +
-      "\001(\0132(.derec.message.StoreShareResponseMe" +
-      "ssageH\000\022O\n\032verifyShareResponseMessage\030\004 " +
-      "\001(\0132).derec.message.VerifyShareResponseM" +
-      "essageH\000\022a\n#getSecretIdsVersionsResponse" +
-      "Message\030\005 \001(\01322.derec.message.GetSecretI" +
-      "dsVersionsResponseMessageH\000\022I\n\027getShareR" +
-      "esponseMessage\030\006 \001(\0132&.derec.message.Get" +
-      "ShareResponseMessageH\000B\006\n\004bodyb\006proto3"
+      "s.proto\"\317\014\n\014DeRecMessage\022\034\n\024protocolVers" +
+      "ionMinor\030\001 \001(\005\022\034\n\024protocolVersionMajor\030\007" +
+      " \001(\005\022\016\n\006sender\030\002 \001(\014\022\020\n\010receiver\030\003 \001(\014\022\020" +
+      "\n\010secretId\030\004 \001(\014\022-\n\ttimestamp\030\005 \001(\0132\032.go" +
+      "ogle.protobuf.Timestamp\022@\n\rmessageBodies" +
+      "\030\006 \001(\0132).derec.message.DeRecMessage.Mess" +
+      "ageBodies\032\273\001\n\rMessageBodies\022N\n\023helperMes" +
+      "sageBodies\030\001 \001(\0132/.derec.message.DeRecMe" +
+      "ssage.HelperMessageBodiesH\000\022N\n\023sharerMes" +
+      "sageBodies\030\002 \001(\0132/.derec.message.DeRecMe" +
+      "ssage.SharerMessageBodiesH\000B\n\n\010messages\032" +
+      "_\n\023SharerMessageBodies\022H\n\021sharerMessageB" +
+      "ody\030\001 \003(\0132-.derec.message.DeRecMessage.S" +
+      "harerMessageBody\032\347\003\n\021SharerMessageBody\022?" +
+      "\n\022pairRequestMessage\030\001 \001(\0132!.derec.messa" +
+      "ge.PairRequestMessageH\000\022C\n\024unpairRequest" +
+      "Message\030\002 \001(\0132#.derec.message.UnpairRequ" +
+      "estMessageH\000\022K\n\030storeShareRequestMessage" +
+      "\030\003 \001(\0132\'.derec.message.StoreShareRequest" +
+      "MessageH\000\022M\n\031verifyShareRequestMessage\030\004" +
+      " \001(\0132(.derec.message.VerifyShareRequestM" +
+      "essageH\000\022_\n\"getSecretIdsVersionsRequestM" +
+      "essage\030\005 \001(\01321.derec.message.GetSecretId" +
+      "sVersionsRequestMessageH\000\022G\n\026getShareReq" +
+      "uestMessage\030\006 \001(\0132%.derec.message.GetSha" +
+      "reRequestMessageH\000B\006\n\004body\032_\n\023HelperMess" +
+      "ageBodies\022H\n\021helperMessageBody\030\001 \003(\0132-.d" +
+      "erec.message.DeRecMessage.HelperMessageB" +
+      "ody\032\363\003\n\021HelperMessageBody\022A\n\023pairRespons" +
+      "eMessage\030\001 \001(\0132\".derec.message.PairRespo" +
+      "nseMessageH\000\022E\n\025unpairResponseMessage\030\002 " +
+      "\001(\0132$.derec.message.UnpairResponseMessag" +
+      "eH\000\022M\n\031storeShareResponseMessage\030\003 \001(\0132(" +
+      ".derec.message.StoreShareResponseMessage" +
+      "H\000\022O\n\032verifyShareResponseMessage\030\004 \001(\0132)" +
+      ".derec.message.VerifyShareResponseMessag" +
+      "eH\000\022a\n#getSecretIdsVersionsResponseMessa" +
+      "ge\030\005 \001(\01322.derec.message.GetSecretIdsVer" +
+      "sionsResponseMessageH\000\022I\n\027getShareRespon" +
+      "seMessage\030\006 \001(\0132&.derec.message.GetShare" +
+      "ResponseMessageH\000B\006\n\004bodyb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -7650,7 +7722,7 @@ public final class Derecmessage {
     internal_static_derec_message_DeRecMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_derec_message_DeRecMessage_descriptor,
-        new java.lang.String[] { "ProtocolVersion", "Sender", "Receiver", "SecretId", "Timestamp", "MessageBodies", });
+        new java.lang.String[] { "ProtocolVersionMinor", "ProtocolVersionMajor", "Sender", "Receiver", "SecretId", "Timestamp", "MessageBodies", });
     internal_static_derec_message_DeRecMessage_MessageBodies_descriptor =
       internal_static_derec_message_DeRecMessage_descriptor.getNestedTypes().get(0);
     internal_static_derec_message_DeRecMessage_MessageBodies_fieldAccessorTable = new

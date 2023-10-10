@@ -96,17 +96,22 @@ message DeRecShare {
 
   /*
    * sharer-assigned identifier for the secret;
-   * this is an opaque 64-bit value
+   * this is an opaque 128-bit value also
+   * present in message header. Size chosen to
+   * accommodate UUID if sharer chooses
    */
-  int64 secretId = 4;
+  bytes secretId = 4;
 
   /*
    * version number for the share;
    * note that helper is entitled to ignore any
    * StoreShareRequestMessage with a version less
    * than or equal to the last seen version
+   *
+   * TODO: helper SHOULD save any version number received
+   * and must compare the content if already received
    */
-  int64 version = 5;
+  int32 version = 5;
 }
 
 /*

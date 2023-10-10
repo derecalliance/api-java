@@ -1,6 +1,13 @@
 package com.thebuildingblocks.derec.v0_9.test;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
+import derec.message.Derecmessage;
+
+import java.security.KeyPair;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.thebuildingblocks.derec.v0_9.httpprototype.Cryptography.keyPairGenerator;
 
 public class TestIds {
     public static DeRecId[] DEFAULT_IDS = {
@@ -14,4 +21,12 @@ public class TestIds {
             new DeRecId("noone", "mailto:noone@thebuildingblocks.com", "http://localhost:8080/noone"),
             new DeRecId("nowhere", "mailto:nowhere@thebuildingblocks.com", "http://192.168.1.40/nowhere"),
     };
+
+    public static Map<String, KeyPair> DEFAULT_KEYPAIRS = new HashMap<>();
+
+    static {
+        for (DeRecId id: DEFAULT_IDS) {
+            DEFAULT_KEYPAIRS.put(id.getName(), keyPairGenerator.generateKeyPair());
+        }
+    }
 }

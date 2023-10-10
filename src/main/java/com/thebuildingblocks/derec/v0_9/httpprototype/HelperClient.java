@@ -98,7 +98,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         }
 
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofByteArray(getMessage(
+                .POST(BodyPublishers.ofByteArray(getMessage(this,
                         getPairRequestMessageBody(helperId)).toByteArray()))
                 .build();
 
@@ -121,7 +121,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         }
 
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofByteArray(getMessage(
+                .POST(BodyPublishers.ofByteArray(getMessage(this,
                         getShareRequestMessageBody(share)).toByteArray()))
                 .build();
 
@@ -155,7 +155,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         }
 
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofByteArray(getMessage(getVerifyRequestMessageBody(share)).toByteArray()))
+                .POST(BodyPublishers.ofByteArray(getMessage(this, getVerifyRequestMessageBody(share)).toByteArray()))
                 .build();
 
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
@@ -180,7 +180,7 @@ public class HelperClient implements DeRecPairable, Closeable {
         }
 
         HttpRequest request = buildRequest()
-                .POST(BodyPublishers.ofByteArray(getMessage(getUnPairRequestMessageBody(reason)).toByteArray()))
+                .POST(BodyPublishers.ofByteArray(getMessage(this, getUnPairRequestMessageBody(reason)).toByteArray()))
                 .build();
 
 
