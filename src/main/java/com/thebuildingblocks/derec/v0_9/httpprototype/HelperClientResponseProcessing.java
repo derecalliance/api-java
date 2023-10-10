@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
@@ -65,21 +66,18 @@ public class HelperClientResponseProcessing {
         PairingResponseProcessingStatus processingStatus = responsesStatuses.get(UNPAIRRESPONSEMESSAGE);
         HelperClientMessageDeserializer messageDeserializer = HelperClientMessageDeserializer.newInstance(inputStream, UNPAIRRESPONSEMESSAGE);
         Unpair.UnpairResponseMessage message = messageDeserializer.getBody().getUnpairResponseMessage();
-        // server failed
-        if (!message.getResult().getStatus().equals(OK)) {
-            helperClient.secret.notifyStatus(Notification.newBuilder()
-                    .secret(helperClient.secret)
-                    .pairable(helperClient)
-                    .message(message.getResult().getStatus() + " " + message.getResult().getMemo())
-                    .build(processingStatus.failNotification()));
-            helperClient.status = processingStatus.failStatus();
-            return helperClient;
-        }
-        helperClient.secret.notifyStatus(Notification.newBuilder()
+        Consumer<DeRecStatusNotification.Type> reporter = (t) -> helperClient.secret.notifyStatus(Notification.newBuilder()
                 .secret(helperClient.secret)
                 .pairable(helperClient)
                 .message(message.getResult().getStatus() + " " + message.getResult().getMemo())
-                .build(processingStatus.successNotification()));
+                .build(t));
+        // server failed
+        if (!message.getResult().getStatus().equals(OK)) {
+            reporter.accept(processingStatus.failNotification());
+            helperClient.status = processingStatus.failStatus();
+            return helperClient;
+        }
+        reporter.accept(processingStatus.successNotification());
         helperClient.status = processingStatus.successStatus();
         return helperClient;
     }
