@@ -1,6 +1,7 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import derec.message.Derecmessage;
+import derec.message.Derecmessage.DeRecMessage;
 import derec.message.Derecmessage.DeRecMessage.HelperMessageBody;
 import derec.message.ResultOuterClass;
 
@@ -12,12 +13,12 @@ import java.util.stream.Collectors;
 
 public class HelperClientMessageDeserializer {
 
-    private Map<HelperMessageBody.BodyCase, HelperMessageBody> bodyMessages = null;
-    private final Derecmessage.DeRecMessage message;
-    private ResultOuterClass.Result result;
+    private final Map<HelperMessageBody.BodyCase, HelperMessageBody> bodyMessages;
+    private final DeRecMessage message;
+    private HelperMessageBody body;
 
-    private HelperClientMessageDeserializer(HttpResponse<InputStream> httpResponse) throws IOException {
-        message = Derecmessage.DeRecMessage.parseFrom(httpResponse.body());
+    private HelperClientMessageDeserializer(InputStream inputStream) throws IOException {
+        message = DeRecMessage.parseFrom(inputStream);
         bodyMessages = message.getMessageBodies()
                 .getHelperMessageBodies()
                 .getHelperMessageBodyList().stream().collect(Collectors.toMap(HelperMessageBody::getBodyCase, b -> b));
@@ -53,9 +54,14 @@ public class HelperClientMessageDeserializer {
         };
     }
 
-    public static HelperClientMessageDeserializer newInstance(HttpResponse<InputStream> response,
-                                                              HelperMessageBody.BodyCase bodyCase) throws IOException {
-        HelperClientMessageDeserializer instance = new HelperClientMessageDeserializer(response);
+    public static HelperClientMessageDeserializer newInstance(InputStream inputStream,
+                                                              HelperMessageBody.BodyCase bodyCase) {
+        HelperClientMessageDeserializer instance = null;
+        try {
+            instance = new HelperClientMessageDeserializer(inputStream);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
         if (instance.bodyMessages.isEmpty()) {
             throw new IllegalArgumentException("There are no bodies in the message");
         }
@@ -65,16 +71,16 @@ public class HelperClientMessageDeserializer {
         if (!instance.bodyMessages.containsKey(bodyCase)) {
             throw new IllegalArgumentException("The response is not a " + bodyCase);
         }
-        instance.result = getResult(instance.bodyMessages.get(bodyCase));
+        instance.body = instance.bodyMessages.get(bodyCase);
         return instance;
     }
 
-    public Derecmessage.DeRecMessage getMessage() {
+    public DeRecMessage getMessage() {
         return message;
     }
 
-    public ResultOuterClass.Result getResult() {
-        return result;
+    public HelperMessageBody getBody() {
+        return body;
     }
 
     public Map<HelperMessageBody.BodyCase, HelperMessageBody> getBodyMessages() {

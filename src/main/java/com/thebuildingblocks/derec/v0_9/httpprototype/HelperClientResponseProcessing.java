@@ -2,10 +2,8 @@ package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
+import derec.message.*;
 import derec.message.Derecmessage.DeRecMessage.HelperMessageBody.BodyCase;
-import derec.message.ResultOuterClass;
-import derec.message.Storeshare;
-import derec.message.Verify;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,21 +36,51 @@ public class HelperClientResponseProcessing {
                 new PairingResponseProcessingStatus(REMOVED, FAILED, HELPER_UNPAIRED, HELPER_INACTIVE));
     }
 
-    public static HelperClient pairProcessResponse(HttpResponse<InputStream> response, HelperClient client) {
-        if (pairingProcessResponse(response, client, PAIRRESPONSEMESSAGE)) {
-            // TODO: do things like figure out what the comms parameters are
+    public static HelperClient pairProcessResponse(InputStream inputStream, HelperClient helperClient) {
+        // get the right set of status and notification codes for this message type
+        PairingResponseProcessingStatus processingStatus = responsesStatuses.get(PAIRRESPONSEMESSAGE);
+        // handy callable notification function
+        BiConsumer<Boolean, String> reporter = (b, s) -> helperClient.secret.notifyStatus(Notification.newBuilder()
+                .secret(helperClient.secret)
+                .pairable(helperClient)
+                .message(s)
+                .build(b ? processingStatus.successNotification() : processingStatus.failNotification()));
+        HelperClientMessageDeserializer messageDeserializer =
+                HelperClientMessageDeserializer.newInstance(inputStream, PAIRRESPONSEMESSAGE);
+        Pair.PairResponseMessage message = messageDeserializer.getBody().getPairResponseMessage();
+        // server failed
+        if (!message.getResult().getStatus().equals(OK)) {
+            reporter.accept(false, message.getResult().getStatus() + " " + message.getResult().getMemo());
+            helperClient.status = processingStatus.failStatus();
+            return helperClient;
         }
-        return client;
+        // TODO: do things like figure out what the comms parameters are
+        return helperClient;
     }
 
-    public static HelperClient unPairProcessResponse(HttpResponse<InputStream> response, HelperClient client) {
-        pairingProcessResponse(response, client, UNPAIRRESPONSEMESSAGE);
-        return client;
+    public static HelperClient unPairProcessResponse(InputStream inputStream, HelperClient helperClient) {
+        // get the right set of status and notification codes for this message type
+        PairingResponseProcessingStatus processingStatus = responsesStatuses.get(UNPAIRRESPONSEMESSAGE);
+        // handy callable notification function
+        BiConsumer<Boolean, String> reporter = (b, s) -> helperClient.secret.notifyStatus(Notification.newBuilder()
+                .secret(helperClient.secret)
+                .pairable(helperClient)
+                .message(s)
+                .build(b ? processingStatus.successNotification() : processingStatus.failNotification()));
+        HelperClientMessageDeserializer messageDeserializer = HelperClientMessageDeserializer.newInstance(inputStream, UNPAIRRESPONSEMESSAGE);
+        Unpair.UnpairResponseMessage message = messageDeserializer.getBody().getUnpairResponseMessage();
+        // server failed
+        if (!message.getResult().getStatus().equals(OK)) {
+            reporter.accept(false, message.getResult().getStatus() + " " + message.getResult().getMemo());
+            helperClient.status = processingStatus.failStatus();
+            return helperClient;
+        }
+        return helperClient;
     }
 
-    private static boolean pairingProcessResponse(HttpResponse<InputStream> response,
-                                                  HelperClient helperClient,
-                                                  BodyCase bodyCase) {
+    private static boolean pairingProcessResponse(BodyCase bodyCase,
+                                                  ResultOuterClass.Result result,
+                                                  HelperClient helperClient) {
         // get the right set of status and notification codes for this message type
         PairingResponseProcessingStatus processingStatus = responsesStatuses.get(bodyCase);
         // handy callable notification function
@@ -62,102 +90,57 @@ public class HelperClientResponseProcessing {
                 .message(s)
                 .build(b ? processingStatus.successNotification() : processingStatus.failNotification()));
 
-        // HTTP response failure
-        if (response.statusCode() != 200) {
-            reporter.accept(false, "HTTP Status " + response.statusCode());
+        // server failed
+        if (!result.getStatus().equals(OK)) {
+            reporter.accept(false, result.getStatus() + " " + result.getMemo());
             helperClient.status = processingStatus.failStatus();
             return false;
         }
-        // HTTP success
-        try {
-            HelperClientMessageDeserializer messageDeserializer =
-                    HelperClientMessageDeserializer.newInstance(response, bodyCase);
-            ResultOuterClass.Result result = messageDeserializer.getResult();
-            // server failed
-            if (!result.getStatus().equals(OK)) {
-                reporter.accept(false, result.getStatus() + " " + result.getMemo());
-                helperClient.status = processingStatus.failStatus();
-                return false;
-            }
-            // server success
-            reporter.accept(true, result.getStatus() + " " + result.getMemo());
-            helperClient.status = processingStatus.successStatus();
-            return true;
-        } catch (Exception e) {
-            reporter.accept(false, "Exception processing response: " + e.getMessage());
-            helperClient.status = processingStatus.failStatus();
-            return false;
-        }
+        // server success
+        reporter.accept(true, result.getStatus() + " " + result.getMemo());
+        helperClient.status = processingStatus.successStatus();
+        return true;
     }
 
-    public static Version.Share verifyResponseHandler(HttpResponse<InputStream> httpResponse,
-                                                      Version.Share share) {
+    public static Version.Share verifyResponseHandler(InputStream inputStream, Version.Share share) {
         BiConsumer<Boolean, String> reporter = (b, s) -> share.processResult(VERIFY, b, s);
-        try {
-            HelperClientMessageDeserializer messageDeserializer =
-                    HelperClientMessageDeserializer.newInstance(httpResponse, VERIFYSHARERESPONSEMESSAGE);
-            ResultOuterClass.Result result = messageDeserializer.getResult();
-            if (shareResponseHandler(httpResponse, share, result, reporter)) {
-                Verify.VerifyShareResponseMessage message =
-                        messageDeserializer.getBodyMessages().get(VERIFYSHARERESPONSEMESSAGE).getVerifyShareResponseMessage();
-                if (!Arrays.equals(message.getNonce().toByteArray(), share.nonce)) {
-                    reporter.accept(false, "Nonce is not equal");
-                }
-                // TODO check the hash
-                reporter.accept(true, result.getStatus() + " " + result.getMemo());
-            }
-        } catch (IOException e) {
-            reporter.accept(false, e.getMessage());
+        // check there is an appropriate messageBody
+        HelperClientMessageDeserializer messageDeserializer =
+                HelperClientMessageDeserializer.newInstance(inputStream, VERIFYSHARERESPONSEMESSAGE);
+        Verify.VerifyShareResponseMessage message = messageDeserializer.getBody().getVerifyShareResponseMessage();
+        ResultOuterClass.Result result = message.getResult();
+        if (!result.getStatus().equals(OK)) {
+            reporter.accept(false, result.getStatus() + " " + result.getMemo());
+            return share;
         }
-        share.future.complete(share);
+        if (!Arrays.equals(message.getNonce().toByteArray(), share.nonce)) {
+            reporter.accept(false, "Nonce is not equal");
+            return share;
+        }
+        // TODO check the hash
+        reporter.accept(true, result.getStatus() + " " + result.getMemo());
         return share;
     }
 
     /* -- Verify and Store processing -- */
 
-    public static Version.Share storeShareResponseHandler(HttpResponse<InputStream> httpResponse,
-                                                          Version.Share share) {
+    public static Version.Share storeShareResponseHandler(InputStream inputStream, Version.Share share) {
         BiConsumer<Boolean, String> reporter = (b, s) -> share.processResult(SHARE, b, s);
-        try {
-            HelperClientMessageDeserializer messageDeserializer =
-                    HelperClientMessageDeserializer.newInstance(httpResponse, STORESHARERESPONSEMESSAGE);
-            ResultOuterClass.Result result = messageDeserializer.getResult();
-            // check message result
-            if (shareResponseHandler(httpResponse, share, result, reporter)) {
-                Storeshare.StoreShareResponseMessage message =
-                        messageDeserializer.getBodyMessages().get(STORESHARERESPONSEMESSAGE).getStoreShareResponseMessage();
-                if (message.getVersion() != share.version.versionNumber) {
-                    reporter.accept(false, "Version number is incorrect");
-                }
-            }
-            reporter.accept(true, result.getStatus() + " " + result.getMemo());
-        } catch (IOException e) {
-            reporter.accept(false, e.getMessage());
+        // check there is an appropriate message body
+        HelperClientMessageDeserializer messageDeserializer =
+                HelperClientMessageDeserializer.newInstance(inputStream, STORESHARERESPONSEMESSAGE);
+        Storeshare.StoreShareResponseMessage message = messageDeserializer.getBody().getStoreShareResponseMessage();
+        ResultOuterClass.Result result = message.getResult();
+        if (!result.getStatus().equals(OK)) {
+            reporter.accept(false, result.getStatus() + " " + result.getMemo());
+            return share;
         }
-        share.future.complete(share);
+        if (message.getVersion() != share.version.versionNumber) {
+            reporter.accept(false, "Version number is incorrect");
+            return share;
+        }
+        reporter.accept(true, result.getStatus() + " " + result.getMemo());
         return share;
-    }
-
-    private static boolean shareResponseHandler(HttpResponse<InputStream> httpResponse,
-                                                Version.Share share,
-                                                ResultOuterClass.Result result,
-                                                BiConsumer<Boolean, String> reporter) {
-        // check HTTP status
-        if (httpResponse.statusCode() != 200) {
-            reporter.accept(false, "HTTP Status " + httpResponse.statusCode());
-            return false;
-        }
-        try {
-            // failed, so notify
-            if (!result.getStatus().equals(OK)) {
-                reporter.accept(false, result.getStatus() + " " + result.getMemo());
-                return false;
-            }
-            return true;
-        } catch (Exception e) {
-            reporter.accept(false, e.getCause().getMessage());
-            return false;
-        }
     }
 
     /**

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -20,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientMessageFactory.*;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientResponseProcessing.*;
@@ -70,6 +72,20 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .timeout(retryParameters.getResponseTimeout());
     }
 
+    // function to check response is 200 and return the body as an input stream  or throw exception if not
+    Function<HttpResponse<InputStream>, InputStream> httpStatusChecker = response -> {
+        if (response.statusCode() != 200) {
+            throw new IllegalStateException("HTTP Status " + response.statusCode());
+        }
+        return response.body();
+    };
+
+    // get something printable in case exception doesn't have a message
+    private static String getMessageForException(Throwable throwable) {
+        String message = throwable.getCause().getMessage();
+        return Objects.nonNull(message) ? message : throwable.getCause().getClass().getName();
+    }
+
     /**
      * Initiate pairing with this helper
      */
@@ -87,10 +103,11 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .build();
 
         pairingFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .thenApply(httpStatusChecker)
                 .thenApply(r -> pairProcessResponse(r, this))
                 .exceptionally(t -> {
                     this.status = FAILED;
-                    notifier.accept(HELPER_NOT_PAIRED, t.getCause().getMessage());
+                    notifier.accept(HELPER_NOT_PAIRED, getMessageForException(t));
                     return this;
                 });
     }
@@ -116,10 +133,10 @@ public class HelperClient implements DeRecPairable, Closeable {
         }
 
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .thenApply(httpResponse -> HelperClientResponseProcessing.storeShareResponseHandler(httpResponse, share))
+                .thenApply(httpStatusChecker)
+                .thenApply(inputStream -> HelperClientResponseProcessing.storeShareResponseHandler(inputStream, share))
                 .exceptionally(throwable -> {
-                    share.processResult(SHARE, false, throwable.getCause().getMessage());
-                    share.future.complete(share);
+                    share.processResult(SHARE, false, getMessageForException(throwable));
                     return share;
                 });
     }
@@ -142,10 +159,10 @@ public class HelperClient implements DeRecPairable, Closeable {
                 .build();
 
         share.future = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
-                .thenApply(httpResponse -> HelperClientResponseProcessing.verifyResponseHandler(httpResponse, share))
+                .thenApply(httpStatusChecker)
+                .thenApply(inputStream -> HelperClientResponseProcessing.verifyResponseHandler(inputStream, share))
                 .exceptionally(throwable -> {
-                    share.processResult(VERIFY, false, throwable.getCause().getMessage());
-                    share.future.complete(share);
+                    share.processResult(VERIFY, false, getMessageForException(throwable));
                     return share;
                 });
     }
@@ -168,10 +185,11 @@ public class HelperClient implements DeRecPairable, Closeable {
 
 
         pairingFuture = httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
+                .thenApply(httpStatusChecker)
                 .thenApply(r -> unPairProcessResponse(r, this))
                 .exceptionally(t -> {
                     this.status = FAILED;
-                    notifier.accept(HELPER_NOT_PAIRED, t.getCause().getMessage());
+                    notifier.accept(HELPER_NOT_PAIRED, getMessageForException(t));
                     return this;
                 });
     }
