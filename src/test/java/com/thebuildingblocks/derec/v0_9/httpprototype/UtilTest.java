@@ -6,12 +6,12 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
-public class HelpersTest {
+public class UtilTest {
     @Test
     public void verifyUuidToFromByte() {
         UUID u = UUID.randomUUID();
-        byte[] uBytes = Helpers.asBytes(u);
-        UUID u2 = Helpers.asUuid(uBytes);
+        byte[] uBytes = Util.asBytes(u);
+        UUID u2 = Util.asUuid(uBytes);
         assertEquals(u, u2);
     }
 }

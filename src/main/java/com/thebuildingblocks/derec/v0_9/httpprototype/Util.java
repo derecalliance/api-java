@@ -1,7 +1,10 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 
+import java.nio.ByteBuffer;
 import java.time.Duration;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * placeholder for stuff needed in a few places
@@ -35,5 +38,31 @@ public class Util {
      */
     public static class RetryStatus {
 
+    }
+
+    public static class ProtocolVersion {
+        int majorVersion;
+
+        public ProtocolVersion(int majorVersion, int minorVersion) {
+            this.majorVersion = majorVersion;
+            this.minorVersion = minorVersion;
+        }
+
+        int minorVersion;
+    }
+    public static final List<ProtocolVersion> availableVersions = List.of(new ProtocolVersion(0, 9));
+
+    public static UUID asUuid(byte[] bytes) {
+        ByteBuffer bb = ByteBuffer.wrap(bytes);
+        long firstLong = bb.getLong();
+        long secondLong = bb.getLong();
+        return new UUID(firstLong, secondLong);
+    }
+
+    public static byte[] asBytes(UUID uuid) {
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        return bb.array();
     }
 }
