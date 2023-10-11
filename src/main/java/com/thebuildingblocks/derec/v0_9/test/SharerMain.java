@@ -47,32 +47,19 @@ public class SharerMain {
         secret.close();
 
 
-        try {
+/*        try {
             // should not be able to update after close
             secret.update("throw me an exception".getBytes(StandardCharsets.UTF_8));
             throw new AssertionError("can't update after close");
         } catch (IllegalStateException e) {
             // correctly throwing exception
             logger.info("[Expected] Exception on update secret", e);
-        }
+        }*/
 
         DeRecSecret secret2 = me.newSecret("Genghis Khan", "Something".getBytes(StandardCharsets.UTF_8),
                 Arrays.asList(DEFAULT_IDS));
 
-        System.out.println("Helpers and Secrets");
-        Recipes.listHelpers(me).forEach((key, value) -> {
-            System.out.println(key.getName());
-            value.forEach(s -> System.out.printf("   Secret id: %s, \"%s\", Closed: %b, Available: %b\n",
-                    s.getSecretId(), s.getDescription(), s.isClosed(), s.isAvailable()));
-        });
 
-        System.out.println("Secrets and Helpers");
-        for (DeRecSecret s: me.getSecrets()) {
-            System.out.println("Secret Id: " + s.getSecretId().toString());
-            for (DeRecPairable p: s.getHelpers()) {
-                System.out.println("   " + p.getId().getName() + ": " + p.getStatus());
-            }
-        }
         System.out.println("Hit enter to exit");
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();

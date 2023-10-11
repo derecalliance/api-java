@@ -57,7 +57,6 @@ public class HelperServerMain {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            logger.trace("{} received message", id.getName());
             try {
                 DeRecMessage message = parseFrom(exchange.getRequestBody());
                 SharerMessageBodies messageBodies =
