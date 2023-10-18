@@ -40,7 +40,7 @@ import static com.thebuildingblocks.derec.v0_9.httpprototype.Sharer.defaultRetry
 public class Secret implements Closeable, DeRecSecret {
     /* -- basic details of the secret -- */
      Sharer sharer;
-     UUID secretId; // the ID of the secret
+     byte[] secretId; // the ID of the secret
      String description; // human-readable description of the secret
      List<Consumer<DeRecStatusNotification>> notificationListeners = new ArrayList<>(); // listeners for events
 
@@ -219,7 +219,7 @@ public class Secret implements Closeable, DeRecSecret {
     }
 
     @Override
-    public UUID getSecretId() {
+    public byte[] getSecretId() {
         return secretId;
     }
 
@@ -247,7 +247,7 @@ public class Secret implements Closeable, DeRecSecret {
             return this;
         }
 
-        public Builder secretId(UUID secretId) {
+        public Builder secretId(byte[] secretId) {
             secret.secretId = secretId;
             return this;
         }

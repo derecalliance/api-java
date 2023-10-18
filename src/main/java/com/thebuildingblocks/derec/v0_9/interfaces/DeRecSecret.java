@@ -20,7 +20,6 @@ package com.thebuildingblocks.derec.v0_9.interfaces;
 import java.io.Closeable;
 import java.util.List;
 import java.util.NavigableMap;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
@@ -99,9 +98,9 @@ public interface DeRecSecret extends Closeable {
     /**
      * The unique id of the secret
      *
-     * @return the id
+     * @return the id - 1 to 16 bytes that uniquely identify this secret for this sharer
      */
-    UUID getSecretId();
+    byte[] getSecretId();
 
     /**
      * A secret has a human-readable description as a memo for what the secret is for etc.
@@ -115,6 +114,4 @@ public interface DeRecSecret extends Closeable {
      */
     @Override
     void close();
-
-
 }

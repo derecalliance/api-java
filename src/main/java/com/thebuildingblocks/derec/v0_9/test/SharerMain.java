@@ -18,6 +18,7 @@
 package com.thebuildingblocks.derec.v0_9.test;
 
 import com.thebuildingblocks.derec.v0_9.httpprototype.Sharer;
+import com.thebuildingblocks.derec.v0_9.httpprototype.Util;
 import com.thebuildingblocks.derec.v0_9.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +99,6 @@ public class SharerMain {
         String p = t.getPairable().isEmpty() ? "" : "/" + t.getPairable().get().getId().getName();
         String color = t.getType().isError() ? ANSI_RED : ANSI_BLUE;
         logger.info("{}{} {} {}{} {}\u001B[0m", color, t.getType(), p,
-                t.getSecret().getSecretId(), v, t.getMessage());
+                Util.asUuid(t.getSecret().getSecretId()), v, t.getMessage());
     }
 }

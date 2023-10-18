@@ -32,7 +32,7 @@ public class Sharer implements DeRecSharer{
     public static int defaultThresholdRecovery = 3;
     public static int defaultHelpersRequiredForDeletion = 4; // number of helpers that need to confirm a new share
 
-    private final Map<UUID, Secret> secrets; // a map of secret id to each secret that the sharer wishes to share
+    private final Map<byte[], Secret> secrets; // a map of secret id to each secret that the sharer wishes to share
     public DeRecId id; // sharer's id
     public KeyPair keyPair; // public/private key pair
     // before deleting an old share
@@ -55,7 +55,7 @@ public class Sharer implements DeRecSharer{
     @Override
     public Secret newSecret(String description, byte[] bytesToProtect, List<DeRecId> helperIds) {
         UUID secretId = UUID.randomUUID();
-        return newSecret(secretId, description, bytesToProtect, helperIds);
+        return newSecret(Util.asBytes(secretId), description, bytesToProtect, helperIds);
     }
 
     /**
@@ -66,7 +66,7 @@ public class Sharer implements DeRecSharer{
      * @return a newly shared secret
      */
     @Override
-    public Secret newSecret(UUID secretId, String description, byte[] bytesToProtect, List<DeRecId> helperIds) {
+    public Secret newSecret(byte[] secretId, String description, byte[] bytesToProtect, List<DeRecId> helperIds) {
         if (secrets.containsKey(secretId)) {
             throw new IllegalStateException("Secret with that Id already exists");
         }
@@ -88,7 +88,7 @@ public class Sharer implements DeRecSharer{
     }
 
     @Override
-    public Secret getSecret(UUID secretId) {
+    public Secret getSecret(byte[] secretId) {
         return secrets.get(secretId);
     }
 
