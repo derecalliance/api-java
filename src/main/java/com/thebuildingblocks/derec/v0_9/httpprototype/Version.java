@@ -42,6 +42,7 @@ public class Version implements DeRecVersion {
     final Secret secret;
     // version numbers to be allocated so that they are always larger than the last shared
     final int versionNumber;
+    final String description;
     // the bytes of this secret
     byte[] protectedValue;
     // share threshold
@@ -60,9 +61,10 @@ public class Version implements DeRecVersion {
     SecureRandom random = new SecureRandom();
 
 
-    Version(Secret secret, int versionNumber) {
+    Version(Secret secret, int versionNumber, String description) {
         this.versionNumber = versionNumber;
         this.secret = secret;
+        this.description = description;
         for (ResultType r : ResultType.values()) {
             resultCounts.put(r, new ResultCount());
         }

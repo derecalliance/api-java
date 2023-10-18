@@ -67,12 +67,30 @@ public interface DeRecSecret extends Closeable {
     DeRecVersion update(byte[] bytesToProtect);
 
     /**
+     * Update a secret synchronously blocking till the outcome (success or fail) is known.
+     *
+     * @param bytesToProtect the bytes of the update
+     * @param description description of this version of the secret
+     * @return the new Version
+     */
+    DeRecVersion update(byte[] bytesToProtect, String description);
+
+    /**
      * Update a secret asynchronously, cancelling any in-progress updates
      *
      * @param bytesToProtect the bytes of the update
      * @return a Future which completes when the update is safe or when it is known to have failed
      */
     Future<? extends DeRecVersion> updateAsync(byte[] bytesToProtect);
+
+    /**
+     * Update a secret asynchronously, cancelling any in-progress updates
+     *
+     * @param bytesToProtect the bytes of the update
+     * @param description description of this version of the secret
+     * @return a Future which completes when the update is safe or when it is known to have failed
+     */
+    Future<? extends DeRecVersion> updateAsync(byte[] bytesToProtect, String description);
 
     /**
      * get a list of versions of the secret
@@ -101,13 +119,6 @@ public interface DeRecSecret extends Closeable {
      * @return the id - 1 to 16 bytes that uniquely identify this secret for this sharer
      */
     byte[] getSecretId();
-
-    /**
-     * A secret has a human-readable description as a memo for what the secret is for etc.
-     *
-     * @return the description
-     */
-    String getDescription();
 
     /**
      * Gracefully shut down the secret, i.e. unpair from all helpers.

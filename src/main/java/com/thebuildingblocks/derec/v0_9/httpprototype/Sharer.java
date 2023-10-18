@@ -73,7 +73,6 @@ public class Sharer implements DeRecSharer{
         Secret secret = Secret.newBuilder()
                 .sharer(this)
                 .secretId(secretId)
-                .description(description)
                 .storageRequired(bytesToProtect.length)// assume that secret does not grow in size
                 .notificationListener(listener)
                 .thresholdSecretRecovery(defaultThresholdRecovery)
@@ -83,7 +82,7 @@ public class Sharer implements DeRecSharer{
         // add helpers and block
         secret.addHelpers(helperIds);
         // share secret and block
-        secret.update(bytesToProtect);
+        secret.update(bytesToProtect, description);
         return secret;
     }
 

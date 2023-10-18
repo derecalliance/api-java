@@ -41,7 +41,6 @@ public class Secret implements Closeable, DeRecSecret {
     /* -- basic details of the secret -- */
      Sharer sharer;
      byte[] secretId; // the ID of the secret
-     String description; // human-readable description of the secret
      List<Consumer<DeRecStatusNotification>> notificationListeners = new ArrayList<>(); // listeners for events
 
     /* -- interoperability for the secret -- */
@@ -136,10 +135,19 @@ public class Secret implements Closeable, DeRecSecret {
      * @return the updated secret
      */
     @Override
-    public Version update(byte[] bytesToProtect) {
+    public DeRecVersion update(byte[] bytesToProtect) {
         try {
             logger.trace("Waiting for update future");
             return updateAsync(bytesToProtect).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Version update(byte[] bytesToProtect, String description) {
+        try {
+            return updateAsync(bytesToProtect, description).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -152,7 +160,12 @@ public class Secret implements Closeable, DeRecSecret {
      */
     @Override
     public Future<Version> updateAsync(byte[] bytesToProtect) {
-        logger.trace("Updating secret {}", secretId);
+        return updateAsync(bytesToProtect, null);
+    }
+
+    @Override
+    public Future<Version> updateAsync(byte[] bytesToProtect, String description) {
+        logger.trace("Updating secret {}", Util.asUuid(secretId));
         if (isClosed()) {
             throw new IllegalStateException("Cannot update closed secret");
         }
@@ -163,6 +176,9 @@ public class Secret implements Closeable, DeRecSecret {
             lastVersion.future.cancel(true);
         }
 
+        String newDescription = Objects.nonNull(description) ? description :
+                Objects.nonNull(lastVersion) ? lastVersion.description : null;
+
         // get a list of helpers thought to be active
         List<HelperClient> pairedHelpers = helpers.stream().filter(h -> h.status.equals(DeRecHelperStatus.PairingStatus.PAIRED)).toList();
         if (pairedHelpers.size() < thresholdSecretRecovery) {
@@ -171,7 +187,7 @@ public class Secret implements Closeable, DeRecSecret {
 
         // go to next version number
         int versionNumber = latestShareVersion.incrementAndGet();
-        Version version = new Version(this, versionNumber);
+        Version version = new Version(this, versionNumber, newDescription);
         this.versions.put(versionNumber, version);
         version.share(bytesToProtect, this.thresholdSecretRecovery, pairedHelpers);
         return version.future;
@@ -223,11 +239,6 @@ public class Secret implements Closeable, DeRecSecret {
         return secretId;
     }
 
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
     public void notifyStatus(DeRecStatusNotification notification) {
         for (Consumer<DeRecStatusNotification> listener: notificationListeners) {
             listener.accept(notification);
@@ -249,11 +260,6 @@ public class Secret implements Closeable, DeRecSecret {
 
         public Builder secretId(byte[] secretId) {
             secret.secretId = secretId;
-            return this;
-        }
-
-        public Builder description(String description) {
-            secret.description = description;
             return this;
         }
 
