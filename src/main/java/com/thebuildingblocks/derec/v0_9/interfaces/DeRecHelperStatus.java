@@ -1,10 +1,9 @@
 package com.thebuildingblocks.derec.v0_9.interfaces;
 
 /**
- * Something that can be paired with, a helper typically, which has a status resulting from
- * an attempt to pair and an ongoing status reflecting the secret update and pairing life cycle.
+ * Representation of a helper as perceived by a sharer
  */
-public interface DeRecPairable {
+public interface DeRecHelperStatus {
     DeRecId getId();
 
     PairingStatus getStatus();

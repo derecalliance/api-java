@@ -1,6 +1,6 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSecret;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecVersion;
@@ -11,7 +11,7 @@ public class Notification implements DeRecStatusNotification {
     Type type;
     String message = "";
     DeRecVersion version;
-    DeRecPairable pairable;
+    DeRecHelperStatus pairable;
     DeRecSecret secret;
 
     private Notification() {}
@@ -32,7 +32,7 @@ public class Notification implements DeRecStatusNotification {
     }
 
     @Override
-    public Optional<DeRecPairable> getPairable() {
+    public Optional<DeRecHelperStatus> getPairable() {
         return Optional.ofNullable(pairable);
     }
 
@@ -67,7 +67,7 @@ public class Notification implements DeRecStatusNotification {
             return this;
         }
 
-        public Builder pairable(DeRecPairable pairable) {
+        public Builder pairable(DeRecHelperStatus pairable) {
             notification.pairable = pairable;
             return this;
         }

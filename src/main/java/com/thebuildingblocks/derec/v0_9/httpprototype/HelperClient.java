@@ -1,7 +1,7 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,14 +27,14 @@ import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientMessage
 import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientResponseProcessing.*;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.*;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus.PairingStatus.*;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
 
 /**
  * Sharer's view of a helper for a single secret, there will be multiple entries for the
  * same helper - one for each secret shared to that helper
  */
-public class HelperClient implements DeRecPairable, Closeable {
+public class HelperClient implements DeRecHelperStatus, Closeable {
     public final Secret secret; // the secret this helper is a helper for
     private final Util.RetryParameters retryParameters;
     private final HttpClient httpClient;

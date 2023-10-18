@@ -59,13 +59,13 @@ public class Secret implements Closeable, DeRecSecret {
     @Override
     public void addHelpers(List<? extends DeRecId> helperIds) {
         // block for completion
-        List<CompletableFuture<? extends DeRecPairable>> futures = addHelpersAsync(helperIds);
+        List<CompletableFuture<? extends DeRecHelperStatus>> futures = addHelpersAsync(helperIds);
         try {
             logger.info("Awaiting result of pairing");
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[helperIds.size()])).get(retryParameters.pairingWaitSecs, TimeUnit.SECONDS);
         } catch (InterruptedException | TimeoutException | ExecutionException e) {
             logger.error("Error while waiting for pairing completion");
-            for (CompletableFuture<? extends DeRecPairable> f: futures) {
+            for (CompletableFuture<? extends DeRecHelperStatus> f: futures) {
                 try {
                     logger.info("{} {} {}", f.isDone(), f.isDone() ? f.get().getId().getName():"?", f.isCompletedExceptionally());
                 } catch (InterruptedException | ExecutionException ex) {
@@ -82,11 +82,11 @@ public class Secret implements Closeable, DeRecSecret {
      * @return a list of {@link Future<HelperClient>} for helpers created and added
      */
     @Override
-    public List<CompletableFuture<? extends DeRecPairable>> addHelpersAsync(List<? extends DeRecId> helperIds) {
+    public List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecId> helperIds) {
         if (isClosed()) {
             throw new IllegalStateException("Cannot add helpers to closed secret");
         }
-        List<CompletableFuture<? extends DeRecPairable>> addedHelpers = new ArrayList<>();
+        List<CompletableFuture<? extends DeRecHelperStatus>> addedHelpers = new ArrayList<>();
         for (DeRecId helperId: helperIds) {
             HelperClient helper = new HelperClient(this, helperId, httpClient, this.retryParameters);
             // todo other helper configuration, timeouts, etc.
@@ -147,7 +147,7 @@ public class Secret implements Closeable, DeRecSecret {
         }
 
         // get a list of helpers thought to be active
-        List<HelperClient> pairedHelpers = helpers.stream().filter(h -> h.status.equals(DeRecPairable.PairingStatus.PAIRED)).toList();
+        List<HelperClient> pairedHelpers = helpers.stream().filter(h -> h.status.equals(DeRecHelperStatus.PairingStatus.PAIRED)).toList();
         if (pairedHelpers.size() < thresholdSecretRecovery) {
             throw new IllegalStateException(String.format("Not enough helpers %d", pairedHelpers.size()));
         }
@@ -187,7 +187,7 @@ public class Secret implements Closeable, DeRecSecret {
     @Override
     public boolean isAvailable() {
         return !isClosed() && helpers.stream()
-                .filter(h -> h.status.equals(DeRecPairable.PairingStatus.PAIRED))
+                .filter(h -> h.status.equals(DeRecHelperStatus.PairingStatus.PAIRED))
                 .count() >= this.thresholdSecretRecovery;
     }
 

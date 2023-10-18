@@ -1,13 +1,11 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import derec.message.*;
 import derec.message.Derecmessage.DeRecMessage.HelperMessageBody.BodyCase;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +14,7 @@ import java.util.function.Consumer;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecPairable.PairingStatus.*;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus.PairingStatus.*;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
 import static derec.message.Derecmessage.DeRecMessage.HelperMessageBody.BodyCase.*;
 import static derec.message.ResultOuterClass.StatusEnum.OK;
@@ -151,8 +149,8 @@ public class HelperClientResponseProcessing {
      * Records the outcome status for the helper and for the notification message for pair and upnair success and
      * failure
      */
-    private record PairingResponseProcessingStatus(DeRecPairable.PairingStatus successStatus,
-                                                   DeRecPairable.PairingStatus failStatus,
+    private record PairingResponseProcessingStatus(DeRecHelperStatus.PairingStatus successStatus,
+                                                   DeRecHelperStatus.PairingStatus failStatus,
                                                    DeRecStatusNotification.Type successNotification,
                                                    DeRecStatusNotification.Type failNotification) {
     }

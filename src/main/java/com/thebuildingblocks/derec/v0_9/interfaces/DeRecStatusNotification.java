@@ -25,7 +25,7 @@ public interface DeRecStatusNotification {
     /**
      * The pairable, if any, that the udpdate refers to
      */
-    Optional<DeRecPairable> getPairable();
+    Optional<DeRecHelperStatus> getPairable();
 
     /**
      * The secret this update refers to

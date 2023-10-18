@@ -25,14 +25,14 @@ public interface DeRecSecret extends Closeable {
      *
      * @param helperIds a list of futures for each of the helpers
      */
-    List<CompletableFuture<? extends DeRecPairable>> addHelpersAsync(List<? extends DeRecId> helperIds);
+    List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecId> helperIds);
 
     /**
      * List the helpers
      *
      * @return a list of helpers
      */
-    List<? extends DeRecPairable> getHelpers();
+    List<? extends DeRecHelperStatus> getHelpers();
 
     /**
      * Remove each of the helperIds in the list, if a helperId in the list does not refer to a helper for this secret
