@@ -101,8 +101,8 @@ public class SharerMain {
     public static final String ANSI_WHITE = "\u001B[37m";
     private void logNotification(DeRecStatusNotification t) {
         String v =t.getVersion().isEmpty() ? "" : "/" + t.getVersion().get().getVersionNumber();
-        String p = t.getPairable().isEmpty() ? "" : "/" + t.getPairable().get().getId().getName();
-        String color = t.getType().isError() ? ANSI_RED : ANSI_BLUE;
+        String p = t.getHelper().isEmpty() ? "" : "/" + t.getHelper().get().getId().getName();
+        String color = t.getType().getDefaultSeverity().equals(DeRecStatusNotification.NotificationSeverity.ERROR) ? ANSI_RED : ANSI_BLUE;
         logger.info("{}{} {} {}{} {}\u001B[0m", color, t.getType(), p,
                 Util.asUuid(t.getSecret().getSecretId()), v, t.getMessage());
     }

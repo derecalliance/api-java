@@ -31,7 +31,7 @@ import java.util.stream.IntStream;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.StandardNotificationType.*;
 
 
 /**
@@ -85,16 +85,16 @@ public class Version implements DeRecVersion {
         return protectedValue;
     }
 
-    void notifyStatus(DeRecStatusNotification.Type notificationType, HelperClient helper, String message) {
+    void notifyStatus(DeRecStatusNotification.StandardNotificationType notificationType, HelperClient helper, String message) {
         secret.notifyStatus(Notification.newBuilder()
                 .secret(secret)
                 .version(this)
-                .pairable(helper)
+                .helper(helper)
                 .message(message)
                 .build(notificationType));
     }
 
-    void notifyStatus(DeRecStatusNotification.Type notificationType) {
+    void notifyStatus(DeRecStatusNotification.StandardNotificationType notificationType) {
         secret.notifyStatus(Notification.newBuilder()
                 .secret(secret)
                 .version(this)
@@ -138,7 +138,7 @@ public class Version implements DeRecVersion {
     }
 
     synchronized public void verify() {
-        logger.trace("Starting verification {}/{}", this.secret.secretId, versionNumber);
+        logger.trace("Starting verification {}/{}", Util.asUuid(this.secret.secretId), versionNumber);
         resultCounts.put(VERIFY, new ResultCount());
         for (Share share : shares) {
             if (share.isShared) {

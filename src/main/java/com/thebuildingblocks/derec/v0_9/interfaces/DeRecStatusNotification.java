@@ -19,15 +19,26 @@ package com.thebuildingblocks.derec.v0_9.interfaces;
 
 import java.util.Optional;
 
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.NotificationSeverity.*;
+
 /**
  * A status notification may be emitted by a secret asynchronously to alert
  * an API user of changes to the status of the Secret
  */
 public interface DeRecStatusNotification {
+
+    enum NotificationSeverity {UNCLASSIFIED, NORMAL, WARNING, ERROR}
+
+    // extension point for enum below
+    interface NotificationType {
+        NotificationSeverity getDefaultSeverity();
+        String name();
+    }
+
     /**
      * The type of the notification
      */
-    Type getType();
+    NotificationType getType();
 
     /**
      * A message describing the nature of the notification
@@ -42,39 +53,40 @@ public interface DeRecStatusNotification {
     /**
      * The pairable, if any, that the udpdate refers to
      */
-    Optional<DeRecHelperStatus> getPairable();
+    Optional<DeRecHelperStatus> getHelper();
 
     /**
      * The secret this update refers to
      */
     DeRecSecret getSecret();
 
-    enum Type {
-        UPDATE_PROGRESS(false),
-        UPDATE_AVAILABLE(false), // a sufficient number of acknowledgements have been received for an update to consider it recoverable
-        UPDATE_FAILED(true),
-        UPDATE_COMPLETE(false), // all update requests have been replied to, or failed
-        VERIFY_PROGRESS(false),
-        VERIFY_AVAILABLE(false), // a sufficient number of acknowledgements have been received for verify
-        VERIFY_FAILED(true),
-        VERIFY_COMPLETE(false), // all update requests have been replied to, or failed
-        HELPER_NOT_PAIRED(true), // pairing failed
-        HELPER_INACTIVE(true), // a previously active helper has become inactive
-        HELPER_READY(false), // a helper has become active
-        HELPER_UNPAIRED(false), // an unpair action successfully completed for this helper
-        SECRET_UNAVAILABLE(true), // a secret that had previously been usable is now not usable
-        SECRET_AVAILABLE(false); // a secret is now available for use, i.e. a sufficient number of helpers can
+    NotificationSeverity getSeverity();
+
+    enum StandardNotificationType implements NotificationType{
+        UPDATE_PROGRESS(UNCLASSIFIED),
+        UPDATE_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for an update to consider it recoverable
+        UPDATE_FAILED(ERROR),
+        UPDATE_COMPLETE(NORMAL), // all update requests have been replied to, or failed
+        VERIFY_PROGRESS(UNCLASSIFIED),
+        VERIFY_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for verify
+        VERIFY_FAILED(ERROR),
+        VERIFY_COMPLETE(NORMAL), // all update requests have been replied to, or failed
+        HELPER_NOT_PAIRED(ERROR), // pairing failed
+        HELPER_INACTIVE(WARNING), // a previously active helper has become inactive
+        HELPER_READY(NORMAL), // a helper has become active
+        HELPER_UNPAIRED(NORMAL), // an unpair action successfully or unsuccessfully completed for this helper
+        SECRET_UNAVAILABLE(ERROR), // a secret that had previously been usable is now not usable
+        SECRET_AVAILABLE(NORMAL); // a secret is now available for use, i.e. a sufficient number of helpers can
         // receive updates and support recovery
 
-        public boolean isError() {
-            return error;
+        public NotificationSeverity getDefaultSeverity() {
+            return severity;
         }
 
-        final boolean error;
+        final NotificationSeverity severity;
 
-        Type(boolean error){
-            this.error = error;
+        StandardNotificationType(NotificationSeverity severity){
+            this.severity = severity;
         }
-
     }
 }

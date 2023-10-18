@@ -32,7 +32,7 @@ import java.util.function.Consumer;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus.PairingStatus.*;
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.StandardNotificationType.*;
 import static derec.message.Derecmessage.DeRecMessage.HelperMessageBody.BodyCase.*;
 import static derec.message.ResultOuterClass.StatusEnum.OK;
 
@@ -49,7 +49,7 @@ public class HelperClientResponseProcessing {
         responsesStatuses.put(PAIRRESPONSEMESSAGE,
                 new PairingResponseProcessingStatus(PAIRED, REFUSED, HELPER_READY, HELPER_NOT_PAIRED));
         responsesStatuses.put(UNPAIRRESPONSEMESSAGE,
-                new PairingResponseProcessingStatus(REMOVED, FAILED, HELPER_UNPAIRED, HELPER_INACTIVE));
+                new PairingResponseProcessingStatus(REMOVED, FAILED, HELPER_UNPAIRED, HELPER_UNPAIRED));
     }
 
     public static HelperClient pairProcessResponse(InputStream inputStream, HelperClient helperClient) {
@@ -58,7 +58,7 @@ public class HelperClientResponseProcessing {
         // handy callable notification function
         BiConsumer<Boolean, String> reporter = (b, s) -> helperClient.secret.notifyStatus(Notification.newBuilder()
                 .secret(helperClient.secret)
-                .pairable(helperClient)
+                .helper(helperClient)
                 .message(s)
                 .build(b ? processingStatus.successNotification() : processingStatus.failNotification()));
         HelperClientMessageDeserializer messageDeserializer =
@@ -81,9 +81,9 @@ public class HelperClientResponseProcessing {
         PairingResponseProcessingStatus processingStatus = responsesStatuses.get(UNPAIRRESPONSEMESSAGE);
         HelperClientMessageDeserializer messageDeserializer = HelperClientMessageDeserializer.newInstance(inputStream, UNPAIRRESPONSEMESSAGE);
         Unpair.UnpairResponseMessage message = messageDeserializer.getBody().getUnpairResponseMessage();
-        Consumer<DeRecStatusNotification.Type> reporter = (t) -> helperClient.secret.notifyStatus(Notification.newBuilder()
+        Consumer<DeRecStatusNotification.StandardNotificationType> reporter = (t) -> helperClient.secret.notifyStatus(Notification.newBuilder()
                 .secret(helperClient.secret)
-                .pairable(helperClient)
+                .helper(helperClient)
                 .message(message.getResult().getStatus() + " " + message.getResult().getMemo())
                 .build(t));
         // server failed
@@ -105,7 +105,7 @@ public class HelperClientResponseProcessing {
         // handy callable notification function
         BiConsumer<Boolean, String> reporter = (b, s) -> helperClient.secret.notifyStatus(Notification.newBuilder()
                 .secret(helperClient.secret)
-                .pairable(helperClient)
+                .helper(helperClient)
                 .message(s)
                 .build(b ? processingStatus.successNotification() : processingStatus.failNotification()));
 
@@ -168,7 +168,7 @@ public class HelperClientResponseProcessing {
      */
     private record PairingResponseProcessingStatus(DeRecHelperStatus.PairingStatus successStatus,
                                                    DeRecHelperStatus.PairingStatus failStatus,
-                                                   DeRecStatusNotification.Type successNotification,
-                                                   DeRecStatusNotification.Type failNotification) {
+                                                   DeRecStatusNotification.StandardNotificationType successNotification,
+                                                   DeRecStatusNotification.StandardNotificationType failNotification) {
     }
 }

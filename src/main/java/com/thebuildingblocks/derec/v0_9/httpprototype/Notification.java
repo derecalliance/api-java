@@ -25,16 +25,18 @@ import com.thebuildingblocks.derec.v0_9.interfaces.DeRecVersion;
 import java.util.Optional;
 
 public class Notification implements DeRecStatusNotification {
-    Type type;
+    StandardNotificationType type;
     String message = "";
     DeRecVersion version;
-    DeRecHelperStatus pairable;
+
+    NotificationSeverity severity = NotificationSeverity.UNCLASSIFIED;
+    DeRecHelperStatus helper;
     DeRecSecret secret;
 
     private Notification() {}
 
     @Override
-    public Type getType() {
+    public NotificationType getType() {
         return type;
     }
 
@@ -49,8 +51,16 @@ public class Notification implements DeRecStatusNotification {
     }
 
     @Override
-    public Optional<DeRecHelperStatus> getPairable() {
-        return Optional.ofNullable(pairable);
+    public Optional<DeRecHelperStatus> getHelper() {
+        return Optional.ofNullable(helper);
+    }
+
+    @Override
+    public NotificationSeverity getSeverity() {
+        if (severity.equals(NotificationSeverity.UNCLASSIFIED)) {
+            return getType().getDefaultSeverity();
+        }
+        return severity;
     }
 
     @Override
@@ -74,7 +84,7 @@ public class Notification implements DeRecStatusNotification {
             return this;
         }
 
-        public Builder type(Type type) {
+        public Builder type(StandardNotificationType type) {
             notification.type = type;
             return this;
         }
@@ -84,8 +94,13 @@ public class Notification implements DeRecStatusNotification {
             return this;
         }
 
-        public Builder pairable(DeRecHelperStatus pairable) {
-            notification.pairable = pairable;
+        public Builder helper(DeRecHelperStatus helper) {
+            notification.helper = helper;
+            return this;
+        }
+
+        public Builder severity(NotificationSeverity severity) {
+            notification.severity = severity;
             return this;
         }
 
@@ -98,7 +113,7 @@ public class Notification implements DeRecStatusNotification {
             return notification;
         }
 
-        public Notification build(Type type){
+        public Notification build(StandardNotificationType type){
             return this.type(type).build();
         }
     }

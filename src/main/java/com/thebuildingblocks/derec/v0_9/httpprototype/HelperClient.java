@@ -45,7 +45,7 @@ import static com.thebuildingblocks.derec.v0_9.httpprototype.HelperClientRespons
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus.PairingStatus.*;
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.Type.*;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.StandardNotificationType.*;
 
 /**
  * Sharer's view of a helper for a single secret, there will be multiple entries for the
@@ -67,7 +67,7 @@ public class HelperClient implements DeRecHelperStatus, Closeable {
     // a filtered view of secret.versions for this helper
     NavigableMap<Integer, Version.Share> shares = Collections.synchronizedNavigableMap(new TreeMap<>());
     CompletableFuture<HelperClient> pairingFuture; // awaits completion of pairing or unpairing
-    BiConsumer<DeRecStatusNotification.Type, String> notifier;
+    BiConsumer<DeRecStatusNotification.StandardNotificationType, String> notifier;
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     HelperClient(Secret secret, DeRecHelperInfo helperId, HttpClient httpClient, Util.RetryParameters retryParameters) {
@@ -77,7 +77,7 @@ public class HelperClient implements DeRecHelperStatus, Closeable {
         this.retryParameters = retryParameters;
         this.notifier = (t, s) -> this.secret.notifyStatus(Notification.newBuilder()
                         .secret(secret)
-                        .pairable(this)
+                        .helper(this)
                         .message(s)
                         .build(t));
     }
@@ -206,7 +206,7 @@ public class HelperClient implements DeRecHelperStatus, Closeable {
                 .thenApply(r -> unPairProcessResponse(r, this))
                 .exceptionally(t -> {
                     this.status = FAILED;
-                    notifier.accept(HELPER_NOT_PAIRED, getMessageForException(t));
+                    notifier.accept(HELPER_UNPAIRED, getMessageForException(t));
                     return this;
                 });
     }
