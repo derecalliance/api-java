@@ -51,7 +51,7 @@ public interface DeRecStatusNotification {
     Optional<DeRecVersion> getVersion();
 
     /**
-     * The pairable, if any, that the udpdate refers to
+     * The helper, if any, that the update refers to
      */
     Optional<DeRecHelperStatus> getHelper();
 
@@ -74,6 +74,10 @@ public interface DeRecStatusNotification {
         VERIFY_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for verify
         VERIFY_FAILED(ERROR),
         VERIFY_COMPLETE(NORMAL), // all update requests have been replied to, or failed
+        RECOVERY_PROGRESS(UNCLASSIFIED),
+        RECOVERY_AVAILABLE(NORMAL), // a sufficient number of responses have been received to reconstruct secret
+        RECOVERY_FAILED(ERROR), // the secret cannot be recovered at the present time
+        RECOVERY_COMPLETE(NORMAL), // all  requests have been replied to, or failed
         HELPER_PAIRED(NORMAL), // helper accepted a pair request
         HELPER_NOT_PAIRED(ERROR), // pairing failed
         HELPER_UNHEALTHY(WARNING), // a healthy helper has become unhealthy

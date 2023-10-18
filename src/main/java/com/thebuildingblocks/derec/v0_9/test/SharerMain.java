@@ -53,7 +53,7 @@ public class SharerMain {
                 .notificationListener(this::logNotification)
                 .build();
         // get a secret
-        logger.info("Building a secret, wait for it to be available");
+        logger.info("Building a secret, wait for it to be recoverable");
         DeRecSecret secret = me.newSecret("Martin Luther", "I have a dream".getBytes(StandardCharsets.UTF_8),
                 Arrays.asList(DEFAULT_IDS));
         // get last version shared - in this case the first version shared
