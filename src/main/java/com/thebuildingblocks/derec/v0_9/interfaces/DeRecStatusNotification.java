@@ -60,6 +60,9 @@ public interface DeRecStatusNotification {
      */
     DeRecSecret getSecret();
 
+    /**
+     * The severity of the notification
+     */
     NotificationSeverity getSeverity();
 
     enum StandardNotificationType implements NotificationType{
@@ -71,9 +74,10 @@ public interface DeRecStatusNotification {
         VERIFY_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for verify
         VERIFY_FAILED(ERROR),
         VERIFY_COMPLETE(NORMAL), // all update requests have been replied to, or failed
+        HELPER_PAIRED(NORMAL), // helper accepted a pair request
         HELPER_NOT_PAIRED(ERROR), // pairing failed
-        HELPER_INACTIVE(WARNING), // a previously active helper has become inactive
-        HELPER_READY(NORMAL), // a helper has become active
+        HELPER_UNHEALTHY(WARNING), // a healthy helper has become unhealthy
+        HELPER_HEALTHY(NORMAL), // an unhealthy helper has become healthy
         HELPER_UNPAIRED(NORMAL), // an unpair action successfully or unsuccessfully completed for this helper
         SECRET_UNAVAILABLE(ERROR), // a secret that had previously been usable is now not usable
         SECRET_AVAILABLE(NORMAL); // a secret is now available for use, i.e. a sufficient number of helpers can

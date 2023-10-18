@@ -47,7 +47,7 @@ public class HelperClientResponseProcessing {
 
     static {
         responsesStatuses.put(PAIRRESPONSEMESSAGE,
-                new PairingResponseProcessingStatus(PAIRED, REFUSED, HELPER_READY, HELPER_NOT_PAIRED));
+                new PairingResponseProcessingStatus(PAIRED, REFUSED, HELPER_PAIRED, HELPER_NOT_PAIRED));
         responsesStatuses.put(UNPAIRRESPONSEMESSAGE,
                 new PairingResponseProcessingStatus(REMOVED, FAILED, HELPER_UNPAIRED, HELPER_UNPAIRED));
     }
