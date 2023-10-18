@@ -73,7 +73,7 @@ public class Secret implements Closeable, DeRecSecret {
      * @param helperIds the ids of the helpers to add
      */
     @Override
-    public void addHelpers(List<? extends DeRecId> helperIds) {
+    public void addHelpers(List<? extends DeRecHelperInfo> helperIds) {
         // block for completion
         List<CompletableFuture<? extends DeRecHelperStatus>> futures = addHelpersAsync(helperIds);
         try {
@@ -98,12 +98,12 @@ public class Secret implements Closeable, DeRecSecret {
      * @return a list of {@link Future<HelperClient>} for helpers created and added
      */
     @Override
-    public List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecId> helperIds) {
+    public List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecHelperInfo> helperIds) {
         if (isClosed()) {
             throw new IllegalStateException("Cannot add helpers to closed secret");
         }
         List<CompletableFuture<? extends DeRecHelperStatus>> addedHelpers = new ArrayList<>();
-        for (DeRecId helperId: helperIds) {
+        for (DeRecHelperInfo helperId: helperIds) {
             HelperClient helper = new HelperClient(this, helperId, httpClient, this.retryParameters);
             // todo other helper configuration, timeouts, etc.
             if (helpers.contains(helper)) {
@@ -119,7 +119,7 @@ public class Secret implements Closeable, DeRecSecret {
     }
 
     @Override
-    public void removeHelpers(List<? extends DeRecId> helperIds) {
+    public void removeHelpers(List<? extends DeRecHelperInfo> helperIds) {
         // update status of to-be-removed helpers
         // figure out the remaining threshold and re-share to those that remain
         // notify the removed helpers that they are removed

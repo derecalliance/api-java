@@ -32,7 +32,7 @@ public interface DeRecSharer {
      * @param helperIds      the ids of helpers for this secret
      * @return a secret
      */
-    DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecId> helperIds);
+    DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecHelperInfo> helperIds);
 
     /**
      * Create a new secret.
@@ -43,7 +43,7 @@ public interface DeRecSharer {
      * @param helperIds      the ids of helpers for this secret
      * @return a secret
      */
-    DeRecSecret newSecret(byte[] secretId, String description, byte[] bytesToProtect, List<DeRecId> helperIds);
+    DeRecSecret newSecret(byte[] secretId, String description, byte[] bytesToProtect, List<DeRecHelperInfo> helperIds);
 
     /**
      * Get the secret with this UUID, return null if none with this ID

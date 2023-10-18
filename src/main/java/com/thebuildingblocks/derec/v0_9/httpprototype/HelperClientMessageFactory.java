@@ -18,10 +18,9 @@
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
 import com.google.protobuf.ByteString;
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperInfo;
 import derec.message.Derecmessage.DeRecMessage.SharerMessageBody;
 
-import static com.thebuildingblocks.derec.v0_9.httpprototype.Cryptography.messageDigest;
 import static derec.message.Communicationinfo.*;
 import static derec.message.Derecmessage.*;
 import static derec.message.Derecmessage.DeRecMessage.*;
@@ -35,7 +34,7 @@ import static derec.message.Verify.*;
  */
 public class HelperClientMessageFactory {
 
-    public static SharerMessageBody getPairRequestMessageBody (DeRecId deRecId) {
+    public static SharerMessageBody getPairRequestMessageBody (DeRecHelperInfo deRecId) {
         return SharerMessageBody.newBuilder()
                 .setPairRequestMessage(PairRequestMessage.newBuilder()
                         .setCommunicationInfo(CommunicationInfo.newBuilder()

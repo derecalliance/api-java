@@ -21,7 +21,7 @@ package com.thebuildingblocks.derec.v0_9.interfaces;
  * Representation of a helper as perceived by a sharer
  */
 public interface DeRecHelperStatus {
-    DeRecId getId();
+    DeRecHelperInfo getId();
 
     PairingStatus getStatus();
 

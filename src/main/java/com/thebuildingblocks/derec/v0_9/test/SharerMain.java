@@ -24,11 +24,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
 import java.util.Arrays;
 import java.util.Scanner;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Cryptography.keyPairGenerator;
 import static com.thebuildingblocks.derec.v0_9.test.TestIds.DEFAULT_IDS;
+import static com.thebuildingblocks.derec.v0_9.test.TestIds.pemFrom;
 
 /**
  * Illustration of use of classes
@@ -41,9 +43,12 @@ public class SharerMain {
     }
 
     public void run() {
+
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        String pem = pemFrom(keyPair.getPublic());
         // build a sharer
         Sharer me = Sharer.newBuilder()
-                .id(new DeRecId("Secret Sammy", "mailto:test@example.org", null))
+                .id(new DeRecHelperInfo("Secret Sammy", "mailto:test@example.org", null, pem))
                 .keyPair(keyPairGenerator.generateKeyPair())
                 .notificationListener(this::logNotification)
                 .build();

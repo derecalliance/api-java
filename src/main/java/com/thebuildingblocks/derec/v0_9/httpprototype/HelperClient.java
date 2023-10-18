@@ -17,7 +17,7 @@
 
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperInfo;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperStatus;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class HelperClient implements DeRecHelperStatus, Closeable {
     public final Secret secret; // the secret this helper is a helper for
     private final Util.RetryParameters retryParameters;
     private final HttpClient httpClient;
-    private final DeRecId helperId; // unique Id for helper
+    private final DeRecHelperInfo helperId; // unique Id for helper
     URI tsAndCs;    // link to legal conditions regarding what the helper is to do about
     // authentication for recovery and substitution of sharer
     PublicKey publicKey; // public key for the helper (for this secret)
@@ -70,7 +70,7 @@ public class HelperClient implements DeRecHelperStatus, Closeable {
     BiConsumer<DeRecStatusNotification.Type, String> notifier;
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    HelperClient(Secret secret, DeRecId helperId, HttpClient httpClient, Util.RetryParameters retryParameters) {
+    HelperClient(Secret secret, DeRecHelperInfo helperId, HttpClient httpClient, Util.RetryParameters retryParameters) {
         this.secret = secret;
         this.helperId = helperId;
         this.httpClient = httpClient;
@@ -223,7 +223,7 @@ public class HelperClient implements DeRecHelperStatus, Closeable {
     }
 
     @Override
-    public DeRecId getId() {
+    public DeRecHelperInfo getId() {
         return helperId;
     }
 

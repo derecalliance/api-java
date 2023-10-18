@@ -17,7 +17,7 @@
 
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperInfo;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSharer;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 
@@ -33,7 +33,7 @@ public class Sharer implements DeRecSharer{
     public static int defaultHelpersRequiredForDeletion = 4; // number of helpers that need to confirm a new share
 
     private final Map<byte[], Secret> secrets; // a map of secret id to each secret that the sharer wishes to share
-    public DeRecId id; // sharer's id
+    public DeRecHelperInfo id; // sharer's id
     public KeyPair keyPair; // public/private key pair
     // before deleting an old share
     public X509Certificate certificate; // certificate to use
@@ -53,7 +53,7 @@ public class Sharer implements DeRecSharer{
      * @return a new secret
      */
     @Override
-    public Secret newSecret(String description, byte[] bytesToProtect, List<DeRecId> helperIds) {
+    public Secret newSecret(String description, byte[] bytesToProtect, List<DeRecHelperInfo> helperIds) {
         UUID secretId = UUID.randomUUID();
         return newSecret(Util.asBytes(secretId), description, bytesToProtect, helperIds);
     }
@@ -66,7 +66,7 @@ public class Sharer implements DeRecSharer{
      * @return a newly shared secret
      */
     @Override
-    public Secret newSecret(byte[] secretId, String description, byte[] bytesToProtect, List<DeRecId> helperIds) {
+    public Secret newSecret(byte[] secretId, String description, byte[] bytesToProtect, List<DeRecHelperInfo> helperIds) {
         if (secrets.containsKey(secretId)) {
             throw new IllegalStateException("Secret with that Id already exists");
         }
@@ -111,7 +111,7 @@ public class Sharer implements DeRecSharer{
     public static class Builder {
         private final Sharer sharer = new Sharer();
 
-        public Builder id(DeRecId id) {
+        public Builder id(DeRecHelperInfo id) {
             sharer.id = id;
             return this;
         }

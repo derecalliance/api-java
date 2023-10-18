@@ -17,33 +17,45 @@
 
 package com.thebuildingblocks.derec.v0_9.test;
 
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
-import derec.message.Derecmessage;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperInfo;
 
 import java.security.KeyPair;
+import java.security.PublicKey;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Cryptography.keyPairGenerator;
 
 public class TestIds {
-    public static DeRecId[] DEFAULT_IDS = {
-            new DeRecId("leemon", "mailto:leemon@swirldslabs.com", "http://localhost:8080/leemon"),
-            new DeRecId("rohit", "mailto:rohit@swirldslabs.com", "http://localhost:8080/rohit"),
-            new DeRecId("dipti", "mailto:dipti@swirldslabs.com", "http://localhost:8080/dipti"),
-            new DeRecId("cate", "mailto:cate@swirldslabs.com", "http://localhost:8080/cate"),
-            new DeRecId("jo", "mailto:jo@thebuildingblocks.com", "http://localhost:8080/jo"),
-            new DeRecId("niall", "mailto:niall@thebuildingblocks.com", "http://localhost:8080/niall"),
-            new DeRecId("daniel", "mailto:daniel@thebuildingblocks.com", "http://localhost:8080/daniel"),
-            new DeRecId("noone", "mailto:noone@thebuildingblocks.com", "http://localhost:8080/noone"),
-            new DeRecId("nowhere", "mailto:nowhere@thebuildingblocks.com", "http://192.168.1.40/nowhere"),
-    };
+
+    public static String[] helperNames = {"leemon", "rohit", "dipti", "cate", "jo", "niall", "daniel", "noone", "nowhere"};
 
     public static Map<String, KeyPair> DEFAULT_KEYPAIRS = new HashMap<>();
 
     static {
-        for (DeRecId id: DEFAULT_IDS) {
-            DEFAULT_KEYPAIRS.put(id.getName(), keyPairGenerator.generateKeyPair());
+        for (String name: helperNames) {
+            DEFAULT_KEYPAIRS.put(name, keyPairGenerator.generateKeyPair());
         }
     }
+
+    private static String pem(String name){
+        return Base64.getEncoder().encodeToString(DEFAULT_KEYPAIRS.get(name).getPublic().getEncoded());
+    }
+
+    public static String pemFrom(PublicKey publicKey) {
+        return Base64.getEncoder().encodeToString(publicKey.getEncoded());
+    }
+    public static DeRecHelperInfo[] DEFAULT_IDS = {
+            new DeRecHelperInfo("leemon", "mailto:leemon@swirldslabs.com", "http://localhost:8080/leemon", pem("leemon")),
+            new DeRecHelperInfo("rohit", "mailto:rohit@swirldslabs.com", "http://localhost:8080/rohit", pem("rohit")),
+            new DeRecHelperInfo("dipti", "mailto:dipti@swirldslabs.com", "http://localhost:8080/dipti", pem("dipti")),
+            new DeRecHelperInfo("cate", "mailto:cate@swirldslabs.com", "http://localhost:8080/cate", pem("cate")),
+            new DeRecHelperInfo("jo", "mailto:jo@thebuildingblocks.com", "http://localhost:8080/jo", pem("jo")),
+            new DeRecHelperInfo("niall", "mailto:niall@thebuildingblocks.com", "http://localhost:8080/niall", pem("niall")),
+            new DeRecHelperInfo("daniel", "mailto:daniel@thebuildingblocks.com", "http://localhost:8080/daniel", pem("daniel")),
+            new DeRecHelperInfo("noone", "mailto:noone@thebuildingblocks.com", "http://localhost:8080/noone", pem("noone")),
+            new DeRecHelperInfo("nowhere", "mailto:nowhere@thebuildingblocks.com", "http://192.168.1.40/nowhere", pem("nowhere")),
+    };
+
 }

@@ -17,7 +17,7 @@
 
 package com.thebuildingblocks.derec.v0_9.httpprototype;
 
-import com.thebuildingblocks.derec.v0_9.interfaces.DeRecId;
+import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperInfo;
 
 import java.net.URI;
 import java.security.KeyPair;
@@ -34,7 +34,7 @@ public class HelperServer {
      * Placeholder for information a helper knows about itself
      */
     public static class HelperModel {
-        DeRecId id; // helper's Id
+        DeRecHelperInfo id; // helper's Id
         KeyPair keyPair; // public/private key pair
         X509Certificate certificate; // certificate to use
         URI address; // my transport address
@@ -46,7 +46,7 @@ public class HelperServer {
          * Information a helper know about a sharer
          */
         public static class Sharer {
-            DeRecId sharerId; // sharer unique id
+            DeRecHelperInfo sharerId; // sharer unique id
             URI sharerAddress; // sharer transport address
             PublicKey publicKey; // sharer's public key
             URI tsAndCs;    // link to legal conditions regarding what the helper is to do about
