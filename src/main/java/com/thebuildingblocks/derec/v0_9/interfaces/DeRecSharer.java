@@ -17,7 +17,10 @@
 
 package com.thebuildingblocks.derec.v0_9.interfaces;
 
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * A factory for and container of Secrets in this API
@@ -59,4 +62,17 @@ public interface DeRecSharer {
      * @return a list
      */
     List<? extends DeRecSecret> getSecrets();
+
+    /**
+     * Provide a "listener" for status and lifecycle event notifications relating to this sharer's secrets.
+     * <p>
+     * Note: More than one listener may be provided by composition such as:
+     * <p>
+     * <pre>{@code
+     * Consumer<DeRecStatusNotification> listener1 = n -> log(n.getType().name());
+     * Consumer<DeRecStatusNotification> listener2 = n -> {if (n.getSeverity().equals(ERROR)) alert(n.getType().name());};
+     * sharer.setListener(listener1.andThen(listener2));
+     * }</pre>
+     */
+    void setListener(Consumer<DeRecStatusNotification> listener);
 }

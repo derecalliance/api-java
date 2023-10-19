@@ -96,6 +96,11 @@ public class Sharer implements DeRecSharer{
         return secrets.values().stream().toList();
     }
 
+    @Override
+    public void setListener(Consumer<DeRecStatusNotification> listener) {
+        this.listener = listener;
+    }
+
     public void close() {
         for (Secret secret: secrets.values()) {
             secret.close();
