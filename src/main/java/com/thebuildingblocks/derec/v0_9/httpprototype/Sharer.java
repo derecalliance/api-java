@@ -46,6 +46,9 @@ public class Sharer implements DeRecSharer{
         secrets = new HashMap<>();
     }
 
+    public Secret newSecret(String description, byte[] bytesToProtect) {
+        return newSecret(description, bytesToProtect, Collections.emptyList());
+    }
     /**
      * Create a new secret with a random UUID as identifier
      *
@@ -56,6 +59,10 @@ public class Sharer implements DeRecSharer{
     public Secret newSecret(String description, byte[] bytesToProtect, List<DeRecHelperInfo> helperIds) {
         UUID secretId = UUID.randomUUID();
         return newSecret(Util.asBytes(secretId), description, bytesToProtect, helperIds);
+    }
+
+    public Secret newSecret(byte[] secretId, String description, byte[] bytesToProtect) {
+        return newSecret(secretId, description, bytesToProtect, Collections.emptyList());
     }
 
     /**

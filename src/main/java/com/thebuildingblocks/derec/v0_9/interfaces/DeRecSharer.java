@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 public interface DeRecSharer {
 
     /**
-     * Create a new secret and auto-allocate its ID
+     * Create a new secret and auto-allocate its ID. Block till pairing concludes.
      *
      * @param description    a human readable description
      * @param bytesToProtect the content of the secret
@@ -38,7 +38,7 @@ public interface DeRecSharer {
     DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecHelperInfo> helperIds);
 
     /**
-     * Create a new secret.
+     * Create a new secret. Block till pairing concludes.
      *
      * @param secretId       1 to 16 bytes that uniquely identify this secret for this sharer
      * @param description    a human readable description
@@ -47,6 +47,25 @@ public interface DeRecSharer {
      * @return a secret
      */
     DeRecSecret newSecret(byte[] secretId, String description, byte[] bytesToProtect, List<DeRecHelperInfo> helperIds);
+
+    /**
+     * Create a new secret for later addition of helpers. AutoAllocate its ID.
+     *
+     * @param description    a human readable description
+     * @param bytesToProtect the content of the secret
+     * @return a secret
+     */
+    DeRecSecret newSecret(String description, byte[] bytesToProtect);
+
+    /**
+     * Create a new secret for later addition of helpers.
+     *
+     * @param secretId       1 to 16 bytes that uniquely identify this secret for this sharer
+     * @param description    a human readable description
+     * @param bytesToProtect the content of the secret
+     * @return a secret
+     */
+    DeRecSecret newSecret(byte[] secretId, String description, byte[] bytesToProtect);
 
     /**
      * Get the secret with this UUID, return null if none with this ID

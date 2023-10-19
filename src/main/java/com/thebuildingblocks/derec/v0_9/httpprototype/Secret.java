@@ -29,6 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Sharer.defaultRetryParameters;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.NotificationSeverity.ERROR;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.StandardNotificationType.UPDATE_FAILED;
 
 /**
  * Implements the idea of Helper Controller, which coordinates helpers in respect of a single secret
@@ -148,10 +150,17 @@ public class Secret implements Closeable, DeRecSecret {
     public DeRecVersion update(byte[] bytesToProtect) {
         try {
             logger.trace("Waiting for update future");
-            return updateAsync(bytesToProtect).get();
+            return updateAsync(bytesToProtect).get(retryParameters.timeout.getSeconds(), TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            notifyStatus(Notification.newBuilder()
+                    .secret(this)
+                    .message("Update timed out")
+                    .severity(ERROR)
+                    .build(UPDATE_FAILED));
         }
+        return versions.lastEntry().getValue();
     }
 
     @Override
@@ -192,14 +201,19 @@ public class Secret implements Closeable, DeRecSecret {
         // get a list of helpers thought to be active
         List<HelperClient> pairedHelpers = helpers.stream().filter(h -> h.status.equals(DeRecHelperStatus.PairingStatus.PAIRED)).toList();
         if (pairedHelpers.size() < thresholdSecretRecovery) {
-            throw new IllegalStateException(String.format("Not enough helpers %d", pairedHelpers.size()));
+            notifyStatus(Notification.newBuilder()
+                    .secret(this)
+                    .type(DeRecStatusNotification.StandardNotificationType.SECRET_UNAVAILABLE)
+                    .severity(ERROR)
+                    .message(String.format("Not enough helpers - %d paired, % d needed", pairedHelpers.size(), thresholdSecretRecovery))
+                    .build());
         }
 
         // go to next version number
         int versionNumber = latestShareVersion.incrementAndGet();
-        Version version = new Version(this, versionNumber, newDescription);
+        Version version = new Version(this, bytesToProtect, versionNumber, newDescription);
         this.versions.put(versionNumber, version);
-        version.share(bytesToProtect, this.thresholdSecretRecovery, pairedHelpers);
+        version.share(this.thresholdSecretRecovery, pairedHelpers);
         return version.future;
     }
 

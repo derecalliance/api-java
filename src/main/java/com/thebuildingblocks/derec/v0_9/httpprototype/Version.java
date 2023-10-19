@@ -31,6 +31,8 @@ import java.util.stream.IntStream;
 
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.SHARE;
 import static com.thebuildingblocks.derec.v0_9.httpprototype.Version.ResultType.VERIFY;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.NotificationSeverity.NORMAL;
+import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.NotificationSeverity.WARNING;
 import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.StandardNotificationType.*;
 
 
@@ -61,10 +63,11 @@ public class Version implements DeRecVersion {
     SecureRandom random = new SecureRandom();
 
 
-    Version(Secret secret, int versionNumber, String description) {
+    Version(Secret secret, byte[] bytesToProtect, int versionNumber, String description) {
         this.versionNumber = versionNumber;
         this.secret = secret;
         this.description = description;
+        this.protectedValue = bytesToProtect;
         for (ResultType r : ResultType.values()) {
             resultCounts.put(r, new ResultCount());
         }
@@ -85,11 +88,12 @@ public class Version implements DeRecVersion {
         return protectedValue;
     }
 
-    void notifyStatus(DeRecStatusNotification.StandardNotificationType notificationType, HelperClient helper, String message) {
+    void notifyStatus(DeRecStatusNotification.StandardNotificationType notificationType, HelperClient helper, boolean success, String message) {
         secret.notifyStatus(Notification.newBuilder()
                 .secret(secret)
                 .version(this)
                 .helper(helper)
+                .severity(success ? NORMAL : WARNING )
                 .message(message)
                 .build(notificationType));
     }
@@ -100,6 +104,14 @@ public class Version implements DeRecVersion {
                 .version(this)
                 .build(notificationType));
     }
+    void notifyStatus(DeRecStatusNotification.StandardNotificationType notificationType, String message) {
+        secret.notifyStatus(Notification.newBuilder()
+                .secret(secret)
+                .version(this)
+                .message(message)
+                .build(notificationType));
+    }
+
 
     @Override
     public boolean isProtected() {
@@ -111,16 +123,15 @@ public class Version implements DeRecVersion {
         return IntStream.range(0, numShares).mapToObj(i -> new Share(bytesToProtect, this)).toList();
     }
 
-    public void share(byte[] bytesToProtect, int recombinationThreshold, List<HelperClient> pairedHelpers) {
-        if (Objects.isNull(bytesToProtect)) {
-            throw new IllegalArgumentException("Bytes to protect is null");
+    public void share(int recombinationThreshold, List<HelperClient> pairedHelpers) {
+        if (Objects.isNull(protectedValue)) {
+            throw new IllegalArgumentException("There are no bytes to protect");
         }
-        if (Objects.nonNull(protectedValue)) {
+        this.recombinationThreshold = recombinationThreshold;
+        if (Objects.nonNull(shares)) {
             throw new IllegalStateException("A version must only be shared once");
         }
-        this.protectedValue = bytesToProtect;
-        this.recombinationThreshold = recombinationThreshold;
-        this.shares = createShares(bytesToProtect, recombinationThreshold, pairedHelpers.size());
+        this.shares = createShares(protectedValue, recombinationThreshold, pairedHelpers.size());
         Iterator<Share> shareIterator = this.shares.iterator();
         Iterator<HelperClient> helperIterator = pairedHelpers.iterator();
         while (shareIterator.hasNext()) {
@@ -153,11 +164,14 @@ public class Version implements DeRecVersion {
                 }
             }
         }
+        if (resultCounts.get(VERIFY).requestsSent == 0) {
+            notifyStatus(VERIFY_FAILED, "There are no helpers");
+        }
     }
 
     synchronized private void processResult(Result latestUpdate) {
         notifyStatus(latestUpdate.resultType.equals(SHARE) ? UPDATE_PROGRESS : VERIFY_PROGRESS,
-                latestUpdate.share.helper, latestUpdate.message);
+                latestUpdate.share.helper, latestUpdate.success, latestUpdate.message);
 
         ResultCount resultCounter = resultCounts.get(latestUpdate.resultType);
 
