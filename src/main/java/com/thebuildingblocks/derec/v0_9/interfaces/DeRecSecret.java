@@ -59,6 +59,13 @@ public interface DeRecSecret extends Closeable {
     void removeHelpers(List<? extends DeRecHelperInfo> helperIds);
 
     /**
+     * Remove helpers from this secret asynchronously
+     *
+     * @param helperIds a list of futures for each of the helpers
+     */
+    List<CompletableFuture<? extends DeRecHelperStatus>> removeHelpersAsync(List<? extends DeRecHelperInfo> helperIds);
+
+    /**
      * Update a secret synchronously blocking till the outcome (success or fail) is known.
      *
      * @param bytesToProtect the bytes of the update
@@ -93,6 +100,13 @@ public interface DeRecSecret extends Closeable {
     Future<? extends DeRecVersion> updateAsync(byte[] bytesToProtect, String description);
 
     /**
+     * The unique id of the secret
+     *
+     * @return the id - 1 to 16 bytes that uniquely identify this secret for this sharer
+     */
+    byte[] getSecretId();
+
+    /**
      * get a list of versions of the secret
      *
      * @return a {@link NavigableMap} of versions
@@ -114,14 +128,12 @@ public interface DeRecSecret extends Closeable {
     boolean isClosed();
 
     /**
-     * The unique id of the secret
-     *
-     * @return the id - 1 to 16 bytes that uniquely identify this secret for this sharer
+     * Close the secret asynchronously.
      */
-    byte[] getSecretId();
+    CompletableFuture<? extends DeRecSecret> closeAsync();
 
     /**
-     * Gracefully shut down the secret, i.e. unpair from all helpers.
+     * Gracefully shut down the secret, i.e. unpair from all helpers. Blocks till complete.
      */
     @Override
     void close();

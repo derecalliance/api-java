@@ -123,6 +123,16 @@ public class Secret implements Closeable, DeRecSecret {
         // update status of to-be-removed helpers
         // figure out the remaining threshold and re-share to those that remain
         // notify the removed helpers that they are removed
+        // TODO
+    }
+
+    @Override
+    public List<CompletableFuture<? extends DeRecHelperStatus>> removeHelpersAsync(List<? extends DeRecHelperInfo> helperIds) {
+        // update status of to-be-removed helpers
+        // figure out the remaining threshold and re-share to those that remain
+        // notify the removed helpers that they are removed
+        // TODO
+        throw new UnsupportedOperationException();
     }
 
 
@@ -196,6 +206,25 @@ public class Secret implements Closeable, DeRecSecret {
     @Override
     public NavigableMap<Integer, ? extends DeRecVersion> getVersions() {
         return versions;
+    }
+
+    /**
+     * Cancel all outstanding requests, unpair with all helpers and deactivate
+     */
+    @Override
+    public CompletableFuture<Secret> closeAsync() {
+        closed = true;
+        for (Version version: versions.values()) {
+            version.close();
+        }
+        List<CompletableFuture<? extends DeRecHelperStatus>> removedHelpers = new ArrayList<>();
+        for (HelperClient helperClient: this.helpers) {
+            // TODO helper.closeAsync();
+            helperClient.unPair("Closing down");
+            removedHelpers.add(helperClient.pairingFuture);
+        }
+        return CompletableFuture.allOf(removedHelpers.toArray(new CompletableFuture[0]))
+                .thenApply(a -> this);
     }
 
     /**
