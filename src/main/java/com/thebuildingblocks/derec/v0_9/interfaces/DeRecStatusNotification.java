@@ -66,13 +66,13 @@ public interface DeRecStatusNotification {
     NotificationSeverity getSeverity();
 
     enum StandardNotificationType implements NotificationType{
-        UPDATE_PROGRESS(UNCLASSIFIED),
+        UPDATE_PROGRESS(UNCLASSIFIED),  // a vehicle for saying things about an update
         UPDATE_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for an update to consider it recoverable
-        UPDATE_FAILED(ERROR),
+        UPDATE_FAILED(ERROR), // update can't reach quorum
         UPDATE_COMPLETE(NORMAL), // all update requests have been replied to, or failed
-        VERIFY_PROGRESS(UNCLASSIFIED),
+        VERIFY_PROGRESS(UNCLASSIFIED), // a vehicle for saying things about a verification
         VERIFY_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for verify
-        VERIFY_FAILED(ERROR),
+        VERIFY_FAILED(ERROR), // verification can't reach quorum
         VERIFY_COMPLETE(NORMAL), // all update requests have been replied to, or failed
         RECOVERY_PROGRESS(UNCLASSIFIED),
         RECOVERY_AVAILABLE(NORMAL), // a sufficient number of responses have been received to reconstruct secret
