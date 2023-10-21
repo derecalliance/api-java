@@ -55,7 +55,7 @@ public class HelperClientMessageFactory {
     public static SharerMessageBody getShareRequestMessageBody (Version.Share share) {
         ByteString bytes = DeRecShare.newBuilder()
                 .setVersion(share.version.versionNumber)
-                .setSecretId(ByteString.copyFrom(share.version.secret.secretId))
+                .setSecretId(ByteString.copyFrom(share.version.secret.getSecretId()))
                 .build()
                 .toByteString();
         return SharerMessageBody.newBuilder()

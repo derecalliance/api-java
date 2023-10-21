@@ -17,8 +17,10 @@
 
 package com.thebuildingblocks.derec.v0_9.test;
 
+import com.thebuildingblocks.derec.v0_9.httpprototype.Secret;
 import com.thebuildingblocks.derec.v0_9.httpprototype.Sharer;
 import com.thebuildingblocks.derec.v0_9.httpprototype.Util;
+import com.thebuildingblocks.derec.v0_9.httpprototype.Version;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecHelperInfo;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecSecret;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
@@ -58,9 +60,9 @@ public class SharerMain2 {
                 .build();
         // get a secret
         logger.info("Building a secret, no helpers yet");
-        DeRecSecret secret = me.newSecret("Martin Luther", "I have a dream".getBytes(StandardCharsets.UTF_8));
+        Secret secret = me.newSecret("Martin Luther", "I have a dream".getBytes(StandardCharsets.UTF_8));
         // get last version shared - in this case the first version shared
-        DeRecVersion v = secret.getVersions().lastEntry().getValue();
+        Version v = (Version) secret.getVersions().lastEntry().getValue();
         logger.info("Secret version: {}, is protected: {}", v.getVersionNumber(), v.isProtected());
 
         for (DeRecHelperInfo helperInfo: DEFAULT_IDS) {
@@ -74,7 +76,7 @@ public class SharerMain2 {
         v = secret.update("I have another dream".getBytes(StandardCharsets.UTF_8));
         logger.info("Secret version: {}, is protected {}", v.getVersionNumber(), v.isProtected());
 
-        logger.info("Closing secret {}", secret.getSecretId());
+        logger.info("Closing secret {}", secret.getSecretIdAsUuid());
         // dispose of it
         secret.close();
 

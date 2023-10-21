@@ -17,6 +17,7 @@
 
 package com.thebuildingblocks.derec.v0_9.test;
 
+import com.thebuildingblocks.derec.v0_9.httpprototype.Secret;
 import com.thebuildingblocks.derec.v0_9.httpprototype.Util;
 import com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification;
 import org.slf4j.Logger;
@@ -36,14 +37,15 @@ public class Notifier {
     static void logNotification(DeRecStatusNotification t) {
         String v = t.getVersion().isEmpty() ? "" : "/" + t.getVersion().get().getVersionNumber();
         String p = t.getHelper().isEmpty() ? "" : "/" + t.getHelper().get().getId().getName();
+        Secret s = ((Secret) t.getSecret());
         String color = switch (t.getSeverity()) {
-            case UNCLASSIFIED -> ANSI_GREEN;
-            case NORMAL -> ANSI_BLUE;
+            case UNCLASSIFIED -> ANSI_BLUE;
+            case NORMAL -> ANSI_GREEN;
             case WARNING -> ANSI_YELLOW;
             case ERROR -> ANSI_RED;
         };
         logger.info("{}{} {} {}{} {}\u001B[0m", color, t.getType(), p,
-                Util.asUuid(t.getSecret().getSecretId()), v, t.getMessage());
+                s.getSecretIdAsUuid(), v, t.getMessage());
     }
 
 }

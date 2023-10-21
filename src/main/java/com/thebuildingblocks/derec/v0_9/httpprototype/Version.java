@@ -149,7 +149,7 @@ public class Version implements DeRecVersion {
     }
 
     synchronized public void verify() {
-        logger.trace("Starting verification {}/{}", Util.asUuid(this.secret.secretId), versionNumber);
+        logger.trace("Starting verification {}/{}", this.secret.getSecretIdAsUuid(), versionNumber);
         resultCounts.put(VERIFY, new ResultCount());
         for (Share share : shares) {
             if (share.isShared) {

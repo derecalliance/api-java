@@ -42,7 +42,7 @@ import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotificatio
 public class Secret implements Closeable, DeRecSecret {
     /* -- basic details of the secret -- */
      Sharer sharer;
-     byte[] secretId; // the ID of the secret
+     private byte[] secretId; // the ID of the secret
      List<Consumer<DeRecStatusNotification>> notificationListeners = new ArrayList<>(); // listeners for events
 
     /* -- interoperability for the secret -- */
@@ -79,7 +79,7 @@ public class Secret implements Closeable, DeRecSecret {
         // block for completion
         List<CompletableFuture<? extends DeRecHelperStatus>> futures = addHelpersAsync(helperIds);
         try {
-            logger.info("Awaiting result of pairing");
+            logger.trace("Awaiting result of pairing");
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[helperIds.size()])).get(retryParameters.pairingWaitSecs, TimeUnit.SECONDS);
         } catch (InterruptedException | TimeoutException | ExecutionException e) {
             logger.error("Error while waiting for pairing completion");
@@ -147,9 +147,15 @@ public class Secret implements Closeable, DeRecSecret {
      * @return the updated secret
      */
     @Override
-    public DeRecVersion update(byte[] bytesToProtect) {
+    public Version update(byte[] bytesToProtect) {
+        return update(bytesToProtect, null);
+    }
+
+    @Override
+    public Version update(byte[] bytesToProtect, String description) {
+        int pairedHelperCount = getPairedHelpers();
         try {
-            logger.trace("Waiting for update future");
+            logger.trace("Waiting for update future, {} paired helpers", pairedHelperCount);
             return updateAsync(bytesToProtect).get(retryParameters.timeout.getSeconds(), TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
@@ -161,15 +167,6 @@ public class Secret implements Closeable, DeRecSecret {
                     .build(UPDATE_FAILED));
         }
         return versions.lastEntry().getValue();
-    }
-
-    @Override
-    public Version update(byte[] bytesToProtect, String description) {
-        try {
-            return updateAsync(bytesToProtect, description).get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -214,6 +211,9 @@ public class Secret implements Closeable, DeRecSecret {
         Version version = new Version(this, bytesToProtect, versionNumber, newDescription);
         this.versions.put(versionNumber, version);
         version.share(this.thresholdSecretRecovery, pairedHelpers);
+        if (pairedHelpers.isEmpty()) {
+            version.future.complete(version);
+        }
         return version.future;
     }
 
@@ -256,6 +256,11 @@ public class Secret implements Closeable, DeRecSecret {
         // todo: how do you shut down httpclient?
     }
 
+    public int getPairedHelpers() {
+        return (int) helpers.stream()
+                .filter(h -> h.status.equals(DeRecHelperStatus.PairingStatus.PAIRED))
+                .count();
+    }
     /**
      * is the secret available for sharing - are there active helpers?
      * @return true if secrets can be shared
@@ -280,6 +285,10 @@ public class Secret implements Closeable, DeRecSecret {
     @Override
     public byte[] getSecretId() {
         return secretId;
+    }
+
+    public UUID getSecretIdAsUuid() {
+        return Util.asUuid(secretId);
     }
 
     public void notifyStatus(DeRecStatusNotification notification) {

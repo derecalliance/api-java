@@ -17,6 +17,7 @@
 
 package com.thebuildingblocks.derec.v0_9.test;
 
+import com.thebuildingblocks.derec.v0_9.httpprototype.Secret;
 import com.thebuildingblocks.derec.v0_9.httpprototype.Sharer;
 import com.thebuildingblocks.derec.v0_9.httpprototype.Util;
 import com.thebuildingblocks.derec.v0_9.interfaces.*;
@@ -54,7 +55,7 @@ public class SharerMain {
                 .build();
         // get a secret
         logger.info("Building a secret, wait for it to be recoverable");
-        DeRecSecret secret = me.newSecret("Martin Luther", "I have a dream".getBytes(StandardCharsets.UTF_8),
+        Secret secret = me.newSecret("Martin Luther", "I have a dream".getBytes(StandardCharsets.UTF_8),
                 Arrays.asList(DEFAULT_IDS));
         // get last version shared - in this case the first version shared
         DeRecVersion v = secret.getVersions().lastEntry().getValue();
@@ -65,7 +66,7 @@ public class SharerMain {
         v = secret.update("I have another dream".getBytes(StandardCharsets.UTF_8));
         logger.info("Secret version: {}, is protected {}", v.getVersionNumber(), v.isProtected());
 
-        logger.info("Closing secret {}", secret.getSecretId());
+        logger.info("Closing secret {}", secret.getSecretIdAsUuid());
         // dispose of it
         secret.close();
 
