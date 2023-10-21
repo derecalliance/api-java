@@ -17,8 +17,6 @@
 
 package com.thebuildingblocks.derec.v0_9.interfaces;
 
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.function.Consumer;
 
