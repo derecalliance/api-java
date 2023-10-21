@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-package com.thebuildingblocks.derec.v0_9.interfaces;
+package org.derecalliance.derec.interfaces;
 
 import java.util.Optional;
 
-import static com.thebuildingblocks.derec.v0_9.interfaces.DeRecStatusNotification.NotificationSeverity.*;
+import static org.derecalliance.derec.interfaces.DeRecStatusNotification.NotificationSeverity.*;
 
 /**
  * A status notification may be emitted by a secret asynchronously to alert

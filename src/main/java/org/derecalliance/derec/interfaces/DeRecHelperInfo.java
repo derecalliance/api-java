@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.thebuildingblocks.derec.v0_9.interfaces;
+package org.derecalliance.derec.interfaces;
 
 import java.net.URI;
 import java.util.Objects;

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.thebuildingblocks.derec.v0_9.interfaces;
+package org.derecalliance.derec.interfaces;
 
 /**
  * Represents an iteration of a value of a secret. A new Version is created when a {@link DeRecSecret} is updated.

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.thebuildingblocks.derec.v0_9.interfaces;
+package org.derecalliance.derec.interfaces;
 
 /**
  * Representation of a helper as perceived by a sharer
