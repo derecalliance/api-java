@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-package org.derecalliance.derec.interfaces;
+package org.derecalliance.derec.api;
 
 import java.util.Optional;
 
-import static org.derecalliance.derec.interfaces.DeRecStatusNotification.NotificationSeverity.*;
+import static org.derecalliance.derec.api.DeRecStatusNotification.NotificationSeverity.*;
 
 /**
  * A status notification may be emitted by a secret asynchronously to alert

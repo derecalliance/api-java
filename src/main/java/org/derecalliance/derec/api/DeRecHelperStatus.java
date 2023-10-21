@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.derecalliance.derec.interfaces;
+package org.derecalliance.derec.api;
 
 /**
  * Representation of a helper as perceived by a sharer

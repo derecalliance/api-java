@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.derecalliance.derec.interfaces;
+package org.derecalliance.derec.api;
 
 /**
  * Represents an iteration of a value of a secret. A new Version is created when a {@link DeRecSecret} is updated.
