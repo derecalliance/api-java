@@ -34,14 +34,14 @@ public interface DeRecSecret extends Closeable {
      *
      * @param helperIds a list of helper IDs to add
      */
-    void addHelpers(List<? extends DeRecHelperInfo> helperIds);
+    void addHelpers(List<? extends DeRecIdentity> helperIds);
 
     /**
      * Add helpers to this secret asynchronously
      *
      * @param helperIds a list of futures for each of the helpers
      */
-    List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecHelperInfo> helperIds);
+    List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecIdentity> helperIds);
 
     /**
      * List the helpers
@@ -56,14 +56,14 @@ public interface DeRecSecret extends Closeable {
      *
      * @param helperIds a list of helper IDs
      */
-    void removeHelpers(List<? extends DeRecHelperInfo> helperIds);
+    void removeHelpers(List<? extends DeRecIdentity> helperIds);
 
     /**
      * Remove helpers from this secret asynchronously
      *
      * @param helperIds a list of futures for each of the helpers
      */
-    List<CompletableFuture<? extends DeRecHelperStatus>> removeHelpersAsync(List<? extends DeRecHelperInfo> helperIds);
+    List<CompletableFuture<? extends DeRecHelperStatus>> removeHelpersAsync(List<? extends DeRecIdentity> helperIds);
 
     /**
      * Update a secret synchronously blocking till the outcome (success or fail) is known.

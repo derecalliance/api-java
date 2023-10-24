@@ -18,16 +18,31 @@
 package org.derecalliance.derec.api;
 
 import java.net.URI;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Objects;
 
 /**
- * Helper info serving also as a key to identify a helper instance
+ * Information about the identity of a helper or a sharer
  */
-public class DeRecHelperInfo {
+public class DeRecIdentity {
+    private static final MessageDigest messageDigest;
+
+    static {
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-384");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private final String name; // human-readable identification
     private final URI contact; // how to contact me outside the protocol, an email address, for example
-    private final URI address; // my transport address
+    private final URI address; // transport address
     private final String publicKey;
+    private final byte[] publicKeyDigest;
+
 
     /**
      * Create a helper info
@@ -36,11 +51,12 @@ public class DeRecHelperInfo {
      * @param address DeRec address
      * @param publicKey PEM encoded public key
      */
-    public DeRecHelperInfo(String name, String contact, String address, String publicKey) {
+    public DeRecIdentity(String name, String contact, String address, String publicKey) {
         this.name = name;
         this.contact = URI.create(contact);
         this.address = Objects.isNull(address) ? null : URI.create(address);
         this.publicKey = publicKey;
+        this.publicKeyDigest = messageDigest.digest(Base64.getDecoder().decode(publicKey));
     }
 
     /**
@@ -67,14 +83,17 @@ public class DeRecHelperInfo {
     /**
      * @return public key of the helper
      */
-    private String getPublicKey() {
+    public String getPublicKey() {
         return publicKey;
+    }
+    public byte[] getPublicKeyDigest() {
+        return publicKeyDigest;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DeRecHelperInfo deRecId)) return false;
+        if (!(o instanceof DeRecIdentity deRecId)) return false;
         return Objects.equals(getName(), deRecId.getName()) &&
                 Objects.equals(getContact(), deRecId.getContact()) &&
                 Objects.equals(getAddress(), deRecId.getAddress()) &&
