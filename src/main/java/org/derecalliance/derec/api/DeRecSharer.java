@@ -18,6 +18,7 @@
 package org.derecalliance.derec.api;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -79,6 +80,22 @@ public interface DeRecSharer {
      * @return a list
      */
     List<? extends DeRecSecret> getSecrets();
+
+    /**
+     * Get a list of the secrets held by a helper
+     * @param helper the helper to provide the list
+     * @return a map of secretId to version number known by this helper
+     */
+    Map<byte[], Integer> getSecretIds(DeRecHelperInfo helper);
+
+    /**
+     * Reconstruct a secret from a list of helpers, block till the recovery is complete
+     * @param secretId the id of the secret
+     * @param version the version of the secret
+     * @param helpers the helpers from whom to get the shares
+     * @return a reconstructed secret
+     */
+    DeRecSecret recoverSecret(byte[] secretId, int version, List<? extends DeRecHelperInfo> helpers);
 
     /**
      * Provide a "listener" for status and lifecycle event notifications relating to this sharer's secrets.
