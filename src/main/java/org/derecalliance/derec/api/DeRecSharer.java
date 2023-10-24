@@ -19,6 +19,7 @@ package org.derecalliance.derec.api;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 /**
@@ -84,9 +85,9 @@ public interface DeRecSharer {
     /**
      * Get a list of the secrets held by a helper
      * @param helper the helper to provide the list
-     * @return a map of secretId to version number known by this helper
+     * @return a map of secretId to version numbers known by this helper
      */
-    Map<byte[], Integer> getSecretIds(DeRecHelperInfo helper);
+    Future<Map<byte[], List<Integer>>> getSecretIdsAsync(DeRecHelperInfo helper);
 
     /**
      * Reconstruct a secret from a list of helpers, block till the recovery is complete
