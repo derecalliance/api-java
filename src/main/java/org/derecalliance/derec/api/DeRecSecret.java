@@ -101,21 +101,49 @@ public interface DeRecSecret extends Closeable {
     List<CompletableFuture<? extends DeRecHelperStatus>> removeHelpersAsync(List<? extends DeRecIdentity> helperIds);
 
     /**
-     * Update a secret synchronously blocking till the outcome (success or fail) is known.
+     * Update a secret synchronously blocking till the outcome (success or fail) is known, success
+     * or failure being measured by the update being acknowledged by a threshold number of helpers
+     * or it being impossible to achieve that threshold ... rather than a response having been received
+     * from all helpers
+     * <p>
+     * The list of currently paired helpers is used. This version of the method being intended to allow
+     * re-share amongst a different constituency of helpers than the previous version.
+     * <p>
+     * Any previous update that is not complete is cancelled.
+     * <p>
+     * The values of {@code bytesToProtect} and {@code description} are kept from the current latest version at the
+     * time of the call.
      *
+     * @return a new {@link DeRecVersion}
+     */
+    DeRecVersion update();
+
+    /**
+     * Update the secret with a new value, the operation being carried out as described for {@link #update()}
+     * @see #update()
      * @param bytesToProtect the bytes of the update
      * @return the new Version
      */
     DeRecVersion update(byte[] bytesToProtect);
 
     /**
-     * Update a secret synchronously blocking till the outcome (success or fail) is known.
-     *
+     * Update the secret with a new value, and a new description, the operation being carried out as
+     * described for {@link #update()}
+     * @see #update()
      * @param bytesToProtect the bytes of the update
      * @param description description of this version of the secret
      * @return the new Version
      */
     DeRecVersion update(byte[] bytesToProtect, String description);
+
+    /**
+     * Update a secret asynchronously, cancelling any in-progress updates, using the previous values
+     * of {@code bytesToProtect} and {@code description}, amongst the currently paired helpers for this secret.
+     *
+     * @return a Future which completes when the update is safe or when it is known to have failed
+     */
+    Future<? extends DeRecVersion> updateAsync();
+
 
     /**
      * Update a secret asynchronously, cancelling any in-progress updates
