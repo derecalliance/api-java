@@ -46,7 +46,7 @@ public interface DeRecSharer {
      * @param helperIds      the ids of helpers for this secret
      * @return a secret
      */
-    DeRecSecret newSecret(byte[] secretId, String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds);
+    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds);
 
     /**
      * Create a new secret for later addition of helpers. AutoAllocate its ID.
@@ -65,7 +65,7 @@ public interface DeRecSharer {
      * @param bytesToProtect the content of the secret
      * @return a secret
      */
-    DeRecSecret newSecret(byte[] secretId, String description, byte[] bytesToProtect);
+    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect);
 
     /**
      * Get the secret with this UUID, return null if none with this ID
@@ -73,7 +73,7 @@ public interface DeRecSharer {
      * @param secretId a secret ID
      * @return a secret or null
      */
-    DeRecSecret getSecret(byte[] secretId);
+    DeRecSecret getSecret(DeRecSecret.Id secretId);
 
     /**
      * Get a list of all secrets known to this sharer
@@ -87,7 +87,7 @@ public interface DeRecSharer {
      * @param helper the helper to provide the list
      * @return a map of secretId to version numbers known by this helper
      */
-    Future<Map<byte[], List<Integer>>> getSecretIdsAsync(DeRecIdentity helper);
+    Future<Map<DeRecSecret.Id, List<Integer>>> getSecretIdsAsync(DeRecIdentity helper);
 
     /**
      * Reconstruct a secret from a list of helpers, block till the recovery is complete
@@ -96,7 +96,7 @@ public interface DeRecSharer {
      * @param helpers the helpers from whom to get the shares
      * @return a reconstructed secret
      */
-    DeRecSecret recoverSecret(byte[] secretId, int version, List<? extends DeRecIdentity> helpers);
+    DeRecSecret recoverSecret(DeRecSecret.Id secretId, int version, List<? extends DeRecIdentity> helpers);
 
     /**
      * Provide a "listener" for status and lifecycle event notifications relating to this sharer's secrets.

@@ -18,6 +18,7 @@
 package org.derecalliance.derec.api;
 
 import java.io.Closeable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.concurrent.CompletableFuture;
@@ -28,6 +29,40 @@ import java.util.concurrent.Future;
  * helpers assigned to it, and carries out updates of the secret.
  */
 public interface DeRecSecret extends Closeable {
+
+    /**
+     * SecretId is a byte array between 1 and 16 bytes, we wrap it to ensure validity and to make it
+     * possible to use it as a key for a {@link java.util.Map}
+     */
+    class Id {
+        private byte[] bytes;
+
+        public Id(byte[] bytes) {
+            setBytes(bytes);
+        }
+
+        public byte[] getBytes() {
+            return bytes;
+        }
+        public void setBytes(byte[] bytes){
+            if (bytes.length < 1 || bytes.length > 16) {
+                throw new IllegalArgumentException("Secret Id must be between 1 and 16 bytes");
+            }
+            this.bytes = Arrays.copyOf(bytes, bytes.length);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Id id)) return false;
+            return Arrays.equals(bytes, id.bytes);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(bytes);
+        }
+    }
 
     /**
      * Add helpers to this secret and block till the outcome of adding them is known
@@ -104,7 +139,7 @@ public interface DeRecSecret extends Closeable {
      *
      * @return the id - 1 to 16 bytes that uniquely identify this secret for this sharer
      */
-    byte[] getSecretId();
+    Id getSecretId();
 
     /**
      * get a list of versions of the secret
