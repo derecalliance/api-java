@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 The Building Blocks Limited.
+ * Copyright (c) 2023 Swirlds Labs.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package com.thebuildingblocks.derec.v0_9.interfaces;
+package org.derecalliance.derec.api;
 
-import org.slf4j.LoggerFactory;
+//import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.Consumer;
