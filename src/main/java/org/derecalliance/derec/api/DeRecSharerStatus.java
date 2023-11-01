@@ -19,6 +19,8 @@ package org.derecalliance.derec.api;
 
 /**
  * Representation of a sharer as perceived by a helper.
+ *
+ * NOTE: this file is a draft, and may change substantially.
  */
 public interface DeRecSharerStatus {
 	DeRecIdentity getId();

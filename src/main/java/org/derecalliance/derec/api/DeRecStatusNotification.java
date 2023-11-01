@@ -66,7 +66,7 @@ public interface DeRecStatusNotification {
     NotificationSeverity getSeverity();
 
     enum StandardNotificationType implements NotificationType{
-        UPDATE_PROGRESS(UNCLASSIFIED),  // a vehicle for saying things about an update
+        UPDATE_PROGRESS(UNCLASSIFIED),  // implementation-dependent report on this operation's progress
         UPDATE_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for an update to consider it recoverable
         UPDATE_FAILED(ERROR), // update can't reach quorum
         UPDATE_COMPLETE(NORMAL), // all update requests have been replied to, or failed
@@ -74,11 +74,11 @@ public interface DeRecStatusNotification {
         VERIFY_AVAILABLE(NORMAL), // a sufficient number of acknowledgements have been received for verify
         VERIFY_FAILED(ERROR), // verification can't reach quorum
         VERIFY_COMPLETE(NORMAL), // all update requests have been replied to, or failed
-        RECOVERY_PROGRESS(UNCLASSIFIED),
+        RECOVERY_PROGRESS(UNCLASSIFIED), // implementation-dependent report on this operation's progress
         RECOVERY_AVAILABLE(NORMAL), // a sufficient number of responses have been received to reconstruct secret
         RECOVERY_FAILED(ERROR), // the secret cannot be recovered at the present time
         RECOVERY_COMPLETE(NORMAL), // all  requests have been replied to, or failed
-        LIST_SECRET_PROGRESS(UNCLASSIFIED),
+        LIST_SECRET_PROGRESS(UNCLASSIFIED), // implementation-dependent report on this operation's progress
         LIST_SECRET_AVAILABLE(NORMAL), // a response has been received from a helper to list secrets
         LIST_SECRET_FAILED(ERROR), // helper won't list the secrets
         HELPER_PAIRED(NORMAL), // helper accepted a pair request

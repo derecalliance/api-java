@@ -23,6 +23,8 @@ import static org.derecalliance.derec.api.DeRecStatusNotification.NotificationSe
 
 /**
  * A status notification sent to a helper app, to notify of changes in the list of secrets or sharers or their status.
+ *
+ * NOTE: this file is a draft, and may change substantially.
  */
 public interface DeRecHelperMessageNotification {
 	// extension point for enum below

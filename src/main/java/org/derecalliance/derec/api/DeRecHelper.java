@@ -17,8 +17,6 @@
 
 package org.derecalliance.derec.api;
 
-//import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.function.Consumer;
 /**
@@ -26,6 +24,8 @@ import java.util.function.Consumer;
  * Instantiating this will start the threads that listen for incoming messages, and respond to them.
  * This class also provides messaging and getters to let the app view current secrets and sharers.
  * This also allows for pairing to be initiated, if the pairing started with the sharer giving a contact to the helper.
+ *
+ * NOTE: this file is a draft, and may change substantially.
  */
 public interface DeRecHelper {
 	/**
