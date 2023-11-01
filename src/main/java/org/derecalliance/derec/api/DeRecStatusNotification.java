@@ -78,6 +78,9 @@ public interface DeRecStatusNotification {
         RECOVERY_AVAILABLE(NORMAL), // a sufficient number of responses have been received to reconstruct secret
         RECOVERY_FAILED(ERROR), // the secret cannot be recovered at the present time
         RECOVERY_COMPLETE(NORMAL), // all  requests have been replied to, or failed
+        LIST_SECRET_PROGRESS(UNCLASSIFIED),
+        LIST_SECRET_AVAILABLE(NORMAL), // a response has been received from a helper to list secrets
+        LIST_SECRET_FAILED(ERROR), // helper won't list the secrets
         HELPER_PAIRED(NORMAL), // helper accepted a pair request
         HELPER_NOT_PAIRED(ERROR), // pairing failed
         HELPER_UNHEALTHY(WARNING), // a healthy helper has become unhealthy

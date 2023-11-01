@@ -32,7 +32,7 @@ public interface DeRecVersion {
     /**
      * The version number of this Version. Later versions have higher numbers.
      */
-    long getVersionNumber();
+    int getVersionNumber();
 
     /**
      * The value of the secret at this version

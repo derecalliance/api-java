@@ -18,6 +18,7 @@
 package org.derecalliance.derec.api;
 
 import java.io.Closeable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.concurrent.CompletableFuture;
@@ -30,18 +31,52 @@ import java.util.concurrent.Future;
 public interface DeRecSecret extends Closeable {
 
     /**
+     * SecretId is a byte array between 1 and 16 bytes, we wrap it to ensure validity and to make it
+     * possible to use it as a key for a {@link java.util.Map}
+     */
+    class Id {
+        private byte[] bytes;
+
+        public Id(byte[] bytes) {
+            setBytes(bytes);
+        }
+
+        public byte[] getBytes() {
+            return bytes;
+        }
+        public void setBytes(byte[] bytes){
+            if (bytes.length < 1 || bytes.length > 16) {
+                throw new IllegalArgumentException("Secret Id must be between 1 and 16 bytes");
+            }
+            this.bytes = Arrays.copyOf(bytes, bytes.length);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Id id)) return false;
+            return Arrays.equals(bytes, id.bytes);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(bytes);
+        }
+    }
+
+    /**
      * Add helpers to this secret and block till the outcome of adding them is known
      *
      * @param helperIds a list of helper IDs to add
      */
-    void addHelpers(List<? extends DeRecHelperInfo> helperIds);
+    void addHelpers(List<? extends DeRecIdentity> helperIds);
 
     /**
      * Add helpers to this secret asynchronously
      *
      * @param helperIds a list of futures for each of the helpers
      */
-    List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecHelperInfo> helperIds);
+    List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecIdentity> helperIds);
 
     /**
      * List the helpers
@@ -56,31 +91,59 @@ public interface DeRecSecret extends Closeable {
      *
      * @param helperIds a list of helper IDs
      */
-    void removeHelpers(List<? extends DeRecHelperInfo> helperIds);
+    void removeHelpers(List<? extends DeRecIdentity> helperIds);
 
     /**
      * Remove helpers from this secret asynchronously
      *
      * @param helperIds a list of futures for each of the helpers
      */
-    List<CompletableFuture<? extends DeRecHelperStatus>> removeHelpersAsync(List<? extends DeRecHelperInfo> helperIds);
+    List<CompletableFuture<? extends DeRecHelperStatus>> removeHelpersAsync(List<? extends DeRecIdentity> helperIds);
 
     /**
-     * Update a secret synchronously blocking till the outcome (success or fail) is known.
+     * Update a secret synchronously blocking till the outcome (success or fail) is known, success
+     * or failure being measured by the update being acknowledged by a threshold number of helpers
+     * or it being impossible to achieve that threshold ... rather than a response having been received
+     * from all helpers
+     * <p>
+     * The list of currently paired helpers is used. This version of the method being intended to allow
+     * re-share amongst a different constituency of helpers than the previous version.
+     * <p>
+     * Any previous update that is not complete is cancelled.
+     * <p>
+     * The values of {@code bytesToProtect} and {@code description} are kept from the current latest version at the
+     * time of the call.
      *
+     * @return a new {@link DeRecVersion}
+     */
+    DeRecVersion update();
+
+    /**
+     * Update the secret with a new value, the operation being carried out as described for {@link #update()}
+     * @see #update()
      * @param bytesToProtect the bytes of the update
      * @return the new Version
      */
     DeRecVersion update(byte[] bytesToProtect);
 
     /**
-     * Update a secret synchronously blocking till the outcome (success or fail) is known.
-     *
+     * Update the secret with a new value, and a new description, the operation being carried out as
+     * described for {@link #update()}
+     * @see #update()
      * @param bytesToProtect the bytes of the update
      * @param description description of this version of the secret
      * @return the new Version
      */
     DeRecVersion update(byte[] bytesToProtect, String description);
+
+    /**
+     * Update a secret asynchronously, cancelling any in-progress updates, using the previous values
+     * of {@code bytesToProtect} and {@code description}, amongst the currently paired helpers for this secret.
+     *
+     * @return a Future which completes when the update is safe or when it is known to have failed
+     */
+    Future<? extends DeRecVersion> updateAsync();
+
 
     /**
      * Update a secret asynchronously, cancelling any in-progress updates
@@ -104,7 +167,7 @@ public interface DeRecSecret extends Closeable {
      *
      * @return the id - 1 to 16 bytes that uniquely identify this secret for this sharer
      */
-    byte[] getSecretId();
+    Id getSecretId();
 
     /**
      * get a list of versions of the secret

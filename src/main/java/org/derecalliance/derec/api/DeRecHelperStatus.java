@@ -21,7 +21,7 @@ package org.derecalliance.derec.api;
  * Representation of a helper as perceived by a sharer
  */
 public interface DeRecHelperStatus {
-    DeRecHelperInfo getId();
+    DeRecIdentity getId();
 
     PairingStatus getStatus();
 
