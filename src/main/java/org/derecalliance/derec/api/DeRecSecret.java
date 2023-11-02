@@ -27,6 +27,17 @@ import java.util.concurrent.Future;
 /**
  * A secret is a "Helper Controller", in other words it controls the communication with each of the
  * helpers assigned to it, and carries out updates of the secret.
+ *
+ * <p>
+ * Example usage:
+ * {@code <pre>
+ * secret = sharer.newSecret(bytesToProtect) // creates version 0, no helpers, not shared
+ * secret.addHelpers(some helpers) // not shared yet
+ * secret.update() // gets sent to all paired helpers - version 1
+ * secret.addHelpers( ...) // adds helpers to the secret but doesn't share
+ * secret.removeHelpers( ...) // removes helpers
+ * secret.update() // gets sent to current paired helpers - version 2
+ * </pre>}
  */
 public interface DeRecSecret extends Closeable {
 
@@ -65,14 +76,17 @@ public interface DeRecSecret extends Closeable {
     }
 
     /**
-     * Add helpers to this secret and block till the outcome of adding them is known
+     * Add helpers to this secret and block till the outcome of adding them is known.
+     * This does not send them shares.
+     * The app must call an update method after adding the helpers.
      *
      * @param helperIds a list of helper IDs to add
      */
     void addHelpers(List<? extends DeRecIdentity> helperIds);
 
     /**
-     * Add helpers to this secret asynchronously
+     * Add helpers to this secret asynchronously, but do not send them shares.
+     * The app must call an update method after adding the helpers.
      *
      * @param helperIds a list of futures for each of the helpers
      */

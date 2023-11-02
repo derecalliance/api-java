@@ -29,6 +29,7 @@ public interface DeRecSharer {
 
     /**
      * Create a new secret and auto-allocate its ID. Block till pairing concludes.
+     * This secreet will be shared with the given helpers.
      *
      * @param description    a human readable description
      * @param bytesToProtect the content of the secret
@@ -39,6 +40,7 @@ public interface DeRecSharer {
 
     /**
      * Create a new secret. Block till pairing concludes.
+     * This secret will be shared with the given helpers.
      *
      * @param secretId       1 to 16 bytes that uniquely identify this secret for this sharer
      * @param description    a human readable description
@@ -50,6 +52,7 @@ public interface DeRecSharer {
 
     /**
      * Create a new secret for later addition of helpers. AutoAllocate its ID.
+     * This secret will not be shared with any helpers until an update method is called.
      *
      * @param description    a human readable description
      * @param bytesToProtect the content of the secret
