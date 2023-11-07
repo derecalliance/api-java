@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Swirlds Labs.
+ * Copyright (c) 2023 The Building Blocks Limited.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,32 +20,58 @@ package org.derecalliance.derec.api;
 import java.util.List;
 import java.util.function.Consumer;
 /**
- * The main API for a DeRec helper app.
- * Instantiating this will start the threads that listen for incoming messages, and respond to them.
- * This class also provides messaging and getters to let the app view current secrets and sharers.
- * This also allows for pairing to be initiated, if the pairing started with the sharer giving a contact to the helper.
- *
- * NOTE: this file is a draft, and may change substantially.
+ * A DeRec Helper implementation may implement this API to provide access to and visibility of its operation. The
+ * implementation may provide non-standardised means of automatically accepting pairing requests and is assumed to
+ * have a means that is independent of this interface for deciding how and where to store information that is to be
+ * protected by it (HelperShares).
+ * <p>
+ * Users of this API could be enterprise applications that instantiate the Helper implementation or could be
+ * Mobile Phone Apps.
+ * <p>
+ * The API makes no assumptions about threading models or message passing models.
  */
 public interface DeRecHelper {
-	/**
-	 * Get the secret with this ID, return null if none with this ID
-	 *
-	 * @param secretId a secret ID
-	 * @return a secret or null
-	 */
-	DeRecSecret getSecret(byte[] secretId);
 
 	/**
-	 * Get a list of all secrets known to this helper
+	 * Representation of a sharer as perceived by a helper in respect of a particular share
+	 */
+	interface SharerStatus {
+		DeRecIdentity getId();
+
+		PairingResponseStatus getStatus();
+
+		enum PairingResponseStatus {
+			PAIRED, // replied positively
+			REFUSED, // replied negatively
+			REMOVED, // at sharer request, potentially as a result of a DISCONNECT from helper
+			PENDING_DISCONNECTION // disconnecting at Helper Request
+		}
+	}
+
+	interface Share {
+		SharerStatus getSharer();
+
+		DeRecSecret.Id getSecretId();
+
+		int getVersion();
+
+		void remove();
+	}
+
+	interface Notification {
+
+	}
+
+	/**
+	 * Get a list of all protected items known to this helper
 	 *
 	 * @return a list
 	 */
-	List<? extends DeRecSecret> getSecrets();
+	List<? extends DeRecHelper.Share> getShares();
 
 	/**
 	 * Provide a "listener" for status and lifecycle event notifications relating to this helper's information,
-	 * such as changes in the list of sharers or secrets or their status.
+	 * such as changes in the list of shares or requests to pair.
 	 * <p>
 	 * Note: More than one listener may be provided by composition such as:
 	 * <p>
@@ -55,5 +81,5 @@ public interface DeRecHelper {
 	 * sharer.setListener(listener1.andThen(listener2));
 	 * }</pre>
 	 */
-	void setListener(Consumer<DeRecStatusNotification> listener);
+	void setListener(Consumer<DeRecHelper.Notification> listener);
 }
