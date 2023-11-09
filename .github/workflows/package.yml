@@ -23,7 +23,7 @@ jobs:
       # delete all old -SNAPSHOT versions except 1
       - uses: actions/delete-package-versions@v4
         with: 
-          package-name: 'derec-api-java'
+          package-name: 'org.derecalliance.derec.derec-api'
           package-type: 'maven'
           min-versions-to-keep: 1
           ignore-versions: '^(?!.*-SNAPSHOT).*$'
