@@ -2,6 +2,7 @@ name: Publish package to GitHub Packages
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -14,6 +15,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
+          cache: maven
       - name: Publish package
         run: mvn --batch-mode deploy
         env:
