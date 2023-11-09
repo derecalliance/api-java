@@ -20,3 +20,9 @@ jobs:
         run: mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'org.derecalliance.derec.derec-api '
+          package-type: 'java'
+          min-versions-to-keep: 1
+          delete-only-pre-release-versions: "true"
