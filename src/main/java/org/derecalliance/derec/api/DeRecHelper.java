@@ -17,6 +17,8 @@
 
 package org.derecalliance.derec.api;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.function.Function;
 
@@ -57,14 +59,40 @@ public interface DeRecHelper {
 		}
 	}
 
+	/**
+	 * Representation of a "share" at a helper. The helper knows nothing about a share other than that it is some
+	 * binary content stored by the library (which the app has no access to) which is identified by a sharer id and
+	 * a secret id local to that sharer id. The app also has access to the version numbers kept by the library. This
+	 * may be useful for diagnostic purposes.
+	 * <p>
+	 * An app may remove a share, which has the effect of getting the library to mark the share as inactive and at
+	 * the next opportunity (on receipt of the next communication from the sharer) to request unpairing.
+	 */
 	interface Share {
+		/**
+		 * The sharer that this share belongs to
+		 */
 		SharerStatus getSharer();
 
+		/**
+		 * This share's secret id
+		 */
 		DeRecSecret.Id getSecretId();
 
-		int getVersion();
+		/**
+		 * A list of versions currently held by the library
+		 */
+		List<Integer> getVersions();
 
-		void remove();
+		/**
+		 * request removal of a share meaning make the share inactive and at the next opportunity, unpair from
+		 * the sharer for this secret.
+		 * The sharer's status becomes {@link SharerStatus.PairingResponseStatus#PENDING_DISCONNECTION} until
+		 * the unpair request has been signalled to the sharer.
+		 * @return true if request has been carried out successfully, false if it has already been requested
+		 * or if the share is not known (possibly as a result of having previously been removed)
+		 */
+		boolean remove();
 	}
 
 	interface Notification {
@@ -74,12 +102,16 @@ public interface DeRecHelper {
 		int getVersion(); // the version number or -1 if inapplicable
 
 
+		/**
+		 * The type of the notification - allows for introduction of custom helper notifications
+		 * aside from {@link StandardHelperNotificationType}
+		 */
 		interface Type {
 			String name();
 		}
 
 		enum StandardHelperNotificationType implements Type {
-			PAIR_INDICATION, // someone is trying to pair for s particular secret
+			PAIR_INDICATION, // someone is trying to pair for a particular secret
 			UNPAIR_INDICATION, // someone is unpairing for a particular secret
 			UPDATE_INDICATION, // an update has been received for a secret
 			VERIFY_INDICATION, // a verification request has been received for a secret
@@ -88,16 +120,25 @@ public interface DeRecHelper {
 		}
 	}
 
+
 	interface NotificationResponse {
-		boolean getDisconnectPlease(); // set to true if the helper wishes to refuse the request and discontinue the helper relationship
-		boolean getReason(String reason); // some optional explanation (see https://en.wikipedia.org/wiki/Never_complain,_never_explain)
+		/**
+		 * Set to true if the helper wishes to refuse the request and discontinue the helper relationship. The
+		 * semantics are as though {@link Share#remove()} had been called.
+		 */
+		boolean getUnpairPlease();
+
+		/**
+		 * some optional text (mainly useful in the case of unpair being requested)
+		 */
+		@Nullable String getReason();
 	}
 
 
 	/**
 	 * Get a list of all protected items known to this helper
 	 *
-	 * @return a list
+	 * @return a list (empty if no items a known)
 	 */
 	List<? extends DeRecHelper.Share> getShares();
 
