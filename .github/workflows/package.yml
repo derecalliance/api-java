@@ -23,6 +23,6 @@ jobs:
       - uses: actions/delete-package-versions@v4
         with: 
           package-name: 'org.derecalliance.derec.derec-api '
-          package-type: 'java'
+          package-type: 'maven'
           min-versions-to-keep: 1
           delete-only-pre-release-versions: "true"
