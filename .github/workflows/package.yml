@@ -15,6 +15,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
+          cache: maven
       - name: Publish package
         run: mvn --batch-mode deploy
         env:
