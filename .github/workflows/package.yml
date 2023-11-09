@@ -20,9 +20,10 @@ jobs:
         run: mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # delete all old -SNAPSHOT versions except 1
       - uses: actions/delete-package-versions@v4
         with: 
           package-name: 'org.derecalliance.derec.derec-api '
           package-type: 'maven'
           min-versions-to-keep: 1
-          delete-only-pre-release-versions: "true"
+          ignore-versions: '^(?!.*-SNAPSHOT).*$'
