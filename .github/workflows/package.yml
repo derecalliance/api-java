@@ -1,0 +1,29 @@
+name: Publish package to GitHub Packages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          cache: maven
+      - name: Publish package
+        run: mvn --batch-mode deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # delete all old -SNAPSHOT versions except 1
+      - uses: actions/delete-package-versions@v4
+        with: 
+          package-name: 'org.derecalliance.derec.derec-api'
+          package-type: 'maven'
+          min-versions-to-keep: 1
+          ignore-versions: '^(?!.*-SNAPSHOT).*$'
