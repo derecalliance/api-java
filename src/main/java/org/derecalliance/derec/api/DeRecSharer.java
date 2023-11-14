@@ -34,9 +34,11 @@ public interface DeRecSharer {
      * @param description    a human readable description
      * @param bytesToProtect the content of the secret
      * @param helperIds      the ids of helpers for this secret
+     * @param recovery       should this start in recovery mode? (i.e., each pairing happens with that flag set)
      * @return a secret
      */
-    DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds);
+    DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds,
+            boolean recovery);
 
     /**
      * Create a new secret. Block till pairing concludes.
@@ -46,9 +48,11 @@ public interface DeRecSharer {
      * @param description    a human readable description
      * @param bytesToProtect the content of the secret
      * @param helperIds      the ids of helpers for this secret
+     * @param recovery       should this start in recovery mode? (i.e., each pairing happens with that flag set)
      * @return a secret
      */
-    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds);
+    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect,
+            List<DeRecIdentity> helperIds, boolean recovery);
 
     /**
      * Create a new secret for later addition of helpers. AutoAllocate its ID.
@@ -56,9 +60,10 @@ public interface DeRecSharer {
      *
      * @param description    a human readable description
      * @param bytesToProtect the content of the secret
+     * @param recovery       should this be in recovery mode? (i.e., each pairing happens with that flag set)
      * @return a secret
      */
-    DeRecSecret newSecret(String description, byte[] bytesToProtect);
+    DeRecSecret newSecret(String description, byte[] bytesToProtect, boolean recovery);
 
     /**
      * Create a new secret for later addition of helpers.
@@ -66,9 +71,10 @@ public interface DeRecSharer {
      * @param secretId       1 to 16 bytes that uniquely identify this secret for this sharer
      * @param description    a human readable description
      * @param bytesToProtect the content of the secret
+     * @param recovery       should this be in recovery mode? (i.e., each pairing happens with that flag set)
      * @return a secret
      */
-    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect);
+    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect, boolean recovery);
 
     /**
      * Get the secret with this UUID, return null if none with this ID
@@ -93,7 +99,13 @@ public interface DeRecSharer {
     Future<Map<DeRecSecret.Id, List<Integer>>> getSecretIdsAsync(DeRecIdentity helper);
 
     /**
-     * Reconstruct a secret from a list of helpers, block till the recovery is complete
+     * Reconstruct a secret from a list of helpers, block till the recovery is complete.
+     * This is not normally needed.  Normal recovery is done by creating a new secret with
+     * recovery==true, and then the library will automatically recover as soon as a sufficient
+     * number of helpers have been paired with. But this method can be used in the unusual case
+     * where it is desired to recover a secret whose secret ID is already known, using an existing
+     * secret ID as the communication channel.
+     *
      * @param secretId the id of the secret
      * @param version the version of the secret
      * @param helpers the helpers from whom to get the shares
