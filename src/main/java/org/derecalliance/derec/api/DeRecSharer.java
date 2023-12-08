@@ -128,4 +128,13 @@ public interface DeRecSharer {
      * }</pre>
      */
     void setListener(Consumer<DeRecStatusNotification> listener);
+
+    /**
+     * Assign a "share provider" - an implementation that can create shares and recombine them from byte arrays.
+     * It's not the job of the provider to make the shares useful for recovery, merely to split byte arrays up and
+     * recombine them.
+     *
+     * @param shareProvider a share provider implementation
+     */
+    void setShareProvider(DeRecShareProvider shareProvider);
 }
