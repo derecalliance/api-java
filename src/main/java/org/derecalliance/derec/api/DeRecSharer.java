@@ -24,6 +24,9 @@ import java.util.function.Consumer;
 
 /**
  * A factory for and container of Secrets in this API
+ * <p>
+ * Note: this interface is currently the subject of debate, especially regarding
+ * the presence of the parameter "recovery" on each of the {@code newSecret} methods
  */
 public interface DeRecSharer {
 
