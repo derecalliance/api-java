@@ -59,5 +59,5 @@ public interface DeRecShareProvider {
      * @param shares the shares to combine
      * @return the combined shares
      */
-    byte [] combine (List<byte[]> shares);
+    byte [] combine (List<byte[]> shares) throws RecombinationException;
 }
