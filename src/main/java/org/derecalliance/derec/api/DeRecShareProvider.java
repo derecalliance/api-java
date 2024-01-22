@@ -22,18 +22,37 @@ import java.util.List;
  * Interface for sharing and recombining byte arrays. It's not the job of the provider to make
  * the shares useful for recovery, merely to split byte arrays up and recombine them.
  * <p>
- * The interface is for use by a higher level which extracts the relevant bits from a Version of a Secret
- * into a serial form and reconstructs the Version from the serialisations of its shares.
+ * The interface is for use by a higher level which adds metadata to the raw bytes of the secret
+ * such as the list of helpers with which it was shared, private keys and so on.
+ * <p>
+ * The byte array shared with a helper (as provided by a call to {@link #share(byte[], int, byte[], int, int)})
+ * will be shared in a {@code StoreShare} protobuf message. This will contain (unknown to the helper) a
+ * {@code Share} protobuf message (if the sharer so chooses).
+ * <p>
+ * When using algorithm 0 (see protobufs), the {@code share} method wraps this in a {@code CommittedDeRecShare} message,
+ * but this is not visible to the caller.
  */
 public interface DeRecShareProvider {
     /**
-     * Create shares from an array of bytes
-     * @param bytesToShare the bytes to share
-     * @param count the number of shares
-     * @param threshold the recombination threshold
-     * @return a list of count shares
+     * Some kind of error was encountered when recombining shares
      */
-    List<byte[]> share (byte[] bytesToShare, int count, int threshold);
+    class RecombinationException extends Exception {}
+
+    /**
+     * Not enough shares were provided to recombine
+     */
+    class ThresholdException extends RecombinationException {}
+
+    /**
+     * Create shares from an array of bytes
+     * @param secretId the id of the secret
+     * @param version the version number of the secret
+     * @param bytesToShare the bytes of the secret and any additional metadata
+     * @param count the number of shares to create
+     * @param threshold the recombination threshold
+     * @return a list of [count] shares
+     */
+    List<byte[]> share (byte[] secretId, int version, byte[] bytesToShare, int count, int threshold);
 
     /**
      * Recombine some shares
