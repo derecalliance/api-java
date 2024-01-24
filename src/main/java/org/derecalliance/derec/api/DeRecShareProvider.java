@@ -39,11 +39,6 @@ public interface DeRecShareProvider {
     class RecombinationException extends Exception {}
 
     /**
-     * Not enough shares were provided to recombine
-     */
-    class ThresholdException extends RecombinationException {}
-
-    /**
      * Create shares from an array of bytes
      * @param secretId the id of the secret
      * @param version the version number of the secret
