@@ -30,14 +30,14 @@ import java.util.concurrent.Future;
  *
  * <p>
  * Example usage:
- * {@code <pre>
+ * <pre>{@code
  * secret = sharer.newSecret(bytesToProtect) // creates version 0, no helpers, not shared
- * secret.addHelpers(some helpers) // not shared yet
+ * secret.addHelpers(some helpers) // pairs helpers, not shared yet
  * secret.update() // gets sent to all paired helpers - version 1
  * secret.addHelpers( ...) // adds helpers to the secret but doesn't share
- * secret.removeHelpers( ...) // removes helpers
+ * secret.removeHelpers( ...) // removes helpers, unpairs
  * secret.update() // gets sent to current paired helpers - version 2
- * </pre>}
+ * }</pre>
  */
 public interface DeRecSecret extends Closeable {
 
