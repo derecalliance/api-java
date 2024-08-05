@@ -143,6 +143,14 @@ public interface DeRecHelper {
 	List<? extends DeRecHelper.Share> getShares();
 
 	/**
+	 * Get a list of all secrets stored by this helper for a given sharer
+	 *
+	 * @param sharerStatus sharer
+	 * @return a list of secret ids
+	 */
+	List<? extends DeRecSecret.Id> getSecretIds(SharerStatus sharerStatus);
+
+	/**
 	 * Provide a "listener" for status and lifecycle event notifications relating to this helper's information,
 	 * such as changes in the list of shares or requests to pair. The listener both provides information about
 	 * an event and also allows the listener to respond positively, or negatively with a reason, which
