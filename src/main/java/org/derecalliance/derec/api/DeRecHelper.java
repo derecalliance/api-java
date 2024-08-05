@@ -143,7 +143,7 @@ public interface DeRecHelper {
 	List<? extends DeRecHelper.Share> getShares();
 
 	/**
-	 * Get a list of all versions numbers stored by this helper for a given secret id
+	 * Get a list of all version numbers stored by this helper for a given secret id
 	 *
 	 * @param secretId secret id
 	 * @return a list of all version numbers stored for a given secret
