@@ -38,6 +38,13 @@ public interface DeRecHelper {
 	 */
 	interface SharerStatus extends DeRecPairingStatus {
 		DeRecIdentity getId();
+
+		/**
+		 * Returns whether the sharer is in recovery mode
+		 *
+		 * @return true if sharer is in recovery mode, false otherwise
+		 */
+		boolean isRecovering();
 	}
 
 	/**
