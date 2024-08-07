@@ -136,6 +136,13 @@ public class DeRecIdentity {
                 Objects.equals(getPublicSignatureKey(), deRecId.getPublicSignatureKey());
     }
 
+    public boolean equalsKey(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DeRecIdentity deRecId)) return false;
+        return Objects.equals(getPublicEncryptionKey(), deRecId.getPublicEncryptionKey()) &&
+                Objects.equals(getPublicSignatureKey(), deRecId.getPublicSignatureKey());
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(getName(), getContact(), getAddress(), getPublicEncryptionKey(), getPublicSignatureKey());
