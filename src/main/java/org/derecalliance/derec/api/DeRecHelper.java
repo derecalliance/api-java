@@ -55,6 +55,13 @@ public interface DeRecHelper {
 			REPLIED_REMOVED, // at sharer request, potentially as a result of a DISCONNECT from helper
 			PENDING_DISCONNECTION // disconnecting at Helper Request
 		}
+
+		/**
+		 * Returns whether the sharer is in recovery mode
+		 *
+		 * @return true if sharer is in recovery mode, false otherwise
+		 */
+		boolean isRecovering();
 	}
 
 	/**
