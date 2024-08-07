@@ -38,10 +38,8 @@ public interface DeRecHelper {
 	/**
 	 * Representation of a sharer as perceived by a helper in respect of a particular share
 	 */
-	interface SharerStatus {
+	interface SharerStatus extends DeRecPairingStatus {
 		DeRecIdentity getId();
-
-		DeRecHelperStatus.PairingStatus getStatus();
 	}
 
 	/**
