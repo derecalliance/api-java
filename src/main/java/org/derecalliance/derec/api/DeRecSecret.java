@@ -97,7 +97,7 @@ public interface DeRecSecret extends Closeable {
      *
      * @return a list of helpers
      */
-    List<? extends DeRecHelperStatus> getHelpers();
+    List<? extends DeRecHelperStatus> getHelperStatuses();
 
     /**
      * Remove each of the helperIds in the list, if a helperId in the list does not refer to a helper for this secret
