@@ -40,6 +40,7 @@ public class DeRecIdentity {
     private final String name; // human-readable identification
     private final URI contact; // how to contact me outside the protocol, an email address, for example
     private final URI address; // transport address
+    private int publicEncryptionKeyId;
     private final String publicEncryptionKey;
     private String publicSignatureKey;
     private final byte[] publicEncryptionKeyDigest;
@@ -51,13 +52,15 @@ public class DeRecIdentity {
      * @param name human-readable name
      * @param contact contact address - e.g. email
      * @param address DeRec address
+     * @param publicEncryptionKeyId public encryption key id
      * @param publicEncryptionKey PEM encoded public encryption key
      * @param publicSignatureKey PEM encoded public signature key
      */
-    public DeRecIdentity(String name, String contact, String address, String publicEncryptionKey, String publicSignatureKey) {
+    public DeRecIdentity(String name, String contact, String address, int publicEncryptionKeyId, String publicEncryptionKey, String publicSignatureKey) {
         this.name = name;
         this.contact = URI.create(contact);
         this.address = Objects.isNull(address) ? null : URI.create(address);
+        this.publicEncryptionKeyId = publicEncryptionKeyId;
         this.publicEncryptionKey = publicEncryptionKey;
         this.publicSignatureKey = publicSignatureKey;
         this.publicEncryptionKeyDigest = messageDigest.digest(Base64.getDecoder().decode(publicEncryptionKey));
@@ -86,6 +89,13 @@ public class DeRecIdentity {
      */
     public URI getAddress() {
         return address;
+    }
+
+    /**
+     * @return public encryption key id
+     */
+    public int getPublicEncryptionKeyId() {
+        return publicEncryptionKeyId;
     }
 
     /**
@@ -132,6 +142,7 @@ public class DeRecIdentity {
         return Objects.equals(getName(), deRecId.getName()) &&
                 Objects.equals(getContact(), deRecId.getContact()) &&
                 Objects.equals(getAddress(), deRecId.getAddress()) &&
+                Objects.equals(getPublicEncryptionKeyId(), deRecId.getPublicEncryptionKeyId()) &&
                 Objects.equals(getPublicEncryptionKey(), deRecId.getPublicEncryptionKey()) &&
                 Objects.equals(getPublicSignatureKey(), deRecId.getPublicSignatureKey());
     }
@@ -139,7 +150,8 @@ public class DeRecIdentity {
     public boolean equalsKey(Object o) {
         if (this == o) return true;
         if (!(o instanceof DeRecIdentity deRecId)) return false;
-        return Objects.equals(getPublicEncryptionKey(), deRecId.getPublicEncryptionKey()) &&
+        return Objects.equals(getPublicEncryptionKeyId(), deRecId.getPublicEncryptionKeyId()) &&
+                Objects.equals(getPublicEncryptionKey(), deRecId.getPublicEncryptionKey()) &&
                 Objects.equals(getPublicSignatureKey(), deRecId.getPublicSignatureKey());
     }
 
