@@ -205,6 +205,13 @@ public interface DeRecSecret extends Closeable {
     boolean isAvailable();
 
     /**
+     * Is the secret in recovery mode?
+     *
+     * @return true if the secret is in recovery mode, false otherwise
+     */
+    boolean isRecovering();
+
+    /**
      * Is the secret shut down
      *
      * @return true if it is shut down
