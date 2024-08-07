@@ -17,8 +17,6 @@
 
 package org.derecalliance.derec.api;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.function.Function;
 
@@ -129,11 +127,30 @@ public interface DeRecHelper {
 		boolean getUnpairPlease();
 
 		/**
+		 * result of notification handling
+		 */
+		public boolean getResult();
+
+		/**
 		 * some optional text (mainly useful in the case of unpair being requested)
 		 */
-		@Nullable String getReason();
+		public String getReason();
+
+		/**
+		 * an optional object associated with the notification response
+		 */
+		public Object getReferenceObject();
 	}
 
+	/**
+	 * Respond to a received notification
+	 *
+	 * @param result the result of notification handling
+	 * @param reason optional text associated with notification handling
+	 * @param referenceObj optional object associated with notification handling
+	 * @return NotificationResponse object
+	 */
+	DeRecHelper.NotificationResponse newNotificationResponse(boolean result, String reason, Object referenceObj);
 
 	/**
 	 * Get a list of all protected items known to this helper
