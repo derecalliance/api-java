@@ -41,22 +41,7 @@ public interface DeRecHelper {
 	interface SharerStatus {
 		DeRecIdentity getId();
 
-		PairingResponseStatus getStatus();
-
-		/**
-		 * How the pairing request was responded to
-		 */
-		enum PairingResponseStatus {
-			/*
-			This is needed only if we as a standard wish to report refused and gone
-			sharers to the application. As things stand this interface only reports
-			active secrets.
-			REPLIED_PAIRED, // replied positively
-			REPLIED_REFUSED, // replied negatively*/
-			ACTIVE,
-			REPLIED_REMOVED, // at sharer request, potentially as a result of a DISCONNECT from helper
-			PENDING_DISCONNECTION // disconnecting at Helper Request
-		}
+		DeRecHelperStatus.PairingStatus getStatus();
 	}
 
 	/**
@@ -87,7 +72,7 @@ public interface DeRecHelper {
 		/**
 		 * request removal of a share meaning make the share inactive and at the next opportunity, unpair from
 		 * the sharer for this secret.
-		 * The sharer's status becomes {@link SharerStatus.PairingResponseStatus#PENDING_DISCONNECTION} until
+		 * The sharer's status becomes {@link DeRecHelperStatus.PairingStatus#PENDING_REMOVAL} until
 		 * the unpair request has been signalled to the sharer.
 		 * @return true if request has been carried out successfully, false if it has already been requested
 		 * or if the share is not known (possibly as a result of having previously been removed)
