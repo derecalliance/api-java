@@ -160,6 +160,14 @@ public interface DeRecHelper {
 	List<? extends DeRecHelper.Share> getShares();
 
 	/**
+	 * Get a list of all secrets stored by this helper for a given sharer
+	 *
+	 * @param sharerStatus sharer
+	 * @return a list of secret ids
+	 */
+	List<? extends DeRecSecret.Id> getSecretIds(SharerStatus sharerStatus);
+  
+	/**
 	 * Get a list of all sharers that this helper is helping
 	 *
 	 * @return list of sharers
