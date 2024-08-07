@@ -17,6 +17,8 @@
 
 package org.derecalliance.derec.api;
 
+import java.time.Instant;
+
 /**
  * Representation of a helper as perceived by a sharer
  */
@@ -35,4 +37,11 @@ public interface DeRecHelperStatus {
         FAILED, // timeout, disconnect etc.
         GONE // disconnected at Helper Request
     }
+
+    /**
+     * Gets the last time at which the Helper had last successfully responded to a VerifyShareRequestMessage
+     *
+     * @return Instant time
+     */
+    Instant getLastVerificationTime();
 }
