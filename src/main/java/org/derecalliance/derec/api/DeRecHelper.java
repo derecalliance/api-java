@@ -32,21 +32,6 @@ import java.util.function.Function;
  * The API makes no assumptions about threading models or message passing models.
  */
 public interface DeRecHelper {
-
-	/**
-	 * Representation of a sharer as perceived by a helper in respect of a particular share
-	 */
-	interface SharerStatus extends DeRecPairingStatus {
-		DeRecIdentity getId();
-
-		/**
-		 * Returns whether the sharer is in recovery mode
-		 *
-		 * @return true if sharer is in recovery mode, false otherwise
-		 */
-		boolean isRecovering();
-	}
-
 	/**
 	 * Representation of a "share" at a helper. The helper knows nothing about a share other than that it is some
 	 * binary content stored by the library (which the app has no access to) which is identified by a sharer id and
@@ -60,7 +45,7 @@ public interface DeRecHelper {
 		/**
 		 * The sharer that this share belongs to
 		 */
-		SharerStatus getSharer();
+		DeRecSharerStatus getSharer();
 
 		/**
 		 * This share's secret id
@@ -163,21 +148,21 @@ public interface DeRecHelper {
 	 * @param sharerStatus sharer
 	 * @return a list of secret ids
 	 */
-	List<? extends DeRecSecret.Id> getSecretIds(SharerStatus sharerStatus);
+	List<? extends DeRecSecret.Id> getSecretIds(DeRecSharerStatus sharerStatus);
   
 	/**
 	 * Get a list of all sharers that this helper is helping
 	 *
 	 * @return list of sharers
 	 */
-	List<? extends SharerStatus> getSharers();
+	List<? extends DeRecSharerStatus> getSharers();
 
 	/**
 	 * Remove a sharer (identified by SharerStatus) as seen by this helper
 	 *
 	 * @param sharerStatus sharer to remove
 	 */
-	void removeSharer(SharerStatus sharerStatus);
+	void removeSharer(DeRecSharerStatus sharerStatus);
 
 	/**
 	 * Provide a "listener" for status and lifecycle event notifications relating to this helper's information,
