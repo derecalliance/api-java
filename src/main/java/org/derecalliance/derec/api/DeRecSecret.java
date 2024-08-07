@@ -184,6 +184,13 @@ public interface DeRecSecret extends Closeable {
     Id getSecretId();
 
     /**
+     * Get the description of the secret
+     *
+     * @return the description of the secret
+     */
+    String getDescription();
+
+    /**
      * get a list of versions of the secret
      *
      * @return a {@link NavigableMap} of versions
