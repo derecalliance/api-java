@@ -32,42 +32,6 @@ import java.util.function.Function;
  * The API makes no assumptions about threading models or message passing models.
  */
 public interface DeRecHelper {
-	/**
-	 * Representation of a "share" at a helper. The helper knows nothing about a share other than that it is some
-	 * binary content stored by the library (which the app has no access to) which is identified by a sharer id and
-	 * a secret id local to that sharer id. The app also has access to the version numbers kept by the library. This
-	 * may be useful for diagnostic purposes.
-	 * <p>
-	 * An app may remove a share, which has the effect of getting the library to mark the share as inactive and at
-	 * the next opportunity (on receipt of the next communication from the sharer) to request unpairing.
-	 */
-	interface Share {
-		/**
-		 * The sharer that this share belongs to
-		 */
-		DeRecSharerStatus getSharer();
-
-		/**
-		 * This share's secret id
-		 */
-		DeRecSecret.Id getSecretId();
-
-		/**
-		 * A list of versions currently held by the library
-		 */
-		List<Integer> getVersions();
-
-		/**
-		 * request removal of a share meaning make the share inactive and at the next opportunity, unpair from
-		 * the sharer for this secret.
-		 * The sharer's status becomes {@link DeRecHelperStatus.PairingStatus#PENDING_REMOVAL} until
-		 * the unpair request has been signalled to the sharer.
-		 * @return true if request has been carried out successfully, false if it has already been requested
-		 * or if the share is not known (possibly as a result of having previously been removed)
-		 */
-		boolean remove();
-	}
-
 	interface Notification {
 		Type getType(); // the type of the notification
 		DeRecIdentity getSharerId(); // the sharer id
@@ -97,7 +61,7 @@ public interface DeRecHelper {
 	interface NotificationResponse {
 		/**
 		 * Set to true if the helper wishes to refuse the request and discontinue the helper relationship. The
-		 * semantics are as though {@link Share#remove()} had been called.
+		 * semantics are as though {@link DeRecShare#remove()} had been called.
 		 */
 		boolean getUnpairPlease();
 
@@ -132,7 +96,7 @@ public interface DeRecHelper {
 	 *
 	 * @return a list (empty if no items a known)
 	 */
-	List<? extends DeRecHelper.Share> getShares();
+	List<? extends DeRecShare> getShares();
 
 	/**
 	 * Get a list of all version numbers stored by this helper for a given secret id
