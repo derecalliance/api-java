@@ -160,6 +160,13 @@ public interface DeRecHelper {
 	List<? extends DeRecHelper.Share> getShares();
 
 	/**
+	 * Get a list of all sharers that this helper is helping
+	 *
+	 * @return list of sharers
+	 */
+	List<? extends SharerStatus> getSharers();
+
+	/**
 	 * Remove a sharer (identified by SharerStatus) as seen by this helper
 	 *
 	 * @param sharerStatus sharer to remove
