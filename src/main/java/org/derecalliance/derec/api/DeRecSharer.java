@@ -40,8 +40,7 @@ public interface DeRecSharer {
      * @param recovery       should this start in recovery mode? (i.e., each pairing happens with that flag set)
      * @return a secret
      */
-    DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds,
-                          boolean recovery);
+    DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds, boolean recovery);
 
     /**
      * Create a new secret. Block till pairing concludes.
@@ -54,8 +53,7 @@ public interface DeRecSharer {
      * @param recovery       should this start in recovery mode? (i.e., each pairing happens with that flag set)
      * @return a secret
      */
-    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect,
-                          List<DeRecIdentity> helperIds, boolean recovery);
+    DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds, boolean recovery);
 
     /**
      * Create a new secret for later addition of helpers. AutoAllocate its ID.
