@@ -41,7 +41,7 @@ public interface DeRecSharer {
      * @return a secret
      */
     DeRecSecret newSecret(String description, byte[] bytesToProtect, List<DeRecIdentity> helperIds,
-            boolean recovery);
+                          boolean recovery);
 
     /**
      * Create a new secret. Block till pairing concludes.
@@ -55,7 +55,7 @@ public interface DeRecSharer {
      * @return a secret
      */
     DeRecSecret newSecret(DeRecSecret.Id secretId, String description, byte[] bytesToProtect,
-            List<DeRecIdentity> helperIds, boolean recovery);
+                          List<DeRecIdentity> helperIds, boolean recovery);
 
     /**
      * Create a new secret for later addition of helpers. AutoAllocate its ID.
@@ -115,6 +115,15 @@ public interface DeRecSharer {
      * @return a reconstructed secret
      */
     DeRecSecret recoverSecret(DeRecSecret.Id secretId, int version, List<? extends DeRecIdentity> helpers);
+
+    /**
+     * The application tells the library that the user has agreed that recovery is complete using this API.
+     * This updates the state of the Sharer in the library to revert to normal mode, using their original keys and
+     * communicating with their restored helpers in the contexts of their recovered secrets.
+     *
+     * @param recoverySecretId the id of the secret used for pairing during recovery mode
+     */
+    void recoveryComplete(DeRecSecret.Id recoverySecretId);
 
     /**
      * Provide a "listener" for status and lifecycle event notifications relating to this sharer's secrets.
