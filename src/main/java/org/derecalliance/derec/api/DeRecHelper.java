@@ -148,6 +148,13 @@ public interface DeRecHelper {
 	 * @return list of sharers
 	 */
 	List<? extends SharerStatus> getSharers();
+  
+  /**
+	 * Remove a sharer (identified by SharerStatus) as seen by this helper
+	 *
+	 * @param sharerStatus sharer to remove
+	 */
+	void removeSharer(SharerStatus sharerStatus);
 
 	/**
 	 * Provide a "listener" for status and lifecycle event notifications relating to this helper's information,
