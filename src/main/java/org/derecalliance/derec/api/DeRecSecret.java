@@ -97,7 +97,7 @@ public interface DeRecSecret extends Closeable {
      *
      * @return a list of helpers
      */
-    List<? extends DeRecHelperStatus> getHelpers();
+    List<? extends DeRecHelperStatus> getHelperStatuses();
 
     /**
      * Remove each of the helperIds in the list, if a helperId in the list does not refer to a helper for this secret
@@ -184,6 +184,13 @@ public interface DeRecSecret extends Closeable {
     Id getSecretId();
 
     /**
+     * Get the description of the secret
+     *
+     * @return the description of the secret
+     */
+    String getDescription();
+
+    /**
      * get a list of versions of the secret
      *
      * @return a {@link NavigableMap} of versions
@@ -196,6 +203,13 @@ public interface DeRecSecret extends Closeable {
      * @return true if it is safe
      */
     boolean isAvailable();
+
+    /**
+     * Is the secret in recovery mode?
+     *
+     * @return true if the secret is in recovery mode, false otherwise
+     */
+    boolean isRecovering();
 
     /**
      * Is the secret shut down
