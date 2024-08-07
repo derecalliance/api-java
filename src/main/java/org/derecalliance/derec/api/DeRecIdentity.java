@@ -40,8 +40,11 @@ public class DeRecIdentity {
     private final String name; // human-readable identification
     private final URI contact; // how to contact me outside the protocol, an email address, for example
     private final URI address; // transport address
-    private final String publicKey;
-    private final byte[] publicKeyDigest;
+    private int publicEncryptionKeyId;
+    private final String publicEncryptionKey;
+    private String publicSignatureKey;
+    private final byte[] publicEncryptionKeyDigest;
+    private byte[] publicSignatureKeyDigest;
 
 
     /**
@@ -49,14 +52,22 @@ public class DeRecIdentity {
      * @param name human-readable name
      * @param contact contact address - e.g. email
      * @param address DeRec address
-     * @param publicKey PEM encoded public key
+     * @param publicEncryptionKeyId public encryption key id
+     * @param publicEncryptionKey PEM encoded public encryption key
+     * @param publicSignatureKey PEM encoded public signature key
      */
-    public DeRecIdentity(String name, String contact, String address, String publicKey) {
+    public DeRecIdentity(String name, String contact, String address, int publicEncryptionKeyId, String publicEncryptionKey, String publicSignatureKey) {
         this.name = name;
         this.contact = URI.create(contact);
         this.address = Objects.isNull(address) ? null : URI.create(address);
-        this.publicKey = publicKey;
-        this.publicKeyDigest = messageDigest.digest(Base64.getDecoder().decode(publicKey));
+        this.publicEncryptionKeyId = publicEncryptionKeyId;
+        this.publicEncryptionKey = publicEncryptionKey;
+        this.publicSignatureKey = publicSignatureKey;
+        this.publicEncryptionKeyDigest = messageDigest.digest(Base64.getDecoder().decode(publicEncryptionKey));
+        if (publicSignatureKey != null) {
+            // This check is necessary because when pairing with someone, we don't know their public signature key immediately
+            this.publicSignatureKeyDigest = messageDigest.digest(Base64.getDecoder().decode(publicSignatureKey));
+        }
     }
 
     /**
@@ -81,13 +92,47 @@ public class DeRecIdentity {
     }
 
     /**
-     * @return public key of the helper
+     * @return public encryption key id
      */
-    public String getPublicKey() {
-        return publicKey;
+    public int getPublicEncryptionKeyId() {
+        return publicEncryptionKeyId;
     }
-    public byte[] getPublicKeyDigest() {
-        return publicKeyDigest;
+
+    /**
+     * @return PEM encoded public encryption key
+     */
+    public String getPublicEncryptionKey() {
+        return publicEncryptionKey;
+    }
+
+    /**
+     * @return PEM encoded public signature key
+     */
+    public String getPublicSignatureKey() {
+        return publicSignatureKey;
+    }
+
+    /**
+     * @return digest of public encryption key
+     */
+    public byte[] getPublicEncryptionKeyDigest() {
+        return publicEncryptionKeyDigest;
+    }
+
+    /**
+     * @return digest of public signature key
+     */
+    public byte[] getPublicSignatureKeyDigest() {
+        return publicSignatureKeyDigest;
+    }
+
+    /**
+     * Used to set a peer's public signature key during pairing
+     * @param publicSignatureKey public signature key
+     */
+    public void setPublicSignatureKey(String publicSignatureKey) {
+        this.publicSignatureKey = publicSignatureKey;
+        this.publicSignatureKeyDigest = messageDigest.digest(Base64.getDecoder().decode(publicSignatureKey));
     }
 
     @Override
@@ -97,11 +142,21 @@ public class DeRecIdentity {
         return Objects.equals(getName(), deRecId.getName()) &&
                 Objects.equals(getContact(), deRecId.getContact()) &&
                 Objects.equals(getAddress(), deRecId.getAddress()) &&
-                Objects.equals(getPublicKey(), deRecId.getPublicKey());
+                Objects.equals(getPublicEncryptionKeyId(), deRecId.getPublicEncryptionKeyId()) &&
+                Objects.equals(getPublicEncryptionKey(), deRecId.getPublicEncryptionKey()) &&
+                Objects.equals(getPublicSignatureKey(), deRecId.getPublicSignatureKey());
+    }
+
+    public boolean equalsKey(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DeRecIdentity deRecId)) return false;
+        return Objects.equals(getPublicEncryptionKeyId(), deRecId.getPublicEncryptionKeyId()) &&
+                Objects.equals(getPublicEncryptionKey(), deRecId.getPublicEncryptionKey()) &&
+                Objects.equals(getPublicSignatureKey(), deRecId.getPublicSignatureKey());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getContact(), getAddress(), getPublicKey());
+        return Objects.hash(getName(), getContact(), getAddress(), getPublicEncryptionKey(), getPublicSignatureKey());
     }
 }
