@@ -143,6 +143,13 @@ public interface DeRecHelper {
 	List<? extends DeRecHelper.Share> getShares();
 
 	/**
+	 * Remove a sharer (identified by SharerStatus) as seen by this helper
+	 *
+	 * @param sharerStatus sharer to remove
+	 */
+	void removeSharer(SharerStatus sharerStatus);
+
+	/**
 	 * Provide a "listener" for status and lifecycle event notifications relating to this helper's information,
 	 * such as changes in the list of shares or requests to pair. The listener both provides information about
 	 * an event and also allows the listener to respond positively, or negatively with a reason, which
