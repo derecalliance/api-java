@@ -17,9 +17,18 @@
 
 package org.derecalliance.derec.api;
 
+import java.time.Instant;
+
 /**
  * Representation of a helper as perceived by a sharer
  */
 public interface DeRecHelperStatus extends DeRecPairingStatus {
     DeRecIdentity getId();
+
+    /**
+     * Gets the last time at which the Helper had last successfully responded to a VerifyShareRequestMessage
+     *
+     * @return Instant time
+     */
+    Instant getLastVerificationTime();
 }

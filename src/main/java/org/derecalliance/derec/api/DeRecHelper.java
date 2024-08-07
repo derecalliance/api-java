@@ -17,8 +17,6 @@
 
 package org.derecalliance.derec.api;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.function.Function;
 
@@ -112,11 +110,30 @@ public interface DeRecHelper {
 		boolean getUnpairPlease();
 
 		/**
+		 * result of notification handling
+		 */
+		public boolean getResult();
+
+		/**
 		 * some optional text (mainly useful in the case of unpair being requested)
 		 */
-		@Nullable String getReason();
+		public String getReason();
+
+		/**
+		 * an optional object associated with the notification response
+		 */
+		public Object getReferenceObject();
 	}
 
+	/**
+	 * Respond to a received notification
+	 *
+	 * @param result the result of notification handling
+	 * @param reason optional text associated with notification handling
+	 * @param referenceObj optional object associated with notification handling
+	 * @return NotificationResponse object
+	 */
+	DeRecHelper.NotificationResponse newNotificationResponse(boolean result, String reason, Object referenceObj);
 
 	/**
 	 * Get a list of all protected items known to this helper
@@ -124,6 +141,36 @@ public interface DeRecHelper {
 	 * @return a list (empty if no items a known)
 	 */
 	List<? extends DeRecHelper.Share> getShares();
+
+	/**
+	 * Get a list of all version numbers stored by this helper for a given secret id
+	 *
+	 * @param secretId secret id
+	 * @return a list of all version numbers stored for a given secret
+	 */
+	List<? extends Integer> getVersionNumbersForASecret(DeRecSecret.Id secretId);
+
+  /**
+	 * Get a list of all secrets stored by this helper for a given sharer
+	 *
+	 * @param sharerStatus sharer
+	 * @return a list of secret ids
+	 */
+	List<? extends DeRecSecret.Id> getSecretIds(SharerStatus sharerStatus);
+  
+	/**
+	 * Get a list of all sharers that this helper is helping
+	 *
+	 * @return list of sharers
+	 */
+	List<? extends SharerStatus> getSharers();
+
+	/**
+	 * Remove a sharer (identified by SharerStatus) as seen by this helper
+	 *
+	 * @param sharerStatus sharer to remove
+	 */
+	void removeSharer(SharerStatus sharerStatus);
 
 	/**
 	 * Provide a "listener" for status and lifecycle event notifications relating to this helper's information,
