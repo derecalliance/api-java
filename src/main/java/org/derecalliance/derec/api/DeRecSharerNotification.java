@@ -19,13 +19,13 @@ package org.derecalliance.derec.api;
 
 import java.util.Optional;
 
-import static org.derecalliance.derec.api.DeRecStatusNotification.NotificationSeverity.*;
+import static org.derecalliance.derec.api.DeRecSharerNotification.NotificationSeverity.*;
 
 /**
  * A status notification may be emitted by a secret asynchronously to alert
  * an API user of changes to the status of the Secret
  */
-public interface DeRecStatusNotification {
+public interface DeRecSharerNotification {
 
     enum NotificationSeverity {UNCLASSIFIED, NORMAL, WARNING, ERROR}
 
