@@ -129,10 +129,10 @@ public interface DeRecSharer {
      * Note: More than one listener may be provided by composition such as:
      * <p>
      * <pre>{@code
-     * Consumer<DeRecStatusNotification> listener1 = n -> log(n.getType().name());
-     * Consumer<DeRecStatusNotification> listener2 = n -> {if (n.getSeverity().equals(ERROR)) alert(n.getType().name());};
+     * Consumer<DeRecSharerNotification> listener1 = n -> log(n.getType().name());
+     * Consumer<DeRecSharerNotification> listener2 = n -> {if (n.getSeverity().equals(ERROR)) alert(n.getType().name());};
      * sharer.setListener(listener1.andThen(listener2));
      * }</pre>
      */
-    void setListener(Consumer<DeRecStatusNotification> listener);
+    void setListener(Consumer<DeRecSharerNotification> listener);
 }
