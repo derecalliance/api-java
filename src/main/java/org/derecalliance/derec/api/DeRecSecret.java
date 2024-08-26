@@ -20,6 +20,7 @@ package org.derecalliance.derec.api;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -80,17 +81,18 @@ public interface DeRecSecret extends Closeable {
      * This does not send them shares.
      * The app must call an update method after adding the helpers.
      *
-     * @param helperIds a list of helper IDs to add
+     * @param nonceAndHelperIds a mapping of the nonce generated for pairing with the DeRecIdentity it was generated for
      */
-    void addHelpers(List<? extends DeRecIdentity> helperIds);
+    void addHelpers(Map<Long, DeRecIdentity> nonceAndHelperIds);
 
     /**
      * Add helpers to this secret asynchronously, but do not send them shares.
      * The app must call an update method after adding the helpers.
      *
-     * @param helperIds a list of futures for each of the helpers
+     * @param nonceAndHelperIds a mapping of the nonce generated for pairing with the DeRecIdentity it was generated for
+     * @return a list of futures for each of the helpers
      */
-    List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(List<? extends DeRecIdentity> helperIds);
+    List<CompletableFuture<? extends DeRecHelperStatus>> addHelpersAsync(Map<Long, DeRecIdentity> nonceAndHelperIds);
 
     /**
      * List the helpers
