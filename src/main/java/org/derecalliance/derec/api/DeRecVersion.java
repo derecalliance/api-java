@@ -17,6 +17,8 @@
 
 package org.derecalliance.derec.api;
 
+import java.util.List;
+
 /**
  * Represents an iteration of a value of a secret. A new Version is created when a {@link DeRecSecret} is updated.
  * It is distributed among helpers. If a sufficient number of helpers acknowledge receipt {@link #isProtected()}
@@ -43,4 +45,9 @@ public interface DeRecVersion {
      * The version has been successfully distributed among helpers.
      */
     boolean isProtected();
+
+    /**
+     * Get the list of helpers who are protecting this version.
+     */
+    List<DeRecHelperStatus> getProtectingHelperStatuses();
 }
