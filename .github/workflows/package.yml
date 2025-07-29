@@ -31,6 +31,7 @@ jobs:
         run: mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # delete all old -SNAPSHOT versions except 1
       - name: Delete old snapshot versions
         uses: actions/delete-package-versions@0d39a63126868f5eefaa47169615edd3c0f61e20 # v4.1.1
